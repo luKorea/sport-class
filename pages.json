@@ -1,0 +1,29 @@
+{
+	"pages": [
+		{
+			"path":"pages/common/setting/setting",
+			"style": {
+				"navigationBarTitleText":"消息设置"
+			}
+		},
+		{
+			"path":"pages/common/feedback/feedback",
+			"style": {
+				"navigationBarTitleText":"意见反馈"
+			}
+		},
+		{
+			"path":"pages/common/reset/reset",
+			"style": {
+				"navigationBarTitleText":"重置密码"
+			}
+		},
+		{
+			"path": "pages/index/index"
+		}
+	],
+	"globalStyle": {
+		"navigationBarBackgroundColor":"#F4313E",
+		"navigationBarTextStyle":"white"
+	}
+}

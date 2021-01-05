@@ -4,3 +4,7 @@
             1. reset 重置密码
             2. feedback 意见反馈
             3. setting 消息设置
+        2. teacher 老师端
+            1. class 我的班级
+                1. index 首页
+                2. detail 详情页面

@@ -1,6 +1,18 @@
 {
 	"pages": [
 		{
+			"path":"pages/teacher/class/index/index",
+			"style": {
+				"navigationBarTitleText":"我的班级"
+			}
+		},
+		{
+			"path":"pages/teacher/class/detail/detail",
+			"style": {
+				"navigationBarTitleText":"班级详情"
+			}
+		},
+		{
 			"path":"pages/common/setting/setting",
 			"style": {
 				"navigationBarTitleText":"消息设置"

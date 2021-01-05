@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import axios from "../../../utils/axios";
+
 export default {
   data() {
     return {
@@ -42,7 +44,6 @@ export default {
     }
   },
   onLoad() {
-
   },
   methods: {
     setStudent(e) {

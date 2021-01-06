@@ -3,7 +3,7 @@
  * @method axios
  * @param params
  */
-const baseURL = "http://192.168.1.6:2828";
+const baseURL = "http://s1.huatisport.com/v1";
 // const baseURL = '';
 
 // 请求的计数器 -- 不加计数器的话会显示三次/隐藏三次 loading, 加了计数器之后,只当所有请求完成之后只需要隐藏一次loading

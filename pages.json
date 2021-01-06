@@ -1,6 +1,12 @@
 {
 	"pages": [
 		{
+			"path":"pages/principal/index",
+			"style": {
+				"navigationBarTitleText":"校长首页"
+			}
+		},
+		{
 			"path":"pages/teacher/class/index/index",
 			"style": {
 				"navigationBarTitleText":"我的班级"

@@ -8,3 +8,5 @@
             1. class 我的班级
                 1. index 首页
                 2. detail 详情页面
+		3.principal 校长端
+			1. index 首页

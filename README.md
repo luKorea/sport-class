@@ -8,3 +8,6 @@
             1. class 我的班级
                 1. index 首页
                 2. detail 详情页面
+            2. index 首页
+            3. mime 我的个人中心
+

@@ -19,12 +19,13 @@
       </view>
     </view>
     <!--在线学员-->
-    <view id="tab1" class="{{tab1}} margin-top-sm">
+    <view id="tab1" class="margin-top-sm" :class="tab1">
       <block v-if="result.student.length > 0">
         <view class="cu-list grid col-4 gridBorder">
           <view class="cu-item flex justify-center align-center" v-for="(item, index) in result.student" :key="index">
             <view class="cu-avatar lg bg-white"
-                  style="background-image:url({{item.url}}); border-radius: 50%"></view>
+                  :style="{backgroundImage: `url(${item.url})`}"
+                  style="border-radius: 50%"></view>
             <text>{{item.name}}</text>
           </view>
         </view>
@@ -37,7 +38,7 @@
       </block>
     </view>
     <!--点名记录-->
-    <view id="tab2" class="{{tab2}} margin-top-sm">
+    <view id="tab2" class="margin-top-sm" :class="tab2">
       <block v-if="result.list.length > 0">
         <view class="">
           在线

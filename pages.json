@@ -1,9 +1,22 @@
 {
 	"pages": [
 		{
-			"path":"pages/principal/index",
+			"path":"pages/principal/index/index",
 			"style": {
 				"navigationBarTitleText":"校长首页"
+			}
+		},
+		{
+			"path":"pages/teacher/index/index",
+
+			"style": {
+				"navigationBarTitleText":"首页"
+			}
+		},
+		{
+			"path":"pages/teacher/mime/mime",
+			"style": {
+				"navigationBarTitleText":"个人中心"
 			}
 		},
 		{
@@ -19,25 +32,10 @@
 			}
 		},
 		{
-			"path":"pages/common/setting/setting",
-			"style": {
-				"navigationBarTitleText":"消息设置"
-			}
-		},
-		{
-			"path":"pages/common/feedback/feedback",
-			"style": {
-				"navigationBarTitleText":"意见反馈"
-			}
-		},
-		{
 			"path":"pages/common/reset/reset",
 			"style": {
 				"navigationBarTitleText":"重置密码"
 			}
-		},
-		{
-			"path": "pages/index/index"
 		}
 	],
 	"globalStyle": {

@@ -8,5 +8,11 @@
             1. class 我的班级
                 1. index 首页
                 2. detail 详情页面
+<<<<<<< HEAD
 		3.principal 校长端
 			1. index 首页
+=======
+            2. index 首页
+            3. mime 我的个人中心
+
+>>>>>>> a57a7c59fe29dd1636d4fc24f6c32845d8dd2904

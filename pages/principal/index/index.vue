@@ -7,7 +7,7 @@
 		      <view class="flex align-center">
 				  <view class="flex solid-bottom align-center justify-between" style="width: 100%;">
 					  
-					<view class="left-button flex align-center justify-center">
+					<view class="left-button flex align-center justify-center" @click="goTeacher">
 						切换
 						<image :src="imageurl + '/qiehuan.png'"></image>
 					</view>
@@ -201,6 +201,11 @@ export default {
     goPage(url) {
       uni.navigateTo({
         url: url
+      })
+    },
+    goTeacher() {
+      wx.redirectTo({
+        url: '../../teacher/index/index'
       })
     }
   }

@@ -6,7 +6,7 @@
       <view class="grid col-1 text-center" style="width: 100%;">
         <view class="flex align-center">
           <view class="flex solid-bottom align-center justify-between" style="width: 100%;">
-            <view class="left-button flex align-center justify-center">
+            <view class="left-button flex align-center justify-center" @click="goPrincipal">
               切换
               <image :src="imageurl + '/qiehuan.png'"></image>
             </view>
@@ -135,6 +135,12 @@ export default {
           console.log(res)
         }
       });
+    },
+    // 去校长端
+    goPrincipal() {
+      wx.redirectTo({
+        url: '../../principal/index/index'
+      })
     }
   }
 }

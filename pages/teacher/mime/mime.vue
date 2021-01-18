@@ -16,23 +16,11 @@
           <text class="text-grey">上课点</text>
         </navigator>
       </view>
-      <view class="cu-item arrow">
-        <navigator class="content" url="../../common/reset/reset" hover-class="none">
-          <text class="cuIcon-lock"></text>
-          <text class="text-grey">设置密码</text>
-        </navigator>
-      </view>
-      <view class="cu-item arrow">
-        <navigator class="content" url="../../common/reset/reset" hover-class="none">
-          <text class="cuIcon-like"></text>
-          <text class="text-grey">给予鼓励</text>
-        </navigator>
-      </view>
-      <view class="cu-item arrow">
-        <navigator class="content" url="../../common/reset/reset" hover-class="none">
-          <text class="cuIcon-text"></text>
-          <text class="text-grey">用户隐私权政策</text>
-        </navigator>
+      <view class="cu-item arrow" @click="goReset">
+       <view class="content">
+         <text class="cuIcon-lock"></text>
+         <text class="text-grey">设置密码</text>
+       </view>
       </view>
       <view class="cu-item">
         <navigator class="content" hover-class="none">
@@ -69,6 +57,11 @@
           phoneNumber: this.info.phone //仅为示例，并非真实的电话号码
         })
       },
+      goReset() {
+        uni.navigateTo({
+          url: '../../common/reset/reset'
+        })
+      }
 		}
 	}
 </script>

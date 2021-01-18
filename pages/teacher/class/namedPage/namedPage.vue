@@ -25,13 +25,14 @@
       <view class="cu-bar search bg-white margin-top">
         <view class="search-form">
           <text class="cuIcon-search"></text>
-          <input type="text" placeholder="请输入班级名称" v-model="searchInput"/>
+          <input type="text" placeholder="请输入学员姓名" v-model="searchInput"/>
         </view>
         <view class="action" @click="searchValue">
           <button class="cu-btn shadow-blur text-white bg-red">搜索</button>
           <view class="margin-left" v-if="!showModal">
             <text class="cuIcon-square text-gray" style="margin-right: 10rpx"></text>
-            <text>全选</text>
+            <text  @click="selectBorderAll" v-if="!borderClickAll">全选</text>
+            <text  @click="noSelectBorderAll" v-else>取消</text>
           </view>
         </view>
       </view>
@@ -39,6 +40,7 @@
       <view v-if="showModal" class="margin-bottom ">
         <view class="cu-bar bg-white margin-top solid-bottom">
           <view class="action">{{type.name}}</view>
+          <view class="action"></view>
           <view class="action">{{type.one}}</view>
           <view class="action">{{type.two}}</view>
           <view class="action">{{type.three}}</view>
@@ -47,7 +49,7 @@
         <block v-if="result.teacherInfo.length > 0">
           <view class="cu-bar bg-white padding-bottom-sm padding-top-sm solid-bottom"
                 v-for="(item, index) in result.teacherInfo" :key="index">
-            <view class="action flex-due" style="width: 225rpx">
+            <view class="action flex-due" style="width: 300rpx">
               <view class="text-red" style="margin-bottom: 10rpx">{{item.name}}</view>
               <view class="text-sm text-gray">剩余{{item.time}}课时</view>
             </view>
@@ -72,7 +74,7 @@
           <view class="cu-list grid col-4 gridBorder">
             <view class="cu-item flex justify-center align-center"
                   v-for="(item, index) in result.teacherInfo"
-                  :class="showBorder && borderIndex === index ? 'red' : ''"
+                  :class="{'red':borderArray.indexOf(index)>-1}"
                   :key="index" @click="selectBorder(item.id, index)">
               <view class="cu-avatar lg bg-white"
                     :style="{backgroundImage: `url(${item.imgUrl})`}"
@@ -106,6 +108,7 @@
       <button class="cu-btn bg-cyan lg" style="width: 25%;" @click="this.showModal = !this.showModal">请假</button>
       <button class="cu-btn bg-blue lg" style="width: 25%;" @click="this.showModal = !this.showModal">迟到</button>
     </view>
+    <view class='cu-tabbar-height'></view>
   </view>
 </template>
 
@@ -126,8 +129,10 @@ export default {
         four: '迟到'
       },
       showModal: true,
+      // 2. 多选框按钮
       showBorder: false,
-      borderIndex: null,
+      borderArray: [],
+      borderClickAll: false,    // 是否全选
       searchInput: '',
       result: {
         className: '篮球',
@@ -202,15 +207,28 @@ export default {
         url: `../shift/shift?id=${id}`
       })
     },
-  //  选中课程
-    selectBorder(id ,i) {
-      this.borderIndex = i;
-      if (this.borderIndex === i) {
-        this.borderIndex = i;
-        this.showBorder = true;
-      } else {
-        this.borderIndex = i;
-        this.showBorder = false;
+    // 全选弹框
+    selectBorderAll() {
+      let len = this.result.teacherInfo.length;
+      this.checkBox = [];
+      for (let i = 0; i < len; i++) {
+        this.borderArray.push(i);
+      }
+      this.borderClickAll = true;
+    },
+    // 取消全选弹框
+    noSelectBorderAll() {
+      this.borderArray = [];
+      this.borderClickAll = false;
+    },
+  //  选中课程弹框
+    selectBorder(id, key) {
+      console.log(id);
+      let arrIndex = this.borderArray.indexOf(key);
+      if(arrIndex>-1){   // 已选中,点击取消
+        this.borderArray.splice(arrIndex,1);
+      }else{  // 未选中,点击选中
+        this.borderArray.push(key);
       }
     }
   },

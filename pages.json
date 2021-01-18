@@ -1,12 +1,6 @@
 {
 	"pages": [
 		{
-			"path":"pages/principal/index/index",
-			"style": {
-				"navigationBarTitleText":"校长首页"
-			}
-		},
-		{
 			"path":"pages/teacher/index/index",
 
 			"style": {
@@ -14,15 +8,21 @@
 			}
 		},
 		{
-			"path":"pages/teacher/class/index/index",
-			"style": {
-				"navigationBarTitleText":"我的班级"
-			}
-		},
-		{
 			"path" : "pages/teacher/class/namedPage/namedPage",
 			"style": {
 				"navigationBarTitleText":"点名"
+			}
+		},
+		{
+			"path":"pages/principal/index/index",
+			"style": {
+				"navigationBarTitleText":"校长首页"
+			}
+		},
+		{
+			"path":"pages/teacher/class/index/index",
+			"style": {
+				"navigationBarTitleText":"我的班级"
 			}
 		},
 		{

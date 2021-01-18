@@ -1,7 +1,14 @@
 {
 	"pages": [
 		{
+			"path":"pages/principal/index/index",
+			"style": {
+				"navigationBarTitleText":"校长首页"
+			}
+		},
+		{
 			"path":"pages/teacher/index/index",
+
 			"style": {
 				"navigationBarTitleText":"首页"
 			}

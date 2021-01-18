@@ -38,3 +38,7 @@
                         3. absentInfo 缺课记录
                         4. leaveInfo 请假申请
                 2. detail 详情
+		3.principal 校长端
+			1. index 首页
+            2. index 首页
+            3. mime 我的个人中心

@@ -1,0 +1,83 @@
+/* 公用布局 */
+
+.flex-common {
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+}
+
+/*底部固定*/
+.drawer-footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    width: 100%;
+    z-index: 999;
+}
+/*单选按钮*/
+.radio-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.radio-group .radio-group-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.radio-group .radio-group-item .radio-group-item-round {
+    transform:scale(0.7);
+}
+.radio-group .radio-group-item .radio-group-item-text {
+    font-size: 16rpx;
+}
+
+/*多选按钮*/
+.check-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.check-box {
+    margin-right: 10rpx;
+}
+
+/* 文字图标 */
+
+.ban-red, .ke-orange, .ren-green {
+    color: #ffffff;
+    font-size: 24rpx;
+    width: 41rpx;
+    height: 41rpx;
+    line-height: 41rpx;
+    padding: 8rpx;
+    border-radius: 5rpx;
+    margin-right: 10rpx;
+}
+
+.ban-red {
+    background: #F4313E;
+}
+.ke-orange {
+    background: #FE8530;
+}
+.ren-green {
+    background: #52CDC0;
+}
+
+/* 小方块 */
+.small-block-orange {
+    width: 21rpx;
+    height: 21rpx;
+    background: #FF9547;
+    border-radius: 5rpx;
+    margin-right: 10rpx;
+}
+.small-block-gray {
+    width: 21rpx;
+    height: 21rpx;
+    background: #FF9547;
+    border-radius: 5rpx;
+    margin-right: 10rpx;
+}

@@ -18,13 +18,16 @@
           <view class="action">
             <view class="flex flex-direction padding-top padding-bottom">
               <view class="margin-bottom-sm">
-                <text class="cuIcon-title text-red"></text>{{item.ban}}
+                <text class="ban-red">班</text>
+                <text>{{item.ban}}</text>
               </view>
               <view class="margin-bottom-sm">
-                <text class="cuIcon-title text-orange"></text>{{item.ke}}
+                <text class="ke-orange">课</text>
+                <text>{{item.ke}}</text>
               </view>
               <view>
-                <text class="cuIcon-title text-cyan"></text>{{item.number}}
+                <text class="ren-green">人</text>
+                <text>{{item.number}}</text>
               </view>
             </view>
           </view>

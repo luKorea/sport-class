@@ -7,21 +7,99 @@
 			}
 		},
 		{
-			"path":"pages/teacher/mime/mime",
-			"style": {
-				"navigationBarTitleText":"个人中心"
-			}
-		},
-		{
 			"path":"pages/teacher/class/index/index",
 			"style": {
 				"navigationBarTitleText":"我的班级"
 			}
 		},
 		{
+			"path" : "pages/teacher/class/namedPage/namedPage",
+			"style": {
+				"navigationBarTitleText":"点名"
+			}
+		},
+		{
+			"path" : "pages/teacher/class/shift/shift",
+			"style": {
+				"navigationBarTitleText":"临时插班"
+			}
+		},
+		{
 			"path":"pages/teacher/class/detail/detail",
 			"style": {
 				"navigationBarTitleText":"班级详情"
+			}
+		},
+		{
+			"path" : "pages/teacher/class/commentsPage/commentsPage",
+			"style": {
+				"navigationBarTitleText":"点评"
+			}
+		},
+		{
+			"path":"pages/teacher/classRecord/detail/detail",
+			"style": {
+				"navigationBarTitleText":"上课记录详情"
+			}
+		},
+		{
+			"path":"pages/teacher/classRecord/index/index",
+			"style": {
+				"navigationBarTitleText":"上课记录"
+			}
+		},
+		{
+			"path": "pages/teacher/evaluation/index/index",
+			"style": {
+				"navigationBarTitleText": "师生互评"
+			}
+		},
+		{
+			"path":"pages/teacher/students/index/index",
+			"style": {
+				"navigationBarTitleText":"学员"
+			}
+		},
+		{
+			"path":"pages/teacher/record/index/index",
+			"style": {
+				"navigationBarTitleText":"成长记录"
+			}
+		},
+		{
+			"path":"pages/teacher/record/addRecord/addRecord",
+			"style": {
+				"navigationBarTitleText":"添加成长记录"
+			}
+		},
+		{
+			"path":"pages/teacher/task/detail/detail",
+			"style": {
+				"navigationBarTitleText":"作业详情"
+			}
+		},
+		{
+			"path":"pages/teacher/task/index/index",
+			"style": {
+				"navigationBarTitleText":"作业"
+			}
+		},
+		{
+			"path":"pages/teacher/students/detail/detail",
+			"style": {
+				"navigationBarTitleText":"学员详情"
+			}
+		},
+		{
+			"path":"pages/teacher/students/addFollow/addFollow",
+			"style": {
+				"navigationBarTitleText":"添加跟进记录"
+			}
+		},
+		{
+			"path":"pages/teacher/mime/mime",
+			"style": {
+				"navigationBarTitleText":"个人中心"
 			}
 		},
 		{

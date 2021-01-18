@@ -12,31 +12,31 @@
     <view class="cu-list menu card-menu margin-bottom-xl margin-top" style="margin-right: 0;margin-left: 0">
       <view class="cu-item arrow">
         <navigator class="content" url="/pages/about/about/about" hover-class="none">
-          <text class="cuIcon-edit text-cyan"></text>
+          <text class="cuIcon-read"></text>
           <text class="text-grey">上课点</text>
         </navigator>
       </view>
       <view class="cu-item arrow">
         <navigator class="content" url="../../common/reset/reset" hover-class="none">
-          <text class="cuIcon-present text-orange"></text>
+          <text class="cuIcon-lock"></text>
           <text class="text-grey">设置密码</text>
         </navigator>
       </view>
       <view class="cu-item arrow">
         <navigator class="content" url="../../common/reset/reset" hover-class="none">
-          <text class="cuIcon-present text-orange"></text>
+          <text class="cuIcon-like"></text>
           <text class="text-grey">给予鼓励</text>
         </navigator>
       </view>
       <view class="cu-item arrow">
         <navigator class="content" url="../../common/reset/reset" hover-class="none">
-          <text class="cuIcon-present text-orange"></text>
+          <text class="cuIcon-text"></text>
           <text class="text-grey">用户隐私权政策</text>
         </navigator>
       </view>
       <view class="cu-item">
-        <navigator class="content" url="/pages/about/log/log" hover-class="none">
-          <text class="cuIcon-friendfill text-red"></text>
+        <navigator class="content" hover-class="none">
+          <text class="cuIcon-phone"></text>
           <text class="text-grey">客服电话</text>
         </navigator>
         <view class="action text-gray" @click="sendPhone">{{info.phone}}</view>

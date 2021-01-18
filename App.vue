@@ -15,4 +15,5 @@
 <style>
 @import "colorui/main.wxss";
 @import "colorui/icon.wxss";
+@import "styles/common.css";
 </style>

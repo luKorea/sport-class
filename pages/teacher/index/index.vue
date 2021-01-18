@@ -2,15 +2,29 @@
 <template>
   <view class="index-container">
     <!--头部区域-->
-    <view class="UCenter-bg">
-      <view class="cu-avatar xl round"
-            style="border-radius: 50%"
-            :style="{backgroundImage: `url(${userInfo.imgUrl})`}"></view>
-      <view class="text-xl margin-top-sm">{{userInfo.identity}}</view>
-      <view class="margin-top-my-sm">本月课时: {{userInfo.time}}</view>
+    <view class="bg-white indexbg flex" :style="{backgroundImage: `url(${imageurl + '/bg.png'})`}">
+      <view class="grid col-1 text-center" style="width: 100%;">
+        <view class="flex align-center">
+          <view class="flex solid-bottom align-center justify-between" style="width: 100%;">
+            <view class="left-button flex align-center justify-center">
+              切换
+              <image :src="imageurl + '/qiehuan.png'"></image>
+            </view>
+            <view class="cententinfo flex align-center">
+              <image :src='userInfo.imgUrl'></image>
+              <text>{{userInfo.identity}}</text>
+              <text>本月课时：{{userInfo.time}}</text>
+            </view>
+            <view class="right-button flex align-center justify-center">
+              消息
+              <image :src="imageurl + '/xiaoxi.png'"></image>
+            </view>
+          </view>
+        </view>
+      </view>
     </view>
     <!--下部区域-->
-    <view class="cu-list grid col-4 no-border margin-top margin-bottom">
+    <view class="cu-list grid col-4 no-border margin-bottom">
       <view class="cu-item flex justify-center align-center"
             v-for="(item, index) in iconList" :key="index"
             @click="goPage(item.url)">
@@ -24,7 +38,7 @@
     <view class="flex flex-direction margin">
       <button class="cu-btn bg-my-red lg">我要点名</button>
     </view>
-    <view class="flex flex-direction margin">
+    <view class="flex flex-direction margin" @click="scanCode">
       <button class="cu-btn bg-orange lg">扫描点名</button>
     </view>
   </view>
@@ -34,6 +48,7 @@
 export default {
   data() {
     return {
+      imageurl: '',
       userInfo: {
         identity: '我是老师',
         imgUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
@@ -41,42 +56,42 @@ export default {
       },
       iconList: [
         {
-          img: 'https://yundongke.gzbigbang.cn/banji.png',
+          img:  this.$imageurl + 'banji.png',
           url: '../class/index/index',
           name: '我的班级'
         },
         {
-          img: 'https://yundongke.gzbigbang.cn/xueyuan.png',
-          url: '../class/index/index',
+          img:  this.$imageurl + 'xueyuan.png',
+          url: '../students/index/index',
           name: '我的学员'
         },
         {
-          img: 'https://yundongke.gzbigbang.cn/kecheng.png',
-          url: '../class/index/index',
+          img:  this.$imageurl + 'kecheng.png',
+          url: '',
           name: '我的课表'
         },
         {
-          img: 'https://yundongke.gzbigbang.cn/shangkejilu.png',
-          url: '../class/index/index',
+          img:  this.$imageurl + 'shangkejilu.png',
+          url: '../classRecord/index/index',
           name: '上课记录'
         },
         {
-          img: 'https://yundongke.gzbigbang.cn/banji.png',
-          url: '../class/index/index',
+          img:  this.$imageurl + 'zuoye.png',
+          url: '../task/index/index',
           name: '作业'
         },
         {
-          img: 'https://yundongke.gzbigbang.cn/huping.png',
-          url: '../class/index/index',
+          img:  this.$imageurl + 'huping.png',
+          url: '../evaluation/index/index',
           name: '师生互评'
         },
         {
-          img: 'https://yundongke.gzbigbang.cn/banji.png',
-          url: '../class/index/index',
+          img:  this.$imageurl + 'chengzhangjilu.png',
+          url: '../record/index/index',
           name: '成长记录'
         },
         {
-          img: 'https://yundongke.gzbigbang.cn/banji.png',
+          img:  this.$imageurl + 'student-setting.png',
           url: '../mime/mime',
           name: '设置'
         },
@@ -84,19 +99,48 @@ export default {
     }
   },
   onLoad() {
-
+    this.imageurl = this.$imageurl
   },
   methods: {
     goPage(url) {
       uni.navigateTo({
         url: url
       })
+    },
+    // TODO 扫码点名
+    scanCode() {
+      wx.scanCode({
+        onlyFromCamera: false,
+        scanType: ['barCode', 'qrCode', 'datamatrix','pdf417'],
+        success: res => {
+          if(res.errMsg === 'scanCode:ok'){
+            console.log(res.result);
+            wx.showToast({
+              title: '扫码成功'
+            })
+            // wx.navigateTo({
+            //   url: '../../pages/search/search?keyword=' + res.result
+            // })
+          }
+        },
+        fail: res => {
+          // 接口调用失败
+          wx.showToast({
+            icon: 'none',
+            title: '接口调用失败！'
+          })
+        },
+        complete: res => {
+          // 接口调用结束
+          console.log(res)
+        }
+      });
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 page {
   background-color: #fff;
 }
@@ -121,7 +165,66 @@ page {
 }
 
 .UCenter-bg image {
-  width: 200 rpx;
-  height: 200 rpx;
+  width: 200rpx;
+  height: 200rpx;
 }
+
+.indexbg{
+  height: 420rpx;
+  background-size: 100%;
+}
+.left-button{
+  width: 150rpx;
+  height: 80rpx;
+  background: rgba(0, 0, 0, 0.2);
+  color:#fff;
+  border-radius: 0 15px 15px 0;
+}
+.right-button{
+  width: 150rpx;
+  height: 80rpx;
+  background: rgba(0, 0, 0, 0.2);
+  color:#fff;
+  border-radius: 15px 0 0 15px;
+}
+.right-button image{
+  width: 30rpx;
+  height: 30rpx;
+  margin-left: 10rpx;
+}
+.left-button image{
+  width: 30rpx;
+  height: 30rpx;
+  margin-left: 10rpx;
+
+}
+.cententinfo{
+  flex-direction:column;
+  color:#fff;
+}
+.cententinfo image{
+  height: 160rpx;
+  width: 160rpx;
+  border-radius: 50%;
+  margin-bottom:10rpx;
+}
+.hexin{
+  position: relative;
+}
+.hexin_top{
+  width: 100%;
+  text-align: center;
+  background: no-repeat center center;
+  background-size: 50%;
+}
+.hexin_more{
+  position: absolute;
+  width: 40rpx;
+  height: 40rpx;
+  right:40rpx;
+  top:35rpx
+}
+
+
+
 </style>

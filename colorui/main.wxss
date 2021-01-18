@@ -98,6 +98,18 @@ page {
 	margin-right: 16rpx;
 }
 
+.fixed-bottom {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+}
+
+.flex-due {
+	justify-content: start;
+	align-items: start;
+}
+
 
 view,
 scroll-view,
@@ -722,6 +734,7 @@ radio.white[checked] .wx-radio-input {
 	margin-left: initial;
 	transform: translate(0rpx, 0rpx);
 	margin-right: initial;
+	border-radius: 0 !important;
 }
 
 .cu-btn::after {

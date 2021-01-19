@@ -2,18 +2,21 @@
 <template>
   <view class="index-container">
     <!--头部区域-->
-    <view class="bg-white indexbg flex" :style="{backgroundImage: `url(${imageurl + '/bg.png'})`}">
+    <view class="bg-white indexbg flex"
+          :style="{backgroundImage: `url(${imageurl + '/bg.png'})`}">
       <view class="grid col-1 text-center" style="width: 100%;">
         <view class="flex align-center">
-          <view class="flex solid-bottom align-center justify-between" style="width: 100%;">
-            <view class="left-button flex align-center justify-center" @click="goPrincipal">
+          <view class="flex solid-bottom align-center justify-between"
+                style="width: 100%;">
+            <view class="left-button flex align-center justify-center"
+                  @click="goPrincipal">
               切换
               <image :src="imageurl + '/qiehuan.png'"></image>
             </view>
             <view class="cententinfo flex align-center">
               <image :src='userInfo.imgUrl'></image>
-              <text>{{userInfo.identity}}</text>
-              <text>本月课时：{{userInfo.time}}</text>
+              <text>{{ userInfo.token.realname }}</text>
+              <text>本月课时：{{userInfo.token.expire / 100}}</text>
             </view>
             <view class="right-button flex align-center justify-center">
               消息
@@ -31,7 +34,7 @@
         <view class="cu-avatar sm bg-white"
               :style="{backgroundImage: `url(${item.img})`}"
         ></view>
-        <text>{{item.name}}</text>
+        <text>{{ item.name }}</text>
       </view>
     </view>
 
@@ -49,49 +52,45 @@ export default {
   data() {
     return {
       imageurl: '',
-      userInfo: {
-        identity: '我是老师',
-        imgUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-        time: '30.00'
-      },
+      userInfo: {},
       iconList: [
         {
-          img:  this.$imageurl + 'banji.png',
+          img: this.$imageurl + 'banji.png',
           url: '../class/index/index',
           name: '我的班级'
         },
         {
-          img:  this.$imageurl + 'xueyuan.png',
+          img: this.$imageurl + 'xueyuan.png',
           url: '../students/index/index',
           name: '我的学员'
         },
         {
-          img:  this.$imageurl + 'kecheng.png',
+          img: this.$imageurl + 'kecheng.png',
           url: '',
           name: '我的课表'
         },
         {
-          img:  this.$imageurl + 'shangkejilu.png',
+          img: this.$imageurl + 'shangkejilu.png',
           url: '../classRecord/index/index',
           name: '上课记录'
         },
         {
-          img:  this.$imageurl + 'zuoye.png',
+          img: this.$imageurl + 'zuoye.png',
           url: '../task/index/index',
           name: '作业'
         },
         {
-          img:  this.$imageurl + 'huping.png',
+          img: this.$imageurl + 'huping.png',
           url: '../evaluation/index/index',
           name: '师生互评'
         },
         {
-          img:  this.$imageurl + 'chengzhangjilu.png',
+          img: this.$imageurl + 'chengzhangjilu.png',
           url: '../record/index/index',
           name: '成长记录'
         },
         {
-          img:  this.$imageurl + 'student-setting.png',
+          img: this.$imageurl + 'student-setting.png',
           url: '../mime/mime',
           name: '设置'
         },
@@ -111,9 +110,9 @@ export default {
     scanCode() {
       wx.scanCode({
         onlyFromCamera: false,
-        scanType: ['barCode', 'qrCode', 'datamatrix','pdf417'],
+        scanType: ['barCode', 'qrCode', 'datamatrix', 'pdf417'],
         success: res => {
-          if(res.errMsg === 'scanCode:ok'){
+          if (res.errMsg === 'scanCode:ok') {
             console.log(res.result);
             wx.showToast({
               title: '扫码成功'
@@ -175,62 +174,70 @@ page {
   height: 200rpx;
 }
 
-.indexbg{
+.indexbg {
   height: 420rpx;
   background-size: 100%;
 }
-.left-button{
+
+.left-button {
   width: 150rpx;
   height: 80rpx;
   background: rgba(0, 0, 0, 0.2);
-  color:#fff;
+  color: #fff;
   border-radius: 0 15px 15px 0;
 }
-.right-button{
+
+.right-button {
   width: 150rpx;
   height: 80rpx;
   background: rgba(0, 0, 0, 0.2);
-  color:#fff;
+  color: #fff;
   border-radius: 15px 0 0 15px;
 }
-.right-button image{
+
+.right-button image {
   width: 30rpx;
   height: 30rpx;
   margin-left: 10rpx;
 }
-.left-button image{
+
+.left-button image {
   width: 30rpx;
   height: 30rpx;
   margin-left: 10rpx;
 
 }
-.cententinfo{
-  flex-direction:column;
-  color:#fff;
+
+.cententinfo {
+  flex-direction: column;
+  color: #fff;
 }
-.cententinfo image{
+
+.cententinfo image {
   height: 160rpx;
   width: 160rpx;
   border-radius: 50%;
-  margin-bottom:10rpx;
+  margin-bottom: 10rpx;
 }
-.hexin{
+
+.hexin {
   position: relative;
 }
-.hexin_top{
+
+.hexin_top {
   width: 100%;
   text-align: center;
   background: no-repeat center center;
   background-size: 50%;
 }
-.hexin_more{
+
+.hexin_more {
   position: absolute;
   width: 40rpx;
   height: 40rpx;
-  right:40rpx;
-  top:35rpx
+  right: 40rpx;
+  top: 35rpx
 }
-
 
 
 </style>

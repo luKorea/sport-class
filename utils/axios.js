@@ -10,17 +10,11 @@ const baseURL = "http://s1.huatisport.com/v1";
 
 let requestCount = 0;
 
-const showLoading = () => {
-    wx.showToast({
-        title:'加载中', //设置标题
-        // duration:2000, //设置显示时间
-        mask:true,//是否打开遮罩,默认不打开
-        icon:'loading'	//图标样式，none为无图标
-    });
-}
-const cancelLoading = () => {
-    wx.hideToast();
-}
+const showLoading = () => wx.showLoading({
+    title: '加载中',
+    mask: true
+})
+const cancelLoading = () => wx.hideLoading();
 
 // 1.axios 是个函数,
 const axios = (params) => {
@@ -35,6 +29,9 @@ const axios = (params) => {
             ...params,
             // 将基地址和请求的地址拼接起来
             url: baseURL + params.url,
+            header: {
+                token: wx.getStorageSync('token') !== null ? wx.getStorageSync('token') : ''
+            },
             // 请求成功之后调用的函数
             success: (result) => {
                 // resolve(result)

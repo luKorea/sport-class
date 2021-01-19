@@ -1,6 +1,18 @@
 {
 	"pages": [
 		{
+			"path":"pages/login/login",
+			"style": {
+				"navigationBarTitleText":"运动课"
+			}
+		},
+		{
+			"path":"pages/login/codeLogin",
+			"style": {
+				"navigationBarTitleText":"运动课"
+			}
+		},
+		{
 			"path":"pages/teacher/index/index",
 
 			"style": {

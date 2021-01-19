@@ -30,3 +30,8 @@ const formatNumber = n => {
     n = n.toString()
     return n[1] ? n : '0' + n
 }
+
+// 处理数字
+export function NumberFormat(number) {
+    return Number(number) / 100
+}

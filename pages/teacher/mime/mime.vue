@@ -30,14 +30,16 @@
         <view class="action text-gray" @click="sendPhone">{{info.phone}}</view>
       </view>
     </view>
-    <view class="flex flex-direction margin">
+    <view class="flex flex-direction margin" @click="logoutInfo">
       <button class="cu-btn bg-my-red lg">退出登陆</button>
     </view>
   </view>
 </template>
 
 <script>
-	export default {
+	import {logout} from "../../../api/login";
+
+  export default {
 		data() {
 			return {
 			  info: {
@@ -61,6 +63,22 @@
         uni.navigateTo({
           url: '../../common/reset/reset'
         })
+      },
+      // 退出登陆
+      logoutInfo() {
+        logout()
+        .then(res => {
+          if (res.data.data.errcode === 200) {
+            wx.showModal({
+              title: '退出成功',
+              showCancel: false
+            });
+            wx.clearStorageSync();
+            wx.redirectTo({
+              url: '/pages/login/login'
+            })
+          }
+        }).catch(err => console.log(err))
       }
 		}
 	}

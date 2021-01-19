@@ -1,0 +1,23 @@
+{
+  "name": "sport-class",
+  "version": "1.0.0",
+  "description": "1.  pages 页面",
+  "main": "main.js",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "echarts": "^5.0.0",
+    "mpvue-echarts": "^0.3.2",
+    "qs": "^6.9.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/gzbigbang/sports-class.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

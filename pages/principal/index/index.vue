@@ -139,13 +139,13 @@ export default {
 		  },
 		  {
 		    img: 'https://yundongke.gzbigbang.cn/laoshi.png',
-		    url: '../class/index/index',
+		    url: '../teacher/index/index',
 		    name: '老师'
 		  },
 		  
 		  {
 		    img: 'https://yundongke.gzbigbang.cn/xueyuan.png',
-		    url: '../class/index/index',
+		    url: '../students/index/index',
 		    name: '学员'
 		  },
 		  {
@@ -160,7 +160,7 @@ export default {
 		  },
 		  {
 		    img: 'https://yundongke.gzbigbang.cn/xufei.png',
-		    url: '../class/index/index',
+		    url: '../renewal/index/index',
 		    name: '续费提醒'
 		  },
 		  
@@ -171,7 +171,7 @@ export default {
 		  },
 		  {
 		    img: 'https://yundongke.gzbigbang.cn/qingdan.png',
-		    url: '../class/index/index',
+		    url: '../receipt/index/index',
 		    name: '收据清单'
 		  },
 		  {
@@ -181,8 +181,8 @@ export default {
 		  },
 		  {
 		    img: 'https://yundongke.gzbigbang.cn/qianbao.png',
-		    url: '../class/index/index',
-		    name: '钱包'
+		    url: '../charges/index/index',
+		    name: '收费项'
 		  },
 		  
 		]

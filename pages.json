@@ -1,28 +1,12 @@
 {
 	"pages": [
 		{
-			"path":"pages/login/login",
+			"path":"pages/principal/coreData/index/index",
 			"style": {
-				"navigationBarTitleText":"运动课"
-			}
-		},
-		{
-			"path":"pages/login/codeLogin",
-			"style": {
-				"navigationBarTitleText":"运动课"
-			}
-		},
-		{
-			"path":"pages/teacher/index/index",
-
-			"style": {
-				"navigationBarTitleText":"首页"
-			}
-		},
-		{
-			"path" : "pages/teacher/class/namedPage/namedPage",
-			"style": {
-				"navigationBarTitleText":"点名"
+				"navigationBarTitleText":"核心数据",
+				"usingComponents": {
+					"van-circle": "/wxcomponents/vant/circle/index"
+				}
 			}
 		},
 		{
@@ -32,9 +16,111 @@
 			}
 		},
 		{
+			"path":"pages/principal/students/index/index",
+			"style": {
+				"navigationBarTitleText":"学员"
+			}
+		},
+		{
+			"path":"pages/principal/students/detail/detail",
+			"style": {
+				"navigationBarTitleText":"学员详情"
+			}
+		},
+		{
+			"path":"pages/principal/students/addFollow/addFollow",
+			"style": {
+				"navigationBarTitleText":"添加跟进记录"
+			}
+		},
+		{
+			"path":"pages/principal/students/addStudents/addStudents",
+			"style": {
+				"navigationBarTitleText":"添加学员"
+			}
+		},
+		{
+			"path":"pages/principal/teacher/index/index",
+			"style": {
+				"navigationBarTitleText":"老师"
+			}
+		},
+		{
+			"path":"pages/principal/teacher/detail/detail",
+			"style": {
+				"navigationBarTitleText":"老师详情"
+			}
+		},
+		{
+			"path":"pages/principal/teacher/addTeacher/addTeacher",
+			"style": {
+				"navigationBarTitleText":"添加老师"
+			}
+		},
+		{
+			"path":"pages/principal/receipt/index/index",
+			"style": {
+				"navigationBarTitleText":"收据清单"
+			}
+		},
+		{
+			"path":"pages/principal/receipt/detail/detail",
+			"style": {
+				"navigationBarTitleText":"收据清单详细"
+			}
+		},
+		{
+			"path":"pages/principal/charges/index/index",
+			"style": {
+				"navigationBarTitleText":"收费项"
+			}
+		},
+		{
+			"path":"pages/principal/charges/detail/detail",
+			"style": {
+				"navigationBarTitleText":"收费项详细"
+			}
+		},
+		{
+			"path":"pages/principal/charges/addCharges/addCharges",
+			"style": {
+				"navigationBarTitleText":"新增收费项"
+			}
+		},
+		{
+			"path":"pages/principal/renewal/application/application",
+			"style": {
+				"navigationBarTitleText":"学员报名"
+			}
+		},
+		{
+			"path":"pages/principal/renewal/index/index",
+			"style": {
+				"navigationBarTitleText":"续费提醒"
+			}
+		},
+		{
+			"path":"pages/teacher/index/index",
+			"style": {
+				"navigationBarTitleText":"首页"
+			}
+		},
+		{
 			"path":"pages/teacher/class/index/index",
 			"style": {
 				"navigationBarTitleText":"我的班级"
+			}
+		},
+		{
+			"path" : "pages/teacher/class/namedPage/namedPage",
+			"style": {
+				"navigationBarTitleText":"点名"
+			}
+		},
+		{
+			"path" : "pages/teacher/class/commentsPage/commentsPage",
+			"style": {
+				"navigationBarTitleText":"点评"
 			}
 		},
 		{
@@ -47,12 +133,6 @@
 			"path":"pages/teacher/class/detail/detail",
 			"style": {
 				"navigationBarTitleText":"班级详情"
-			}
-		},
-		{
-			"path" : "pages/teacher/class/commentsPage/commentsPage",
-			"style": {
-				"navigationBarTitleText":"点评"
 			}
 		},
 		{
@@ -71,12 +151,6 @@
 			"path": "pages/teacher/evaluation/index/index",
 			"style": {
 				"navigationBarTitleText": "师生互评"
-			}
-		},
-		{
-			"path":"pages/teacher/students/index/index",
-			"style": {
-				"navigationBarTitleText":"学员"
 			}
 		},
 		{
@@ -104,6 +178,12 @@
 			}
 		},
 		{
+			"path":"pages/teacher/students/index/index",
+			"style": {
+				"navigationBarTitleText":"学员"
+			}
+		},
+		{
 			"path":"pages/teacher/students/detail/detail",
 			"style": {
 				"navigationBarTitleText":"学员详情"
@@ -116,9 +196,27 @@
 			}
 		},
 		{
+			"path":"pages/teacher/students/addStudents/addStudents",
+			"style": {
+				"navigationBarTitleText":"添加跟进记录"
+			}
+		},
+		{
 			"path":"pages/teacher/mime/mime",
 			"style": {
 				"navigationBarTitleText":"个人中心"
+			}
+		},
+		{
+			"path":"pages/login/login",
+			"style": {
+				"navigationBarTitleText":"运动课"
+			}
+		},
+		{
+			"path":"pages/login/codeLogin",
+			"style": {
+				"navigationBarTitleText":"运动课"
 			}
 		},
 		{

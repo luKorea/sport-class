@@ -30,7 +30,8 @@ const axios = (params) => {
             // 将基地址和请求的地址拼接起来
             url: baseURL + params.url,
             header: {
-                token: wx.getStorageSync('token') !== null ? wx.getStorageSync('token') : ''
+                token: wx.getStorageSync('token') !== null ? wx.getStorageSync('token') : '',
+                'content-type': 'application/x-www-form-urlencoded',
             },
             // 请求成功之后调用的函数
             success: (result) => {

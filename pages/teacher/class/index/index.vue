@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import {getMyClassList} from '../../../../api/teacher/myClass';
 export default {
   data() {
     return {
@@ -73,13 +74,30 @@ export default {
           ke: '篮球',
           number: 20
         }
-      ]
+      ],
+      params: {
+        pi : 1,
+        ps : 100,
+      },
     }
   },
   onLoad() {
-
+    this.getList();
   },
   methods: {
+
+    getList() {
+      let user = wx.getStorageSync('userData'),
+      teacherid = user.venueid;
+      getMyClassList({
+        ...this.params
+      })
+      .then(res => {
+        let data = res.data.data;
+        console.log(data);
+      }).catch(err => console.log(err));
+    },
+
     searchValue() {
       console.log(this.searchInput);
     },

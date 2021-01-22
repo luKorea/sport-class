@@ -45,7 +45,7 @@
 
 /* 文字图标 */
 
-.ban-red, .ke-orange, .ren-green {
+.ban-red, .ke-orange, .ren-green, .wu-gran {
     color: #ffffff;
     font-size: 24rpx;
     width: 41rpx;
@@ -66,6 +66,10 @@
     background: #52CDC0;
 }
 
+.wu-gran {
+    background: #00B7EE;
+}
+
 /* 小方块 */
 .small-block-orange {
     width: 21rpx;
@@ -80,4 +84,19 @@
     background: #FF9547;
     border-radius: 5rpx;
     margin-right: 10rpx;
+}
+
+
+/* 底部按钮 */
+
+.add-btn {
+    width: 100%;
+    height: 100rpx;
+    line-height: 100rpx;
+    background-color: #F4313E;
+    color: #fff;
+    font-family: Source Han Sans CN;
+    font-weight: 400;
+    border: none;
+    border-radius: 0;
 }

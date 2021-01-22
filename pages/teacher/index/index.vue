@@ -14,9 +14,9 @@
               <image :src="imageurl + '/qiehuan.png'"></image>
             </view>
             <view class="cententinfo flex align-center">
-              <image :src='userInfo.imgUrl'></image>
-              <text>{{ userInfo.token.realname }}</text>
-              <text>本月课时：{{userInfo.token.expire / 100}}</text>
+              <image src="https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg"></image>
+              <text>{{ userInfo.realname }}</text>
+              <text>本月课时：2.00</text>
             </view>
             <view class="right-button flex align-center justify-center">
               消息
@@ -98,7 +98,10 @@ export default {
     }
   },
   onLoad() {
-    this.imageurl = this.$imageurl
+    this.imageurl = this.$imageurl;
+    let userInfo = wx.getStorageSync('userData');
+    console.log(userInfo);
+    this.userInfo = userInfo;
   },
   methods: {
     goPage(url) {

@@ -32,7 +32,7 @@
                2. recording 报名记录
                3. report 报读班级
                4. follow 跟进记录
-
+         4. addStudents 添加学员页面
       5. task 作业
 
          1. index 首页
@@ -60,5 +60,37 @@
 
       9. principal 校长端
          1. index 首页
-         2. index 首页
-         3. mime 我的个人中心
+         2. mime 我的个人中心
+         3. renewal 续费提醒
+           1. index 首页
+           2. application 报名
+         4. charges 收费项
+            1. index 首页
+            2. detail 详情
+            3. addCharges 新增
+         5. receipt 收费清单
+            1. index 首页
+            2. detail 详情
+         6. teacher 老师页面
+            1. index 首页
+            2. detail 详情
+            3. addTeacher 添加老师页面
+         7. students 学员页面
+            1. index 首页
+            2. detail 详情页
+            3. addFollow 添加跟进记录页面
+                1. components
+                   1. basic 基础资料
+                   2. recording 报名记录
+                   3. report 报读班级
+                   4. follow 跟进记录
+            4. addStudents 添加学员页面
+         8. 课程套餐
+            1. index 首页
+            2. 添加课程套餐页面
+         9. coreData 核心数据
+            1. index 首页
+                1. components
+                    1. fullShift 满班率
+                    2. refunds 退费率
+                    3. renew 续签率

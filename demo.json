@@ -1,0 +1,41 @@
+[
+  {
+    "flags": 27,
+    "cover": "/files/organize/2019/1224/fji8o24bk00g-2ee-177.png",
+    "organizeid": 893,
+    "teacherid": 2384,
+    "teachername": "谢老师",
+    "permitname": "谢老师",
+    "icon": "/files/organize/2020/0108/wpi00k0f86ek-12c-12c.png",
+    "venueflags": 4608,
+    "id": 2843,
+    "title": "演示上课点1",
+    "deadline": "2021-03-23 00:00:00"
+  },
+  {
+    "flags": 27,
+    "cover": "/files/organize/2019/0830/hch4s580johp.png",
+    "organizeid": 893,
+    "teacherid": 2385,
+    "teachername": "谢老师",
+    "permitname": "谢老师",
+    "icon": "/files/organize/2020/0108/wpi00k0f86ek-12c-12c.png",
+    "venueflags": 4608,
+    "id": 3231,
+    "title": "演示上课点2",
+    "deadline": "2021-03-23 00:00:00"
+  },
+  {
+    "flags": 27,
+    "cover": "/files/organize/2019/0830/kchs0johz66z.png",
+    "organizeid": 893,
+    "teacherid": 2386,
+    "teachername": "谢老师",
+    "permitname": "谢老师",
+    "icon": "/files/organize/2020/0108/wpi00k0f86ek-12c-12c.png",
+    "venueflags": 4608,
+    "id": 3251,
+    "title": "演示上课点3",
+    "deadline": "2021-03-23 00:00:00"
+  }
+]

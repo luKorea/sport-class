@@ -25,6 +25,7 @@
 <script>
 	import {resetPassword} from "../../../api/login";
   import {successTip} from "../../../utils/tip";
+  import {redirectPage} from "../../../utils";
 
   export default {
 		data() {
@@ -50,10 +51,7 @@
           .then(res => {
             if (res.data.data.errcode === 200) {
               successTip('修改成功，请重新登录');
-              wx.clearStorageSync();
-              wx.redirectTo({
-                url: '/pages/login/login'
-              })
+              redirectPage();
             }
           }).catch(err => console.log(err));
         }

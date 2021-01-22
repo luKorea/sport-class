@@ -35,3 +35,21 @@ const formatNumber = n => {
 export function NumberFormat(number) {
     return Number(number) / 100
 }
+
+// 重定向到首页
+export const redirectPage = () => {
+    wx.clearStorageSync();
+    wx.redirectTo({
+        url: '/pages/login/login'
+    })
+}
+
+// 格式化Format
+export const formData = (obj = {}) => {
+    let result = ''
+    for (let name of Object.keys(obj)) {
+        let value = obj[name];
+        result += '\r\n--XXX' + '\r\nContent-Disposition: form-data; name=\"'+ name +'\"'+ '\r\n' + '\r\n' + value
+    }
+    return result + '\r\n--XXX--'
+}

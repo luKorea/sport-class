@@ -357,7 +357,9 @@ export default {
       this.showUp = !this.showUp;
     },
     addStudents() {
-      console.log(1);
+      wx.navigateTo({
+        url: `../addStudents/addStudents`
+      })
     },
     goDetail(id) {
       wx.navigateTo({

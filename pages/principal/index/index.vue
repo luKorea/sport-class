@@ -119,7 +119,7 @@
     </view>
     <view class="cu-bar tabbar bg-white footer">
 <!--      @click="goItem(item.url)"-->
-      <view class="action" v-for="item in list" :key="item.id" @click="goItem(item.url)">
+      <view class="action" v-for="item in list" :key="item.id">
         <view class="cuIcon-cu-image">
           <image :src="item.img"></image>
         </view>
@@ -184,7 +184,7 @@ export default {
       },
 		  {
 		    img: 'https://yundongke.gzbigbang.cn/kecheng.png',
-		    url: '',
+		    url: '../course/index/index',
 		    name: '课程'
 		  },
 		  {

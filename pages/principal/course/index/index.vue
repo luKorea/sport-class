@@ -1,6 +1,5 @@
-<!-- TODO 教师端 我的班级 -->
 <template>
-  <view class=" class-container">
+  <view class=" class-container" style="padding-bottom: 100rpx">
     <view class="margin">
       <!--搜索区域-->
       <view class="cu-bar search bg-white">
@@ -19,18 +18,19 @@
             <view class="action">
               <view class="flex flex-direction padding-top padding-bottom">
                 <view class="margin-bottom-sm">
-                  <text class="wu-gran" v-if="item.type === 1">物</text>
-                  <text class="ban-red" v-else>费</text>
-                  <text class="text-center">{{item.ban}}</text>
+                  <text class="text-center margin-right">{{item.ban}}</text>
+                  <text class="text-type" style="padding: 2rpx" v-if="item.type === 0">通</text>
+                  <text class="text-type" style="padding: 2rpx" v-if="item.type === 1">1v1</text>
+                  <text class="text-type" style="padding: 2rpx" v-if="item.type === 2">1vN</text>
                 </view>
                 <view>
-                  <text class="text-center text-gray text-sm">{{item.money}} 元</text>
+                  <text class="text-center text-gray text-sm">{{item.money}}元/课时</text>
                 </view>
               </view>
             </view>
             <view class='action' @click="goDetail(item)">
               <button class="cu-btn bg-orange" v-if="item.status === 1">开启</button>
-              <button class="cu-btn bg-red" v-else>关闭</button>
+              <button class="cu-btn bg-gray" v-else>关闭</button>
             </view>
           </view>
         </view>
@@ -42,7 +42,7 @@
       </block>
     </view>
     <view class="flex flex-direction fixed-bottom" @click="addCharges">
-      <button class="cu-btn bg-red add-btn" style="width: 100%;">+添加</button>
+      <button class="cu-btn bg-red add-btn" style="width: 100%;">+添加课程</button>
     </view>
   </view>
 </template>
@@ -53,13 +53,13 @@ export default {
     return {
       searchInput: '',
       list: [
-        //  type: 1 物品 2. 费用
+        //  type 0. 通用 1. 1v1 2. 1vN
         //  status 0 关闭 1 打开
         {
           id: 1,
           ban: '2020通用课程',
           money: 20,
-          type: 1,
+          type: 0,
           status: 0,
           inventory: 99,
           setInventory: 0,
@@ -68,7 +68,7 @@ export default {
           id: 2,
           ban: '2020通用课程',
           money: 20,
-          type: 2,
+          type: 1,
           status: 1,
           inventory: 99,
           setInventory: 0,
@@ -77,7 +77,7 @@ export default {
           id: 3,
           ban: '2020通用课程',
           money: 20,
-          type: 1,
+          type: 2,
           status: 0,
           inventory: 99,
           setInventory: 0,
@@ -86,7 +86,25 @@ export default {
           id: 4,
           ban: '2020通用课程',
           money: 20,
-          type: 2,
+          type: 1,
+          status: 1,
+          inventory: 99,
+          setInventory: 0,
+        },
+        {
+          id: 4,
+          ban: '2020通用课程',
+          money: 20,
+          type: 1,
+          status: 1,
+          inventory: 99,
+          setInventory: 0,
+        },
+        {
+          id: 4,
+          ban: '2020通用课程',
+          money: 20,
+          type: 1,
           status: 1,
           inventory: 99,
           setInventory: 0,
@@ -107,7 +125,7 @@ export default {
     },
     addCharges() {
       uni.navigateTo({
-        url: `../addCharges/addCharges`
+        url: `../addCourse/addCourse`
       });
     }
   }

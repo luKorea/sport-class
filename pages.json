@@ -7,6 +7,24 @@
 			}
 		},
 		{
+			"path":"pages/principal/course/index/index",
+			"style": {
+				"navigationBarTitleText":"课程"
+			}
+		},
+		{
+			"path":"pages/principal/course/addCourse/addCourse",
+			"style": {
+				"navigationBarTitleText":"添加课程"
+			}
+		},
+		{
+			"path":"pages/principal/course/detail/detail",
+			"style": {
+				"navigationBarTitleText":"课程详情"
+			}
+		},
+		{
 			"path":"pages/principal/classHour/index/index",
 			"style": {
 				"navigationBarTitleText":"本月课时/消耗"

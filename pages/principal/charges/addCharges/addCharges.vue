@@ -46,6 +46,7 @@ export default {
       console.log(this.info.status);
     },
     saveData() {
+      wx.navigateBack();
       console.log(this.info);
     }
   }

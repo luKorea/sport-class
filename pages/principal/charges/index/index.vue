@@ -15,7 +15,7 @@
       <!--列表-->
       <block v-if="list.length > 0">
         <view v-for="(item, index) in list" :key="index">
-          <view class="cu-bar bg-white solid-bottom margin-top" @click="goDetail(item.id)">
+          <view class="cu-bar bg-white solid-bottom margin-top" @click="goDetail(item)">
             <view class="action">
               <view class="flex flex-direction padding-top padding-bottom">
                 <view class="margin-bottom-sm">

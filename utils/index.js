@@ -53,3 +53,7 @@ export const formData = (obj = {}) => {
     }
     return result + '\r\n--XXX--'
 }
+
+export function getRandomNum(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}

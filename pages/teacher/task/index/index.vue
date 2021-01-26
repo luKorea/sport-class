@@ -100,9 +100,9 @@ export default {
       })
     },
     addTask() {
-      // wx.navigateTo({
-      //   url: `../addFollow/addFollow?id=${this.studentId}`
-      // })
+      wx.navigateTo({
+        url: `../addTask/addTask`
+      })
     }
   },
 }

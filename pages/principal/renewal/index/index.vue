@@ -193,6 +193,7 @@ export default {
       console.log(e);
     },
     successModal() {
+      this.showSetting = false;
       console.log(1);
     }
   }

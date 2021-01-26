@@ -14,12 +14,12 @@
       </view>
       <!--筛选-->
       <view class="cu-bar search bg-white margin-top justify-around">
-        <view class="action" @click="searchValue">
-          <text style="margin-right: 6rpx">全部性别</text>
+        <view class="action" @click="showSex">
+          <text style="margin-right: 6rpx">性别</text>
           <text class="cuIcon-triangledownfill text-gray text-sm"></text>
         </view>
         <view class="action" @click="setTime">
-          <text  style="margin-right: 6rpx">课时消耗</text>
+          <text :class="!showUp ? 'text-red' : ''" style="margin-right: 6rpx">课时消耗</text>
           <text class="text-gray text-sm" :class="showUp ? 'cuIcon-triangledownfill' : 'cuIcon-triangleupfill'"></text>
         </view>
       </view>
@@ -59,6 +59,32 @@
     <view class="flex flex-direction fixed-bottom" @click="addTeacher">
       <button class="add-btn">+ 添加老师</button>
     </view>
+
+<!--性别弹框-->
+    <view class="cu-modal show" v-if="showSexModal">
+      <view class="cu-dialog">
+        <radio-group class="block" @change="chooseSexItem">
+          <view class="cu-list menu text-left">
+            <view class="cu-item" v-for="item in sexArray" :key="item.id">
+              <label class="flex justify-between align-center flex-sub">
+                <view class="flex-sub">
+                  <text class="margin-right">{{item.label}}</text>
+                </view>
+                <radio class="round" :value="item.value"></radio>
+              </label>
+            </view>
+          </view>
+        </radio-group>
+        <view class="cu-bar bg-white justify-around">
+          <view class="action" @click="hideSex">
+            <button class="cu-btn bg-white solid-right">取消</button>
+          </view>
+          <view class="action" @click="searchSex">
+            <button class="cu-btn bg-white" >确定</button>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -68,6 +94,24 @@ export default {
     return {
       searchInput: '',
       showUp: true,
+      showSexModal: false,
+      sexArray: [
+        {
+          id: 0,
+          label: '全部性别',
+          value: 0
+        },
+        {
+          id: 1,
+          label: '男',
+          value: 1
+        },
+        {
+          id: 2,
+          label: '女',
+          value: 2
+        }
+      ],
       list: [
         //  type 1 开启 2. 关闭
         {
@@ -131,6 +175,20 @@ export default {
   onLoad() {
   },
   methods: {
+    showSex() {
+      this.showSexModal = true;
+    },
+    hideSex() {
+      this.showSexModal = false;
+    },
+    chooseSexItem(e) {
+      let {value} = e.detail;
+      this.form.sex = value;
+    },
+    searchSex() {
+      this.hideSex();
+      console.log(this.form.sex);
+    },
     // 课时消耗操作
     setTime() {
       this.showUp = !this.showUp;

@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import {getMyClassList} from '../../../../api/teacher/myClass';
+// import {getMyClassList} from '../../../../api/teacher/myClass';
 export default {
   data() {
     return {
@@ -82,7 +82,7 @@ export default {
     }
   },
   onLoad() {
-    this.getList();
+    // this.getList();
   },
   methods: {
 

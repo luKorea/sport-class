@@ -81,7 +81,7 @@ export default {
   created() {
     console.log(1);
     _self = this;
-    this.cWidth = uni.upx2px(750);
+    this.cWidth = uni.upx2px(550);
     this.cHeight = uni.upx2px(300);
     this.getServerData();
   },
@@ -91,7 +91,7 @@ export default {
       let data = {
         categories: ['8月','9月','10月','11月','12月','1月'],
         series: [{
-          name: "",
+          name: "续签率",
           data: [0,10,0,100,20,80]
         }]
       }

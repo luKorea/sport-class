@@ -33,7 +33,7 @@
         <switch :checked="info.status === 1" @change="setStatus"/>
       </view>
     </view>
-    <view class="margin-top">
+    <view class="margin-top" @click="saveData">
       <button class="cu-btn lg bg-my-red" style="width: 100%">保存</button>
     </view>
   </view>
@@ -49,6 +49,7 @@ export default {
   },
   onLoad(options) {
     let {data} = options;
+    console.log(data);
     if (data) {
       this.info = JSON.parse(data);
       console.log(this.info);
@@ -59,6 +60,9 @@ export default {
       let {value} = e.detail;
       this.info.status = value === true ? 1 : 0;
       console.log(this.info.status);
+    },
+    saveData() {
+      wx.navigateBack();
     }
   }
 }

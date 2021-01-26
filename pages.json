@@ -1,42 +1,27 @@
 {
 	"pages": [
 		{
-			"path":"pages/principal/coreData/index/index",
-			"style": {
-				"navigationBarTitleText":"核心数据",
-				"usingComponents": {
-					"van-circle": "/wxcomponents/vant/circle/index"
-				}
-			}
-		},
-		{
 			"path":"pages/principal/index/index",
 			"style": {
 				"navigationBarTitleText":"校长首页"
 			}
 		},
 		{
-			"path":"pages/principal/students/index/index",
+			"path":"pages/principal/classHour/index/index",
 			"style": {
-				"navigationBarTitleText":"学员"
+				"navigationBarTitleText":"本月课时/消耗"
 			}
 		},
 		{
-			"path":"pages/principal/students/detail/detail",
+			"path":"pages/principal/mime/mime",
 			"style": {
-				"navigationBarTitleText":"学员详情"
+				"navigationBarTitleText":"个人中心"
 			}
 		},
 		{
-			"path":"pages/principal/students/addFollow/addFollow",
+			"path":"pages/principal/sales/sales",
 			"style": {
-				"navigationBarTitleText":"添加跟进记录"
-			}
-		},
-		{
-			"path":"pages/principal/students/addStudents/addStudents",
-			"style": {
-				"navigationBarTitleText":"添加学员"
+				"navigationBarTitleText":"销售"
 			}
 		},
 		{
@@ -55,6 +40,54 @@
 			"path":"pages/principal/teacher/addTeacher/addTeacher",
 			"style": {
 				"navigationBarTitleText":"添加老师"
+			}
+		},
+		{
+			"path":"pages/principal/attendanceRate/index/index",
+			"style": {
+				"navigationBarTitleText":"本月出勤率"
+			}
+		},
+		{
+			"path":"pages/principal/coreData/index/index",
+			"style": {
+				"navigationBarTitleText":"核心数据"
+			}
+		},
+		{
+			"path":"pages/principal/class/index/index",
+			"style": {
+				"navigationBarTitleText":"班级"
+			}
+		},
+		{
+			"path":"pages/principal/class/addClass/addClass",
+			"style": {
+				"navigationBarTitleText":"新建班级"
+			}
+		},
+		{
+			"path":"pages/principal/class/addStudents/addStudents",
+			"style": {
+				"navigationBarTitleText":"添加学员"
+			}
+		},
+		{
+			"path":"pages/principal/class/detail/detail",
+			"style": {
+				"navigationBarTitleText":"班级详情"
+			}
+		},
+		{
+			"path":"pages/principal/class/addRules/addRules",
+			"style": {
+				"navigationBarTitleText":"规则排课"
+			}
+		},
+		{
+			"path":"pages/principal/class/addCalendar/addCalendar",
+			"style": {
+				"navigationBarTitleText":"日历排课"
 			}
 		},
 		{
@@ -106,63 +139,15 @@
 			}
 		},
 		{
-			"path":"pages/teacher/class/index/index",
+			"path":"pages/teacher/task/index/index",
 			"style": {
-				"navigationBarTitleText":"我的班级"
+				"navigationBarTitleText":"作业"
 			}
 		},
 		{
-			"path" : "pages/teacher/class/namedPage/namedPage",
+			"path":"pages/teacher/task/addTask/addTask",
 			"style": {
-				"navigationBarTitleText":"点名"
-			}
-		},
-		{
-			"path" : "pages/teacher/class/commentsPage/commentsPage",
-			"style": {
-				"navigationBarTitleText":"点评"
-			}
-		},
-		{
-			"path" : "pages/teacher/class/shift/shift",
-			"style": {
-				"navigationBarTitleText":"临时插班"
-			}
-		},
-		{
-			"path":"pages/teacher/class/detail/detail",
-			"style": {
-				"navigationBarTitleText":"班级详情"
-			}
-		},
-		{
-			"path":"pages/teacher/classRecord/detail/detail",
-			"style": {
-				"navigationBarTitleText":"上课记录详情"
-			}
-		},
-		{
-			"path":"pages/teacher/classRecord/index/index",
-			"style": {
-				"navigationBarTitleText":"上课记录"
-			}
-		},
-		{
-			"path": "pages/teacher/evaluation/index/index",
-			"style": {
-				"navigationBarTitleText": "师生互评"
-			}
-		},
-		{
-			"path":"pages/teacher/record/index/index",
-			"style": {
-				"navigationBarTitleText":"成长记录"
-			}
-		},
-		{
-			"path":"pages/teacher/record/addRecord/addRecord",
-			"style": {
-				"navigationBarTitleText":"添加成长记录"
+				"navigationBarTitleText":"布置作业"
 			}
 		},
 		{
@@ -172,33 +157,15 @@
 			}
 		},
 		{
-			"path":"pages/teacher/task/index/index",
+			"path":"pages/teacher/class/index/index",
 			"style": {
-				"navigationBarTitleText":"作业"
+				"navigationBarTitleText":"我的班级"
 			}
 		},
 		{
-			"path":"pages/teacher/students/index/index",
+			"path":"pages/teacher/class/detail/detail",
 			"style": {
-				"navigationBarTitleText":"学员"
-			}
-		},
-		{
-			"path":"pages/teacher/students/detail/detail",
-			"style": {
-				"navigationBarTitleText":"学员详情"
-			}
-		},
-		{
-			"path":"pages/teacher/students/addFollow/addFollow",
-			"style": {
-				"navigationBarTitleText":"添加跟进记录"
-			}
-		},
-		{
-			"path":"pages/teacher/students/addStudents/addStudents",
-			"style": {
-				"navigationBarTitleText":"添加跟进记录"
+				"navigationBarTitleText":"班级详情"
 			}
 		},
 		{
@@ -220,14 +187,98 @@
 			}
 		},
 		{
+			"path":"pages/common/record/index/index",
+			"style": {
+				"navigationBarTitleText":"成长记录"
+			}
+		},
+		{
+			"path":"pages/common/record/addRecord/addRecord",
+			"style": {
+				"navigationBarTitleText":"添加成长记录"
+			}
+		},
+		{
 			"path":"pages/common/reset/reset",
 			"style": {
 				"navigationBarTitleText":"重置密码"
 			}
+		},
+		{
+			"path":"pages/common/commentsPage/commentsPage",
+			"style": {
+				"navigationBarTitleText":"点评"
+			}
+		},
+		{
+			"path":"pages/common/namedPage/namedPage",
+			"style": {
+				"navigationBarTitleText":"点名"
+			}
+		},
+		{
+			"path":"pages/common/shift/shift",
+			"style": {
+				"navigationBarTitleText":"插班"
+			}
+		},
+		{
+			"path":"pages/common/classRecord/index/index",
+			"style": {
+				"navigationBarTitleText":"上课记录"
+			}
+		},
+		{
+			"path":"pages/common/classRecord/detail/detail",
+			"style": {
+				"navigationBarTitleText":"上课记录详情"
+			}
+		},
+		{
+			"path": "pages/common/evaluation/index/index",
+			"style": {
+				"navigationBarTitleText": "师生互评"
+			}
+		},
+		{
+			"path":"pages/common/evaluation/detail/detail",
+			"style": {
+				"navigationBarTitleText":"评价"
+			}
+		},
+		{
+			"path":"pages/common/evaluation/editComments/editComments",
+			"style": {
+				"navigationBarTitleText":"编辑评语"
+			}
+		},
+		{
+			"path":"pages/common/students/index/index",
+			"style": {
+				"navigationBarTitleText":"学员"
+			}
+		},
+		{
+			"path":"pages/common/students/detail/detail",
+			"style": {
+				"navigationBarTitleText":"学员详情"
+			}
+		},
+		{
+			"path":"pages/common/students/addFollow/addFollow",
+			"style": {
+				"navigationBarTitleText":"添加跟进记录"
+			}
+		},
+		{
+			"path":"pages/common/students/addStudents/addStudents",
+			"style": {
+				"navigationBarTitleText":"添加学员"
+			}
 		}
 	],
 	"globalStyle": {
-		"navigationBarBackgroundColor":"#F4313E",
-		"navigationBarTextStyle":"white"
+		"navigationBarBackgroundColor": "#F4313E",
+		"navigationBarTextStyle": "white"
 	}
 }

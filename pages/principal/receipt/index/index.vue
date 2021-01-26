@@ -14,7 +14,7 @@
       <!--筛选-->
       <view class="cu-bar search bg-white margin-top justify-around">
         <view class="action" @click="setTime">
-          <text  style="margin-right: 6rpx">排序</text>
+          <text  style="margin-right: 6rpx" :class="!showUp ? 'text-red' : ''">排序</text>
           <text class="text-gray text-sm" :class="showUp ? 'cuIcon-triangledownfill' : 'cuIcon-triangleupfill'"></text>
         </view>
         <view class="action" @click="showDrawer">
@@ -68,8 +68,8 @@
         </view>
         <!--底部区域-->
         <view class="drawer-footer">
-          <button class="bg-gray lg" style="width: 50%;" @click="closeDrawer">关闭</button>
-          <button class="bg-my-red lg" style="width: 50%;" @click="searchData">确定</button>
+          <button class="bg-gray lg cu-btn" style="width: 50%;" @click="closeDrawer">关闭</button>
+          <button class="bg-my-red lg cu-btn" style="width: 50%;" @click="searchData">确定</button>
         </view>
       </uni-drawer>
       <!--列表-->

@@ -48,12 +48,13 @@
 .ban-red, .ke-orange, .ren-green, .wu-gran {
     color: #ffffff;
     font-size: 24rpx;
-    width: 41rpx;
-    height: 41rpx;
-    line-height: 41rpx;
+    width: 30rpx;
+    height: 30rpx;
+    line-height: 30rpx;
     padding: 8rpx;
     border-radius: 5rpx;
     margin-right: 10rpx;
+    text-align: center;
 }
 
 .ban-red {
@@ -99,4 +100,52 @@
     font-weight: 400;
     border: none;
     border-radius: 0;
+}
+
+/* 通过 */
+.adopt {
+    width: 150rpx;
+    height: 150rpx;
+    line-height: 150rpx;
+    margin-bottom: 50rpx;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    color: #F4313E;
+    border: 4px solid #F4313E;
+}
+
+.text-type {
+    border: 1px solid #F4313E;
+    border-radius: 5rpx;
+    color: #F4313E;
+}
+.white-text {
+    border: 1px solid #DDDDDD;
+    border-radius: 10rpx;
+    padding: 10rpx;
+    color: #DDDDDD;;
+}
+.orange-text {
+    border: 1px solid #FE8530;
+    border-radius: 10rpx;
+    padding: 10rpx;
+    color: #FE8530;
+}
+
+/*方块元素*/
+.red-block, .orange-block, .cyan-block {
+    width: 24rpx;
+    height: 24rpx;
+    margin-right: 10rpx;
+    border-radius: 5rpx;
+}
+.red-block {
+    background: #F4313E;
+}
+.orange-block {
+    background: #FE8530;
+}
+.cyan-block {
+    background: #52CDC0;
 }

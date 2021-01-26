@@ -61,7 +61,7 @@ export default {
         },
         {
           img: this.$imageurl + 'xueyuan.png',
-          url: '../students/index/index',
+          url: '/pages/common/students/index/index',
           name: '我的学员'
         },
         {
@@ -71,7 +71,7 @@ export default {
         },
         {
           img: this.$imageurl + 'shangkejilu.png',
-          url: '../classRecord/index/index',
+          url: '/pages/common/classRecord/index/index',
           name: '上课记录'
         },
         {
@@ -81,12 +81,12 @@ export default {
         },
         {
           img: this.$imageurl + 'huping.png',
-          url: '../evaluation/index/index',
+          url: '/pages/common/evaluation/index/index',
           name: '师生互评'
         },
         {
           img: this.$imageurl + 'chengzhangjilu.png',
-          url: '../record/index/index',
+          url: '/pages/common/record/index/index',
           name: '成长记录'
         },
         {

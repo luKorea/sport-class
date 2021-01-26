@@ -175,12 +175,12 @@ export default {
     },
     goNamedPage(id) {
       uni.navigateTo({
-        url: `../namedPage/namedPage?id=${id}`
+        url: `/pages/common/namedPage/namedPage?id=${id}`
       });
     },
     goCommentsPage(id) {
       uni.navigateTo({
-        url: `../commentsPage/commentsPage?id=${id}`
+        url: `/pages/common/commentsPage/commentsPage?id=${id}`
       });
     }
   }

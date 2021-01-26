@@ -1,53 +1,18 @@
 # 目录结构
 
-1.  pages 页面
+1. pages 页面
 
    1. common 公用页面
 
       1. reset 重置密码
-      2. feedback 意见反馈 (无该功能)
-      3. setting 消息设置 (无该功能)
 
-   2. teacher 老师端
+      2. namedPage 点名页面
 
-      1.  class 我的班级
+      3. commentsPage 点评页面
 
-         1. index 首页
-         2. detail 详情页面
-         3. namedPage 点名页面
-         4. commentsPage 点评页面
-         5.  shift 插班页面
+      4. shift 插班
 
-      2. index 首页
-
-      3. mime 我的个人中心
-
-      4.  students 学员
-
-         1. index 首页
-         2. addFollow 添加跟进记录页面
-         3.  detail 详情页面
-            1. components
-               1. basic 基础资料
-               2. recording 报名记录
-               3. report 报读班级
-               4. follow 跟进记录
-         4. addStudents 添加学员页面
-      5. task 作业
-
-         1. index 首页
-         2. detail 详情页
-
-      6. record 成长记录
-
-         1. index 首页
-         2. addRecord 添加记录
-
-      7. evaluation 师生互评
-
-         1. index 首页
-
-      8. classRecord 上课记录
+      5. classRecord 上课记录
 
          1. index 首页
             1. components
@@ -58,39 +23,96 @@
 
          2. detail 详情
 
-      9. principal 校长端
+      6. evaluation 师生互评
+
+        7. index 首页
+                2. detail 详情
+                3. editComments 编辑评语
+
+      8. students 学员
          1. index 首页
-         2. mime 我的个人中心
-         3. renewal 续费提醒
-           1. index 首页
-           2. application 报名
-         4. charges 收费项
+         2. addFollow 添加跟进记录页面
+         3.  detail 详情页面
+            1. components
+               1. basic 基础资料
+               2. recording 报名记录
+               3. report 报读班级
+               4. follow 跟进记录
+         4. addStudents 添加学员页面
+
+      9. record 成长记录
             1. index 首页
-            2. detail 详情
-            3. addCharges 新增
-         5. receipt 收费清单
-            1. index 首页
-            2. detail 详情
-         6. teacher 老师页面
-            1. index 首页
-            2. detail 详情
-            3. addTeacher 添加老师页面
-         7. students 学员页面
-            1. index 首页
-            2. detail 详情页
-            3. addFollow 添加跟进记录页面
-                1. components
-                   1. basic 基础资料
-                   2. recording 报名记录
-                   3. report 报读班级
-                   4. follow 跟进记录
-            4. addStudents 添加学员页面
-         8. 课程套餐
-            1. index 首页
-            2. 添加课程套餐页面
-         9. coreData 核心数据
-            1. index 首页
-                1. components
-                    1. fullShift 满班率
-                    2. refunds 退费率
-                    3. renew 续签率
+            2. addRecord 添加成长记录
+
+   2. teacher 老师端
+
+      1.  class 我的班级
+
+         1. index 首页
+         2. detail 详情页面
+         5.  shift 插班页面
+
+      2. index 首页
+
+      3. mime 我的个人中心
+      5. task 作业
+         1. index 首页
+         2. detail 详情页
+
+   3. principal 校长端
+
+      1. index 首页
+      2. mime 我的个人中心
+      3. renewal 续费提醒
+        4. index 首页
+        5. application 报名
+      6. charges 收费项
+         1. index 首页
+         2. detail 详情
+         3. addCharges 新增
+      7. receipt 收费清单
+         1. index 首页
+         2. detail 详情
+      8. teacher 老师页面
+         1. index 首页
+         2. detail 详情
+            1. components
+               1. basic 基础信息
+               2. classes 当前授课班级
+               3. students 学员
+         3. addTeacher 添加老师页面
+      9. 课程套餐（未完成）
+         1. index 首页
+         2. 添加课程套餐页面
+      10. coreData 核心数据
+          1. index 首页
+             1. components
+                1. fullShift 满班率
+                2. refunds 退费率
+                3. renew 续签率
+      11. classHour 课时消耗
+                  1. index 首页
+                      1. components
+                          1. teacherHour 授课课时
+                          2. classExpense 课消金额
+                          3. statistics 出勤统计
+      12. class 班级
+               1. index 首页
+               2. detail 详情
+                 1. components
+                     1. basic 基础资料
+                     2. students 班级学生
+                     3. classes 上课情况
+                     4. scheduling 班级排课
+               3. addStudents 添加学员
+               4. addClass 添加班级
+               5. addRules 规则排课
+               6. addCalendar 日历排课
+      13. sales 销售
+      14. mime 个人中心
+      15. attendanceRate 本月出勤率
+                           1. index 首页
+                               1. components
+                                   1. teacherHour 授课课时
+                                   2. classExpense 课消金额
+                                   3. statistics 出勤统计

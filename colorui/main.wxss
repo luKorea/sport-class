@@ -42,7 +42,7 @@ page {
 	--black: #333333;
 	--darkGray: #666666;
 	--gray: #aaaaaa;
-	--ghostWhite: #f7f3f3;
+	--ghostWhite: #f5f5f5;
 	--white: #ffffff;
 	/* 浅色 */
 	--redLight: #fadbd9;
@@ -2531,6 +2531,7 @@ button.icon.lg {
 }
 
 .cu-dialog {
+	z-index: 999999;
 	position: relative;
 	display: inline-block;
 	vertical-align: middle;

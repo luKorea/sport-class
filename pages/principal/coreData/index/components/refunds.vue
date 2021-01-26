@@ -45,7 +45,6 @@ export default {
       cWidth: '',
       cHeight: '',
       pixelRatio: 1,
-      serverData: '',
       list: [
         {
           id: 1,
@@ -81,7 +80,7 @@ export default {
   created() {
     console.log(1);
     _self = this;
-    this.cWidth = uni.upx2px(750);
+    this.cWidth = uni.upx2px(550);
     this.cHeight = uni.upx2px(300);
     this.getServerData();
   },
@@ -91,7 +90,7 @@ export default {
       let data = {
         categories: ['8月','9月','10月','11月','12月','1月'],
         series: [{
-          name: "",
+          name: "退费率",
           data: [0,0,0,0,0,0]
         }]
       }
@@ -100,29 +99,6 @@ export default {
       LineA.series=data.series;
       _self.textarea = JSON.stringify(data);
       _self.showLineA("canvasLineA", LineA);
-      // uni.request({
-      //   url: 'https://www.ucharts.cn/data.json',
-      //   data: {},
-      //   success: function (res) {
-      //     console.log(res.data.data)
-      //     let LineA = {categories: [], series: []};
-      //     let data = {
-      //       categories: ['8月','9月','10月','11月','12月','1月'],
-      //       series: [{
-      //         name: "",
-      //         data: [0,0,0,0,0,0]
-      //       }]
-      //     }
-      //     // //这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
-      //     LineA.categories=data.categories;
-      //     LineA.series=data.series;
-      //     _self.textarea = JSON.stringify(data);
-      //     _self.showLineA("canvasLineA", LineA);
-      //   },
-      //   fail: () => {
-      //     _self.tips = "网络错误，小程序端请检查合法域名";
-      //   },
-      // });
     },
     showLineA(canvasId, chartData) {
       canvaLineA = new uCharts({

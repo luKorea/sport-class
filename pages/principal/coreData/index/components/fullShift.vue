@@ -4,8 +4,8 @@
     <view class="cu-bar margin-top bg-white justify-center">
       <view class="action">班级满班率 单位：%</view>
     </view>
-    <view class="cu-bar bg-white justify-center">
-      <canvas canvas-id="canvaArcbar" id="canvaArcbar" style="margin-left: 220rpx"></canvas>
+    <view class="cu-bar bg-white justify-center arcbar-charts">
+      <canvas canvas-id="canvaArcbar" id="canvaArcbar" class="charts"></canvas>
     </view>
     <!--课程满班率明细-->
     <view class="cu-bar bg-white margin-top justify-center solid-bottom">
@@ -81,7 +81,7 @@ export default {
   created() {
     _self = this;
     this.cWidth3 = uni.upx2px(250);//这里要与样式的宽高对应
-    this.cHeight3 = uni.upx2px(250);//这里要与样式的宽高对应
+    this.cHeight3 = uni.upx2px(300);//这里要与样式的宽高对应
     this.arcbarWidth = uni.upx2px(20);
     this.getServerData();
   },
@@ -140,4 +140,12 @@ export default {
 </script>
 
 <style scoped>
+.arcbar-charts {
+  width: 100%;
+  height: 400rpx;
+}
+.charts {
+  width: 250rpx;
+  height: 300rpx;
+}
 </style>

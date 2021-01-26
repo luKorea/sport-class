@@ -13,7 +13,7 @@
 </script>
 
 <style>
-@import "wxcomponents/vant/common/index.wxss";
+//@import "wxcomponents/vant/common/index.wxss";
 @import "colorui/main.wxss";
 @import "colorui/icon.wxss";
 @import "styles/common.css";

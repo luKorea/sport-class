@@ -119,7 +119,7 @@
     </view>
     <view class="cu-bar tabbar bg-white footer">
 <!--      @click="goItem(item.url)"-->
-      <view class="action" v-for="item in list" :key="item.id">
+      <view class="action" v-for="item in list" :key="item.id" @click="goItem(item.url)">
         <view class="cuIcon-cu-image">
           <image :src="item.img"></image>
         </view>

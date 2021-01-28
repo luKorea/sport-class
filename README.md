@@ -91,28 +91,50 @@
                 2. refunds 退费率
                 3. renew 续签率
       11. classHour 课时消耗
-                  1. index 首页
-                      1. components
-                          1. teacherHour 授课课时
-                          2. classExpense 课消金额
-                          3. statistics 出勤统计
+          1. index 首页
+             1. components
+                1. teacherHour 授课课时
+                2. classExpense 课消金额
+                3. statistics 出勤统计
       12. class 班级
-               1. index 首页
-               2. detail 详情
-                 1. components
-                     1. basic 基础资料
-                     2. students 班级学生
-                     3. classes 上课情况
-                     4. scheduling 班级排课
-               3. addStudents 添加学员
-               4. addClass 添加班级
-               5. addRules 规则排课
-               6. addCalendar 日历排课
+          1. index 首页
+          2. detail 详情
+             1. components
+                1. basic 基础资料
+                2. students 班级学生
+                3. classes 上课情况
+                4. scheduling 班级排课
+          3. addStudents 添加学员
+          4. addClass 添加班级
+          5. addRules 规则排课
+          6. addCalendar 日历排课
       13. sales 销售
       14. mime 个人中心
       15. attendanceRate 本月出勤率
-                           1. index 首页
-                               1. components
-                                   1. teacherHour 授课课时
-                                   2. classExpense 课消金额
-                                   3. statistics 出勤统计
+          1. index 首页
+             1. components
+                1. teacherHour 授课课时
+                2. classExpense 课消金额
+                3. statistics 出勤统计
+      16. notice 消息通知
+          1. index 首页
+          2. detail 详情
+          3. addNotice 添加通知
+      17. teacherStyles 名师风采
+          1. index 首页
+          2. detail 详情页
+          3. preview 预览
+          4. addTeacherStyles 新增名师风采
+      18. studentStyles 明星学员
+          1. index 首页
+          2. detail 详情页
+          3. preview 预览
+          4. addStudentStyles 新增明星学员
+      19. institutions 机构动态
+          1. index 首页
+          2. detail 详情页
+          3. preview 预览
+          4. addInstitutions 新增机构动态
+      20. microActivities 微活动
+          1. index 首页
+          2. detail 详情页

@@ -60,9 +60,19 @@ export default {
     return {
       iconList: [
         {
-          img: this.$imageurl + 'xueyuandangan.png',
-          url: '../class/index/index',
-          name: '学员档案'
+          img: this.$imageurl + 'tongzhi.png',
+          url: '/pages/principal/notice/index/index',
+          name: '消息通知'
+        },
+        {
+          img: this.$imageurl + 'mingshifengcai.png',
+          url: '/pages/principal/teacherStyles/index/index',
+          name: '名师风采'
+        },
+        {
+          img: this.$imageurl + 'mingxingxueyuan.png',
+          url: '/pages/principal/studentStyles/index/index',
+          name: '明星学员'
         },
         {
           img: this.$imageurl + 'xchengzhangjilu.png',
@@ -70,9 +80,9 @@ export default {
           name: '成长记录'
         },
         {
-          img: this.$imageurl + 'xianshangbaoming.png',
-          url: '',
-          name: '线上报课'
+          img: this.$imageurl + 'jigoudongtai.png',
+          url: '/pages/principal/institutions/index/index',
+          name: '机构动态'
         },
         {
           img: this.$imageurl + 'weihuodong.png',
@@ -80,24 +90,14 @@ export default {
           name: '微活动'
         },
         {
-          img: this.$imageurl + 'tongzhi.png',
-          url: '../task/index/index',
-          name: '消息通知'
+          img: this.$imageurl + 'xueyuandangan.png',
+          url: '../class/index/index',
+          name: '学员档案'
         },
         {
-          img: this.$imageurl + 'mingshifengcai.png',
-          url: '../evaluation/index/index',
-          name: '名师风采'
-        },
-        {
-          img: this.$imageurl + 'mingxingxueyuan.png',
-          url: '../record/index/index',
-          name: '明星学员'
-        },
-        {
-          img: this.$imageurl + 'jigoudongtai.png',
-          url: '../mime/mime',
-          name: '机构动态'
+          img: this.$imageurl + 'xianshangbaoming.png',
+          url: '',
+          name: '线上报课'
         },
       ],
       list: [

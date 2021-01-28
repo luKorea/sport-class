@@ -1,9 +1,128 @@
 {
 	"pages": [
+
+		{
+			"path":"pages/principal/microActivities/index/index",
+			"style": {
+				"navigationBarTitleText": "微活动"
+			}
+		},
+		{
+			"path":"pages/principal/microActivities/detail/detail",
+			"style": {
+				"navigationBarTitleText": "微活动详情"
+			}
+		},
+
 		{
 			"path":"pages/principal/index/index",
 			"style": {
 				"navigationBarTitleText":"校长首页"
+			}
+		},
+		{
+			"path":"pages/principal/sales/sales",
+			"style": {
+				"navigationBarTitleText":"销售"
+			}
+		},
+		{
+			"path":"pages/principal/mime/mime",
+			"style": {
+				"navigationBarTitleText":"个人中心"
+			}
+		},
+
+		{
+			"path":"pages/principal/institutions/index/index",
+			"style": {
+				"navigationBarTitleText": "机构动态"
+			}
+		},
+		{
+			"path":"pages/principal/institutions/addInstitutions/addInstitutions",
+			"style": {
+				"navigationBarTitleText": "发布机构动态"
+			}
+		},
+		{
+			"path":"pages/principal/institutions/preview/preview",
+			"style": {
+				"navigationBarTitleText": "预览"
+			}
+		},
+		{
+			"path":"pages/principal/institutions/detail/detail",
+			"style": {
+				"navigationBarTitleText": "机构动态详情"
+			}
+		},
+		{
+			"path":"pages/principal/studentStyles/index/index",
+			"style": {
+				"navigationBarTitleText": "明星学员"
+			}
+		},
+		{
+			"path":"pages/principal/studentStyles/addStudentStyles/addStudentStyles",
+			"style": {
+				"navigationBarTitleText": "发布明星学员"
+			}
+		},
+		{
+			"path":"pages/principal/studentStyles/preview/preview",
+			"style": {
+				"navigationBarTitleText": "预览"
+			}
+		},
+		{
+			"path":"pages/principal/studentStyles/detail/detail",
+			"style": {
+				"navigationBarTitleText": "明星学员详情"
+			}
+		},
+
+
+		{
+			"path":"pages/principal/teacherStyles/index/index",
+			"style": {
+				"navigationBarTitleText": "名师风采"
+			}
+		},
+		{
+			"path":"pages/principal/teacherStyles/addTeacherStyles/addTeacherStyles",
+			"style": {
+				"navigationBarTitleText": "发布名师风采"
+			}
+		},
+		{
+			"path":"pages/principal/teacherStyles/preview/preview",
+			"style": {
+				"navigationBarTitleText": "预览"
+			}
+		},
+		{
+			"path":"pages/principal/teacherStyles/detail/detail",
+			"style": {
+				"navigationBarTitleText": "名师风采详情"
+			}
+		},
+		{
+			"path":"pages/principal/notice/addNotice/addNotice",
+			"style": {
+				"navigationBarTitleText":"新增消息通知"
+			}
+		},
+		{
+			"path":"pages/principal/notice/index/index",
+			"style": {
+				"navigationBarTitleText":"消息通知"
+			}
+		},
+		{
+			"path":"pages/principal/notice/detail/detail",
+			"style": {
+				"navigationBarTitleText":"消息通知详情"
 			}
 		},
 		{
@@ -28,18 +147,6 @@
 			"path":"pages/principal/classHour/index/index",
 			"style": {
 				"navigationBarTitleText":"本月课时/消耗"
-			}
-		},
-		{
-			"path":"pages/principal/mime/mime",
-			"style": {
-				"navigationBarTitleText":"个人中心"
-			}
-		},
-		{
-			"path":"pages/principal/sales/sales",
-			"style": {
-				"navigationBarTitleText":"销售"
 			}
 		},
 		{

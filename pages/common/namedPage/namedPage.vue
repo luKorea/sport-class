@@ -93,7 +93,7 @@
       </view>
     </view>
 <!--插班-->
-    <view class="fixed-right"v-if="showModal" @click="goShift(id)">
+    <view class="fixed-right" v-if="showModal" @click="goShift(id)">
       <view class="cuIcon-add"></view>
       <view>插班</view>
     </view>

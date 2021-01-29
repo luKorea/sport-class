@@ -1,23 +1,15 @@
 {
 	"pages": [
-
-		{
-			"path":"pages/principal/microActivities/index/index",
-			"style": {
-				"navigationBarTitleText": "微活动"
-			}
-		},
-		{
-			"path":"pages/principal/microActivities/detail/detail",
-			"style": {
-				"navigationBarTitleText": "微活动详情"
-			}
-		},
-
 		{
 			"path":"pages/principal/index/index",
 			"style": {
 				"navigationBarTitleText":"校长首页"
+			}
+		},
+		{
+			"path":"pages/teacher/index/index",
+			"style": {
+				"navigationBarTitleText":"首页"
 			}
 		},
 		{
@@ -32,7 +24,60 @@
 				"navigationBarTitleText":"个人中心"
 			}
 		},
-
+		{
+			"path":"pages/principal/onlineClasses/index/index",
+			"style": {
+				"navigationBarTitleText":"在线报课"
+			}
+		},
+		{
+			"path":"pages/principal/onlineClasses/addOnlineClasses/addOnlineClasses",
+			"style": {
+				"navigationBarTitleText":"发布课程"
+			}
+		},
+		{
+			"path":"pages/principal/onlineClasses/detail/detail",
+			"style": {
+				"navigationBarTitleText":"课程详情"
+			}
+		},
+		{
+			"path":"pages/principal/studentFiles/index/index",
+			"style": {
+				"navigationBarTitleText":"学员档案"
+			}
+		},
+		{
+			"path":"pages/principal/studentFiles/detail/detail",
+			"style": {
+				"navigationBarTitleText":"学员档案详情"
+			}
+		},
+		{
+			"path":"pages/principal/studentFiles/salesAllocation/salesAllocation",
+			"style": {
+				"navigationBarTitleText":"销售分配"
+			}
+		},
+		{
+			"path":"pages/principal/studentFiles/addStudents/addStudents",
+			"style": {
+				"navigationBarTitleText":"添加学员"
+			}
+		},
+		{
+			"path":"pages/principal/microActivities/index/index",
+			"style": {
+				"navigationBarTitleText": "微活动"
+			}
+		},
+		{
+			"path":"pages/principal/microActivities/detail/detail",
+			"style": {
+				"navigationBarTitleText": "微活动详情"
+			}
+		},
 		{
 			"path":"pages/principal/institutions/index/index",
 			"style": {
@@ -258,12 +303,6 @@
 			}
 		},
 		{
-			"path":"pages/teacher/index/index",
-			"style": {
-				"navigationBarTitleText":"首页"
-			}
-		},
-		{
 			"path":"pages/teacher/task/index/index",
 			"style": {
 				"navigationBarTitleText":"作业"
@@ -291,6 +330,12 @@
 			"path":"pages/teacher/class/detail/detail",
 			"style": {
 				"navigationBarTitleText":"班级详情"
+			}
+		},
+		{
+			"path":"pages/teacher/named/index/index",
+			"style": {
+				"navigationBarTitleText":"我要点名"
 			}
 		},
 		{
@@ -399,6 +444,18 @@
 			"path":"pages/common/students/addStudents/addStudents",
 			"style": {
 				"navigationBarTitleText":"添加学员"
+			}
+		},
+		{
+			"path":"pages/common/schedule/index/index",
+			"style": {
+				"navigationBarTitleText":"课表"
+			}
+		},
+		{
+			"path":"pages/common/schedule/detail/detail",
+			"style": {
+				"navigationBarTitleText":"班级详情"
 			}
 		}
 	],

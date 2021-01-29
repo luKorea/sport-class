@@ -20,6 +20,24 @@
         </view>
       </view>
     </view>
+
+
+    <view class="cu-bar search bg-white margin-top solid-top">
+      <view class="search-form">
+        <text class="cuIcon-search"></text>
+        <input type="text" placeholder="请输入课程名称" v-model="searchInput"/>
+      </view>
+      <view class="action" @click="searchValue">
+        <button class="cu-btn shadow-blur text-white bg-red">搜索</button>
+      </view>
+    </view>
+
+
+
+    <view class="drawer-footer footer">
+      <text class="text-center text-red">没有排课？未排课直接考勤</text>
+    </view>
+
   </view>
 </template>
 

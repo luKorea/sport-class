@@ -189,7 +189,8 @@ export default {
 		  },
 		  {
 		    img: 'https://yundongke.gzbigbang.cn/kecheng.png',
-		    url: '',
+		    url: '/pages/common/schedule/index/index',
+		    // url: /'',
 		    name: '课表'
 		  },
 		  {

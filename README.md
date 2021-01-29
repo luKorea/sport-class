@@ -5,13 +5,9 @@
    1. common 公用页面
 
       1. reset 重置密码
-
       2. namedPage 点名页面
-
       3. commentsPage 点评页面
-
       4. shift 插班
-
       5. classRecord 上课记录
 
          1. index 首页
@@ -22,13 +18,11 @@
             5. leaveInfo 请假申请
 
          2. detail 详情
-
       6. evaluation 师生互评
 
-        7. index 首页
-                2. detail 详情
-                3. editComments 编辑评语
-
+              1. index 首页
+              2. detail 详情
+              3. editComments 编辑评语
       8. students 学员
          1. index 首页
          2. addFollow 添加跟进记录页面
@@ -39,10 +33,12 @@
                3. report 报读班级
                4. follow 跟进记录
          4. addStudents 添加学员页面
-
       9. record 成长记录
             1. index 首页
             2. addRecord 添加成长记录
+      9. schedule 课表
+            1. index  首页
+            2. detail 详情页
 
    2. teacher 老师端
 
@@ -51,13 +47,13 @@
          1. index 首页
          2. detail 详情页面
          5.  shift 插班页面
-
-      2. index 首页
-
+   2.  index 首页
       3. mime 我的个人中心
-      5. task 作业
+   5. task 作业
          1. index 首页
          2. detail 详情页
+      5.  named 我要点名
+          1.  index 首页
 
    3. principal 校长端
 
@@ -138,3 +134,17 @@
       20. microActivities 微活动
           1. index 首页
           2. detail 详情页
+      21. studentFiles 学员档案
+          1. index 首页
+             1. components
+                1. potentialStudent 潜在学员
+                2. readStudent  在读学员
+                3. historyStudent 历史学员
+             2. detail 详情页
+             3. salesAllocation 销售分配
+             4. addStudents 添加学员
+      22. onlineClasses 线上报课
+          1. index 首页
+          2. detail 详情页
+          3. addOnlineClasses 添加线上报课
+

@@ -42,32 +42,6 @@
         <view class="title">暂无数据</view>
       </view>
     </block>
-
-    <!--课程弹框-->
-    <view class="cu-modal show" v-if="showModal">
-      <view class="cu-dialog">
-        <radio-group class="block" @change="chooseDateItem">
-          <view class="cu-list menu text-left">
-            <view class="cu-item" v-for="item in dateArray" :key="item.id">
-              <label class="flex justify-between align-center flex-sub">
-                <view class="flex-sub">
-                  <text class="margin-right">{{item.name}}</text>
-                </view>
-                <radio class="round" :value="item.name"></radio>
-              </label>
-            </view>
-          </view>
-        </radio-group>
-        <view class="cu-bar bg-white justify-around">
-          <view class="action" @click="hideModal">
-            <button class="cu-btn bg-white solid-right">取消</button>
-          </view>
-          <view class="action" @click="hideModal">
-            <button class="cu-btn bg-white" >确定</button>
-          </view>
-        </view>
-      </view>
-    </view>
   </view>
 </template>
 

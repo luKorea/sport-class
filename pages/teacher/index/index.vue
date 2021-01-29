@@ -38,7 +38,7 @@
       </view>
     </view>
 
-    <view class="flex flex-direction margin">
+    <view class="flex flex-direction margin" @click="goNamed">
       <button class="cu-btn bg-my-red lg">我要点名</button>
     </view>
     <view class="flex flex-direction margin" @click="scanCode">
@@ -66,7 +66,7 @@ export default {
         },
         {
           img: this.$imageurl + 'kecheng.png',
-          url: '',
+          url: '/pages/common/schedule/index/index',
           name: '我的课表'
         },
         {
@@ -142,6 +142,11 @@ export default {
     goPrincipal() {
       wx.redirectTo({
         url: '../../principal/index/index'
+      })
+    },
+    goNamed() {
+      wx.navigateTo({
+        url: '../named/index/index'
       })
     }
   }

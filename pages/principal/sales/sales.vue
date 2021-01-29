@@ -86,17 +86,17 @@ export default {
         },
         {
           img: this.$imageurl + 'weihuodong.png',
-          url: '../classRecord/index/index',
+          url: '/pages/principal/microActivities/index/index',
           name: '微活动'
         },
         {
           img: this.$imageurl + 'xueyuandangan.png',
-          url: '../class/index/index',
+          url: '/pages/principal/studentFiles/index/index',
           name: '学员档案'
         },
         {
           img: this.$imageurl + 'xianshangbaoming.png',
-          url: '',
+          url: '/pages/principal/onlineClasses/index/index',
           name: '线上报课'
         },
       ],

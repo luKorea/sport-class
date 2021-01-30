@@ -106,7 +106,6 @@
     </view>
 
 
-    <!--班级弹框-->
     <view class="cu-modal show" v-if="showGradeModal">
       <view class="cu-dialog">
         <radio-group class="block" @change="chooseGradeItem">
@@ -136,7 +135,6 @@
         </view>
       </view>
     </view>
-    <!--课程弹框-->
     <view class="cu-modal show" v-if="showClassModal">
       <view class="cu-dialog">
         <radio-group class="block" @change="chooseClassItem">

@@ -41,9 +41,9 @@
     <view class="flex flex-direction margin" @click="goNamed">
       <button class="cu-btn bg-my-red lg">我要点名</button>
     </view>
-    <view class="flex flex-direction margin" @click="scanCode">
-      <button class="cu-btn bg-orange lg">扫描点名</button>
-    </view>
+<!--    <view class="flex flex-direction margin" @click="scanCode">-->
+<!--      <button class="cu-btn bg-orange lg">扫描点名</button>-->
+<!--    </view>-->
   </view>
 </template>
 

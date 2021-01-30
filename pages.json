@@ -13,6 +13,48 @@
 			}
 		},
 		{
+			"path":"pages/principal/class/detail/detail",
+			"style": {
+				"navigationBarTitleText":"班级详情"
+			}
+		},
+		{
+			"path":"pages/principal/class/transferClass/transferClass",
+			"style": {
+				"navigationBarTitleText":"调课"
+			}
+		},
+		{
+			"path":"pages/principal/class/index/index",
+			"style": {
+				"navigationBarTitleText":"班级"
+			}
+		},
+		{
+			"path":"pages/principal/class/addClass/addClass",
+			"style": {
+				"navigationBarTitleText":"新建班级"
+			}
+		},
+		{
+			"path":"pages/principal/class/addStudents/addStudents",
+			"style": {
+				"navigationBarTitleText":"添加学员"
+			}
+		},
+		{
+			"path":"pages/principal/class/addRules/addRules",
+			"style": {
+				"navigationBarTitleText":"规则排课"
+			}
+		},
+		{
+			"path":"pages/principal/class/addCalendar/addCalendar",
+			"style": {
+				"navigationBarTitleText":"日历排课"
+			}
+		},
+		{
 			"path":"pages/principal/sales/sales",
 			"style": {
 				"navigationBarTitleText":"销售"
@@ -225,42 +267,6 @@
 			}
 		},
 		{
-			"path":"pages/principal/class/index/index",
-			"style": {
-				"navigationBarTitleText":"班级"
-			}
-		},
-		{
-			"path":"pages/principal/class/addClass/addClass",
-			"style": {
-				"navigationBarTitleText":"新建班级"
-			}
-		},
-		{
-			"path":"pages/principal/class/addStudents/addStudents",
-			"style": {
-				"navigationBarTitleText":"添加学员"
-			}
-		},
-		{
-			"path":"pages/principal/class/detail/detail",
-			"style": {
-				"navigationBarTitleText":"班级详情"
-			}
-		},
-		{
-			"path":"pages/principal/class/addRules/addRules",
-			"style": {
-				"navigationBarTitleText":"规则排课"
-			}
-		},
-		{
-			"path":"pages/principal/class/addCalendar/addCalendar",
-			"style": {
-				"navigationBarTitleText":"日历排课"
-			}
-		},
-		{
 			"path":"pages/principal/receipt/index/index",
 			"style": {
 				"navigationBarTitleText":"收据清单"
@@ -456,6 +462,12 @@
 			"path":"pages/common/schedule/detail/detail",
 			"style": {
 				"navigationBarTitleText":"班级详情"
+			}
+		},
+		{
+			"path":"pages/common/classSchedule/classSchedule",
+			"style": {
+				"navigationBarTitleText":"未排课点名"
 			}
 		}
 	],

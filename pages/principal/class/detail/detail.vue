@@ -22,7 +22,7 @@
     </view>
     <!--班级排课-->
     <view id="tab4" class="margin-top-sm" :class="tab4">
-<!--      <scheduling-component :student-id="studentId" />-->
+      <scheduling-component :student-id="studentId" />
     </view>
   </view>
 </template>

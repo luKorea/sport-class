@@ -7,21 +7,21 @@
 			}
 		},
 		{
+			"path":"pages/principal/mime/mime",
+			"style": {
+				"navigationBarTitleText":"个人中心"
+			}
+		},
+		{
 			"path":"pages/teacher/index/index",
 			"style": {
 				"navigationBarTitleText":"首页"
 			}
 		},
 		{
-			"path":"pages/principal/class/detail/detail",
+			"path":"pages/principal/sales/sales",
 			"style": {
-				"navigationBarTitleText":"班级详情"
-			}
-		},
-		{
-			"path":"pages/principal/class/transferClass/transferClass",
-			"style": {
-				"navigationBarTitleText":"调课"
+				"navigationBarTitleText":"销售"
 			}
 		},
 		{
@@ -43,27 +43,36 @@
 			}
 		},
 		{
+			"path":"pages/principal/class/detail/detail",
+			"style": {
+				"navigationBarTitleText":"班级详情"
+			}
+		},
+		{
+			"path":"pages/principal/class/timePage/timePage",
+			"style": {
+				"navigationBarTitleText":"配置上课时间"
+			}
+		},
+		{
+			"path":"pages/principal/class/addCalendar/addCalendar",
+			"style": {
+				"navigationBarTitleText":"日历排课",
+				"usingComponents": {
+					"van-calendar": "/wxcomponents/vant/calendar/index"
+				}
+			}
+		},
+		{
 			"path":"pages/principal/class/addRules/addRules",
 			"style": {
 				"navigationBarTitleText":"规则排课"
 			}
 		},
 		{
-			"path":"pages/principal/class/addCalendar/addCalendar",
+			"path":"pages/principal/class/transferClass/transferClass",
 			"style": {
-				"navigationBarTitleText":"日历排课"
-			}
-		},
-		{
-			"path":"pages/principal/sales/sales",
-			"style": {
-				"navigationBarTitleText":"销售"
-			}
-		},
-		{
-			"path":"pages/principal/mime/mime",
-			"style": {
-				"navigationBarTitleText":"个人中心"
+				"navigationBarTitleText":"调课"
 			}
 		},
 		{

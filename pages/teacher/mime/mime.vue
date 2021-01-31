@@ -9,25 +9,34 @@
       <view class="text-xl margin-top-sm">{{info.identity}}</view>
     </view>
 <!--下面区域-->
-    <view class="cu-list menu card-menu margin-bottom-xl margin-top" style="margin-right: 0;margin-left: 0">
-      <view class="cu-item arrow">
-        <navigator class="content" url="/pages/about/about/about" hover-class="none">
-          <text class="cuIcon-read"></text>
-          <text class="text-grey">上课点</text>
-        </navigator>
+    <view class="cu-bar bg-white solid-bottom">
+      <view class="action">
+        <text class="cuIcon-read"></text>
+        <text class="text-grey">上课点</text>
       </view>
-      <view class="cu-item arrow" @click="goReset">
-       <view class="content">
-         <text class="cuIcon-lock"></text>
-         <text class="text-grey">设置密码</text>
-       </view>
+      <view class="action">
+        <picker @change="bindClassChange($event, classArray)" :value="classIndex" :range="classArray" range-key="label">
+          <view class="picker">{{classArray[classIndex].label}}</view>
+        </picker>
+        <text class="cuIcon-right"></text>
       </view>
-      <view class="cu-item">
-        <navigator class="content" hover-class="none">
-          <text class="cuIcon-phone"></text>
-          <text class="text-grey">客服电话</text>
-        </navigator>
-        <view class="action text-gray" @click="sendPhone">{{info.phone}}</view>
+    </view>
+    <view class="cu-bar bg-white solid-bottom"  @click="goReset">
+      <view class="action">
+        <text class="cuIcon-lock"></text>
+        <text class="text-grey">设置密码</text>
+      </view>
+      <view class="action">
+        <text class="cuIcon-right"></text>
+      </view>
+    </view>
+    <view class="cu-bar bg-white solid-bottom"  @click="sendPhone">
+      <view class="action">
+        <text class="cuIcon-phone"></text>
+        <text class="text-grey">客服电话</text>
+      </view>
+      <view class="action">
+        <text class="action text-gray">{{ info.phone }}</text>
       </view>
     </view>
     <view class="flex flex-direction margin" @click="logoutInfo">
@@ -42,6 +51,21 @@
   export default {
 		data() {
 			return {
+        classIndex: 0,
+        classArray: [
+          {
+            label: '测试地点一',
+            value: 1
+          },
+          {
+            label: '测试地点二',
+            value: 2
+          },
+          {
+            label: '测试地点三',
+            value: 3
+          }
+        ],
 			  info: {
           identity: '我是老师',
 			    imgUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
@@ -58,6 +82,11 @@
         uni.makePhoneCall({
           phoneNumber: this.info.phone //仅为示例，并非真实的电话号码
         })
+      },
+      bindClassChange(e, item) {
+        const {value} = e.detail;
+        this.classIndex = value;
+        // this.form.grade = data[this.gradeIndex].id;
       },
       goReset() {
         uni.navigateTo({

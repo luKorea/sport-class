@@ -9,7 +9,7 @@
       </view>
       <block v-if="list.length > 0">
         <view class="cu-bar bg-white solid-bottom" v-for="(item, index) in list" :key="index">
-          <view class="action text-orange flex flex-common">
+          <view class="action text-orange flex flex-common" @click="goDetail(item.id)">
             <text class="text-sm">{{item.type}}</text>
             <text class="text-sm">{{item.startDate}}~{{item.endDate}}</text>
             <text class="text-sm">{{item.startTime}}~{{item.endTime}}</text>
@@ -177,9 +177,14 @@ export default {
       console.log(this.form);
       this.showModal = false;
     },
+    goDetail(id) {
+      wx.navigateTo({
+        url: `../addRules/addRules?type=edit&id=${id}`
+      })
+    },
     addRules() {
       wx.navigateTo({
-        url: '../addRules/addRules'
+        url: '../addRules/addRules?type=add'
       })
     },
     addCalendar() {

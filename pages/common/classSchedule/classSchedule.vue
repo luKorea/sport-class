@@ -91,8 +91,8 @@ export default {
     })
     return {
       date: currentDate,
-      startTime: `${new Date().getHours()} : ${new Date().getMinutes()}`,
-      endTime: `${new Date().getHours()} : ${new Date().getMinutes()}`,
+      startTime: `${new Date().getHours()}:${new Date().getMinutes()}`,
+      endTime: `${new Date().getHours()}:${new Date().getMinutes()}`,
       showModal: false,
       teacherArray: [
         //  type 0 主教 1 助教

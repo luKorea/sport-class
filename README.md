@@ -106,6 +106,7 @@
           5. addRules 规则排课
           6. addCalendar 日历排课
           7. transferClass 调课
+          8. timePage 配置上课时间
       13. sales 销售
       14. mime 个人中心
       15. attendanceRate 本月出勤率

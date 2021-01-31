@@ -63,8 +63,8 @@ export default {
     })
     return {
       date: currentDate,
-      startTime: `${new Date().getHours()} : ${new Date().getMinutes()}`,
-      endTime: `${new Date().getHours()} : ${new Date().getMinutes()}`,
+      startTime: `${new Date().getHours()}:${new Date().getMinutes()}`,
+      endTime: `${new Date().getHours()}:${new Date().getMinutes()}`,
       info: {
         className: '测试班级',
         teacherName: '李老师',

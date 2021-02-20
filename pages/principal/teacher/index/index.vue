@@ -202,7 +202,7 @@ export default {
       wx.navigateTo({
         url: `../detail/detail?id=${id}`
       })
-    }
+    },
   }
 }
 </script>

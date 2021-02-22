@@ -77,3 +77,53 @@ export const getteacherhourstatistics = params => {
         data: params
     })
 }
+//=====================================================
+// 班级满班率
+export const getfullclassrate = params => {
+    return axios({
+        url: '/educationalstatistics/fullclassrate',
+        method: 'POST',
+        data: params
+    })
+}
+// 退费率统计（百分比汇总）
+export const getrefundratebytype = params => {
+    return axios({
+        url: '/educationalstatistics/refundratebytype',
+        method: 'POST',
+        data: params
+    })
+}
+// 续费率统计（百分比汇总）
+export const getrenewratebytype = params => {
+    return axios({
+        url: '/educationalstatistics/renewratebytype',
+        method: 'POST',
+        data: params
+    })
+}
+//=========================================================
+// 按课程统计满班率
+export const getfullclassratebycourse = params => {
+    return axios({
+        url: '/educationalstatistics/fullclassratebycourse',
+        method: 'POST',
+        data: params
+    })
+}
+// 按课程统计退费率
+export const getrefundrate = params => {
+    return axios({
+        url: '/educationalstatistics/refundrate',
+        method: 'POST',
+        data: params
+    })
+}
+// 按课程统计续费率
+export const getrenewrate = params => {
+    return axios({
+        url: '/educationalstatistics/renewrate',
+        method: 'POST',
+        data: params
+    })
+}

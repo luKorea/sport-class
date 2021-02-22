@@ -143,7 +143,7 @@
 					data.setMonth(data.getMonth() - 1); //每次循环一次 月份值减1
 					var m = data.getMonth() + 1;
 					m = m < 10 ? "0" + m : m;
-					monthArr.push(parseInt(m));
+					monthArr.push(`${m}月`);
 				}
 				return monthArr.reverse();
 			},

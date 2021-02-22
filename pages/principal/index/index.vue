@@ -70,28 +70,28 @@
 			</view>
 			<view class="cu-bar bg-white keshi">
 				<view class="flex p-xs margin-bottom-sm mb-sm border" style="width: 100%;">
-					<view class="flex-treble padding-sm margin-xs radius text-red text-bold">0.00课时</view>
+					<view class="flex-treble padding-sm margin-xs radius text-red text-bold">{{Zc}}课时</view>
 					<view class="flex-twice padding-sm margin-xs radius flex flex-direction text-right">
-						<text>0课时</text>
-						<text>0课时</text>
+						<text>{{Kc1}}课时</text>
+						<text>{{Kc2}}课时</text>
 					</view>
 					<view class="flex-twice padding-sm margin-xs radius flex flex-direction text-right">
 						<text>一对一</text>
-						<text>一对一</text>
+						<text>一对多</text>
 					</view>
 
 				</view>
 			</view>
 			<view class="cu-bar bg-white keshi">
 				<view class="flex p-xs margin-bottom-sm mb-sm border" style="width: 100%;">
-					<view class="flex-treble padding-sm margin-xs radius text-orange text-bold">￥0.00</view>
+					<view class="flex-treble padding-sm margin-xs radius text-orange text-bold">￥{{Xc}}</view>
 					<view class="flex-twice padding-sm margin-xs radius flex flex-direction text-right">
-						<text>0课时</text>
-						<text>0课时</text>
+						<text>{{Xc1}}￥</text>
+						<text>{{Xc2}}￥</text>
 					</view>
 					<view class="flex-twice padding-sm margin-xs radius flex flex-direction text-right">
 						<text>一对一</text>
-						<text>一对一</text>
+						<text>一对多</text>
 					</view>
 				</view>
 			</view>
@@ -145,6 +145,12 @@
 				qC1: 0,
 				qC2: 0,
 				qCRate: 0,
+				Kc1:0,
+				Kc2:0,
+				Zc:0,
+				Xc1:0,
+				Xc2:0,
+				Xc:0,
 				cWidth: '',
 				cHeight: '',
 				pixelRatio: 1,
@@ -306,7 +312,7 @@
 					data.setMonth(data.getMonth() - 1); //每次循环一次 月份值减1
 					var m = data.getMonth() + 1;
 					m = m < 10 ? "0" + m : m;
-					monthArr.push(parseInt(m));
+					monthArr.push(`${m}月`);
 				}
 				return monthArr.reverse();
 			},
@@ -324,49 +330,39 @@
 					if (res.data.code === 0) {
 						if (res.data.data.length > 0) {
 							
-							return// 此处没有折现图，计算数字就好
-							let LineA = {
-								categories: [],
-								series: [{
-										name: "一对一",
-										data: []
-									},
-									{
-										name: "一对多",
-										data: []
-									}
-								]
-							};
+							let c1 = 0;
+							let c2 = 0;
 							res.data.data.list.map((item, index) => {
-								LineA.categories.push(`${item.day}`);
 								if (item.type === 1) {
-									LineA.series[0].data.push(item.c1)
+									c1+=Number(item.c1)
 								} else {
-									LineA.series[1].data.push(item.c1)
+									c2+=Number(item.c1)
 								}
 							})
-							LineA.categories = [...new Set(LineA.categories)]
-							_self.showLineA("canvasLineA", LineA);
-						} else {
-							let LineA = {
-								categories: this.getMonths(),
-								series: [{
-										name: "一对一",
-										data: [0, 0, 0, 0, 0, 0]
-									},
-									{
-										name: "一对多",
-										data: [0, 0, 0, 0, 0, 0]
-									}
-								]
-							};
-							LineA.categories = [...new Set(LineA.categories)]
-							_self.showLineA("canvasLineA", LineA);
-						}
-				
-				
+							this.Kc1 = c1;
+							this.Kc2 = c2;
+							this.Zc = c1+c2;
+						} 
 					}
-				
+				});
+				getcostsummary(obj).then((res) => {
+					if (res.data.code === 0) {
+						if (res.data.data.length > 0) {
+							
+							let c1 = 0;
+							let c2 = 0;
+							res.data.data.list.map((item, index) => {
+								if (item.type === 1) {
+									c1+=Number(item.c1)
+								} else {
+									c2+=Number(item.c1)
+								}
+							})
+							this.Xc1 = c1;
+							this.Xc2 = c2;
+							this.Xc = c1+c2;
+						} 
+					}
 				})
 				
 				// 出勤

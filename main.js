@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App'
-
+import api from './api'
 Vue.config.productionTip = false
 
 App.mpType = 'app'
@@ -9,6 +9,7 @@ Vue.prototype.$imageurl = "https://yundongke.gzbigbang.cn/"
 Vue.prototype.image = "https://yundongke.gzbigbang.cn"
 Vue.prototype.$uploadUrl = 'https://i.huatisport.com';
 Vue.prototype.$upload = 'https://d.huatisport.com';
+Vue.prototype.$api = api;
 
 // main.js
 function formatDate(date, fmt) {

@@ -374,7 +374,8 @@
 		{
 			"path":"pages/common/record/index/index",
 			"style": {
-				"navigationBarTitleText":"成长记录"
+				"navigationBarTitleText":"成长记录",
+        "enablePullDownRefresh": true
 			}
 		},
 		{

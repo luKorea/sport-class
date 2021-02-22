@@ -3,9 +3,14 @@
  * @method axios
  * @param params
  */
-const baseURL = "https://s1.huatisport.com/v1";
+// const baseURL = "https://s1.huatisport.com/v1";
 // const baseURL = "https://b.huatisport.com/v1";
-
+//#ifdef H5
+    const baseURL = '/v1';
+//#endif
+//#ifndef H5
+    const baseURL = "https://s1.huatisport.com/v1";
+//#endif
 
 // const baseURL = '';
 

@@ -7,16 +7,16 @@
             <view class="flex flex-direction padding-top padding-bottom">
               <view class="margin-bottom-sm">
                 <text class="ban-red">班</text>
-                <text class="margin-right">{{item.ban}}</text>
-                <text class="text-type">{{item.type}}</text>
+                <text class="margin-right">{{item.name}}</text>
+                <text class="text-type">{{item.type === 1 ? '1v1' : '1vN'}}</text>
               </view>
               <view class="margin-bottom-sm">
                 <text class="ke-orange">课</text>
-                <text>{{item.ke}}</text>
+                <text>{{item.title}}</text>
               </view>
               <view>
                 <text class="ren-green">人</text>
-                <text>学生: {{item.number}} 人</text>
+                <text>学生: {{item.signnum}}/{{item.capacity}} 人</text>
               </view>
             </view>
           </view>
@@ -25,49 +25,50 @@
     </block>
     <block wx:else>
       <view class="cu-form-group cu-bar bg-white flex justify-center align-center margin-top-sm">
-        <view class="title">暂无数据</view>
+        <view class="title text-center">暂无数据</view>
       </view>
     </block>
   </view>
 </template>
 
 <script>
+import {getClassList} from "../../../../../api/principal/class";
 export default {
   name: "classes",
-  data() {
-    return {
-      list: [
-        {
-          id: 1,
-          ban: '2020通用课程',
-          ke: '篮球',
-          number: 10,
-          type: '1v1'
-        },
-        {
-          id: 2,
-          ban: '2020通用课程',
-          ke: '篮球',
-          number: 88,
-          type: '1v1'
-        },
-        {
-          id: 3,
-          ban: '2020通用课程',
-          ke: '篮球',
-          number: 66,
-          type: '1v1'
-        },
-        {
-          id: 4,
-          ban: '2020通用课程',
-          ke: '篮球',
-          number: 20,
-          type: '1v1'
-        }
-      ]
+  props: {
+    teacherids: {
+      type: String,
+      default: ''
     }
   },
+  data() {
+    return {
+      list: [],
+      params: {
+        pi: 1,
+        ps: 1000
+      }
+    }
+  },
+  mounted() {
+    if (this.teacherids !== '') {
+      this.getClassData({
+        ...this.params,
+        teacherid: this.teacherids
+      })
+    }
+  },
+  methods: {
+    getClassData(params) {
+      getClassList(params)
+      .then(res => {
+        if (res.data.code === 0) {
+          this.list = res.data.data.list;
+          console.log(this.list);
+        }
+      }).catch(err => console.log(err))
+    }
+  }
 }
 </script>
 

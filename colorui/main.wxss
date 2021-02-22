@@ -734,7 +734,7 @@ radio.white[checked] .wx-radio-input {
 	margin-left: initial;
 	transform: translate(0rpx, 0rpx);
 	margin-right: initial;
-	border-radius: 0 !important;
+	/*border-radius: 0 !important;*/
 }
 
 .cu-btn::after {

@@ -11,25 +11,25 @@
       <view class="cu-bar bg-white solid-bottom">
         <view class="action">班级名称</view>
         <view class="action text-right">
-          <input type="text" placeholder="请输入班级名称" v-model="info.gradeName">
+          <input type="text" placeholder="请输入班级名称" v-model="info.name">
         </view>
       </view>
       <view class="cu-bar bg-white solid-bottom">
         <view class="action">班级容量</view>
         <view class="action text-right">
-          <input type="text" placeholder="请输入班级容量人数" v-model="info.total">
+          <input type="text" placeholder="请输入班级容量人数" v-model="info.capacity">
         </view>
       </view>
       <view class="cu-bar bg-white solid-bottom">
         <view class="action">默认授课课时</view>
         <view class="action text-right">
-          <input type="text" placeholder="请输入默认授课课时" v-model="info.time">
+          <input type="text" placeholder="请输入默认授课课时" v-model="info.duration">
         </view>
       </view>
       <view class="cu-bar bg-white solid-bottom">
         <view class="action">备注</view>
         <view class="action text-right">
-          <input type="text" placeholder="(50字以内)" v-model="info.content">
+          <input type="text" placeholder="(50字以内)" v-model="info.remark">
         </view>
       </view>
 
@@ -39,7 +39,7 @@
           <button class="bg-orange cu-btn">添加</button>
         </view>
       </view>
-      <view class="cu-bar bg-white solid-bottom" v-for="(item, index) in info.teacher" :key="index">
+      <view class="cu-bar bg-white solid-bottom" v-for="(item, index) in teacher" :key="index">
         <view class="action">{{item.name}}</view>
         <view class="action" @click="deleteItem(index)">
           <button class="bg-gray cu-btn text-gray">删除</button>
@@ -64,18 +64,18 @@
       <view class="cu-bar bg-white solid-bottom margin-top">
         <view class="action">
           <text class="text-sm">开课前 </text>
-          <input type="text" class="kaike">
+          <input type="text" class="kaike" v-model="info.time">
           <text class="text-sm"> 小时，约满 </text>
-          <input type="text" class="kaike">
+          <input type="text" class="kaike" v-model="info.time2">
           <text class="text-sm"> 人准时开课</text>
         </view>
       </view>
       <view class="cu-bar bg-white solid-bottom">
         <view class="action text-sm">
           <text class="text-sm">最多可约</text>
-          <input type="text" class="yue">
+          <input type="text" class="yue" v-model="info.amount">
           <text class="text-sm">人，开课前</text>
-          <input type="text" class="yue">
+          <input type="text" class="yue" v-model="info.amount2">
           <text class="text-sm">小时不能取消约课</text>
         </view>
       </view>
@@ -94,11 +94,10 @@
             <view class="cu-item" v-for="item in classArray" :key="item.id">
               <label class="flex justify-between align-center flex-sub">
                 <view class="flex-sub">
-                  <text class="margin-right">{{item.name}}</text>
-                  <text class="text-cyan margin-right text-sm">{{item.money}}元/课时</text>
-                  <text class="text-type">{{item.type}}</text>
+                  <text class="margin-right">{{item.title}}</text>
+                  <text class="text-type">{{item.type === 1 ? '1v1': '1vN'}}</text>
                 </view>
-                <radio class="round" :value="item.name"></radio>
+                <radio class="round" :value="JSON.stringify(item)"></radio>
               </label>
             </view>
           </view>
@@ -121,7 +120,10 @@
           <view class="cu-list menu text-left">
             <view class="cu-item" v-for="item in teacherArray" :key="item.id">
               <label class="flex justify-between align-center flex-sub">
-                <view class="flex-sub">{{item.name}}</view>
+                <view class="flex-sub">
+                  <text class="margin-right">{{item.name}}</text>
+                  <text>{{item.contact}}</text>
+                </view>
                 <checkbox :value="JSON.stringify(item)" style="transform:scale(0.6)"></checkbox>
               </label>
             </view>
@@ -141,6 +143,13 @@
 </template>
 
 <script>
+import {
+  addOrEditClass,
+  getCourseBaseList
+} from "../../../../api/principal/class";
+import {getTeacherList} from '../../../../api/principal/teacher';
+import {failTip} from "../../../../utils/tip";
+
 export default {
   name: "basic",
   data() {
@@ -149,76 +158,56 @@ export default {
       showModal: false,
       info: {
         className: '',
-        gradeName: '',
-        total: '',
-        time: '',
-        content: '',
-        teacher: [
-          {
-            id: 1,
-            name: '陈老师'
-          },
-          {
-            id: 2,
-            name: '黄老师'
-          },
-        ]
+        name: '',
+        capacity: '',
+        duration: '',
+        remark: '',
+        about: 0,
+        public: 0
       },
-      classArray: [
-        {
-          id: 1,
-          name: '测试课程1',
-          money: 10,
-          type: '1v1'
-        },
-        {
-          id: 2,
-          name: '测试课程2',
-          money: 10,
-          type: '1vN'
-        },
-        {
-          id: 3,
-          name: '测试课程3',
-          money: 10,
-          type: '1v1'
-        },
-        {
-          id: 4,
-          name: '测试课程4',
-          money: 10,
-          type: '1vN'
-        },
-      ],
-      teacherArray: [
-        {
-          id: 1,
-          name: '李老师'
-        },
-        {
-          id: 2,
-          name: '张老师'
-        },
-        {
-          id: 3,
-          name: '徐老师'
-        },
-        {
-          id: 4,
-          name: '卢老师'
-        },
-      ],
-      selectArray: []
+      teacher: [],
+      classArray: [],
+      teacherArray: [],
+      selectArray: [],
+      params: {
+        pi: 1,
+        ps: 1000,
+        enable: 1
+      }
     }
   },
+  onLoad(){
+    this.getAllCourse();
+    this.getAllTeacher(this.params);
+  },
   methods: {
+    getAllCourse() {
+      getCourseBaseList()
+      .then(res => {
+        if (res.data.code === 0) {
+          this.classArray = res.data.data;
+        } else {
+          failTip('出错了')
+        }
+      }).catch(err => console.log(err))
+    },
+    getAllTeacher(params) {
+      getTeacherList(params)
+          .then(res => {
+            if (res.data.code === 0) {
+              this.teacherArray = res.data.data.list;
+            } else {
+              failTip('出错了')
+            }
+          }).catch(err => console.log(err))
+    },
     setAbout(e) {
       let {value} = e.detail;
-      this.info.about = value === true ? 1 : 0;
+      this.info.about = value === true ? 2 : 0;
     },
     setPublic(e) {
       let {value} = e.detail;
-      this.info.public = value === true ? 1 : 0;
+      this.info.public = value === true ? 4 : 0;
     },
     showClassModals() {
       this.showClassModal = true;
@@ -227,8 +216,10 @@ export default {
       this.showClassModal = false;
     },
     chooseClassItem(e) {
-      let {value} = e.detail;
-      this.info.className = value;
+      let {value} = e.detail,
+          data = JSON.parse(value);
+      this.info.courseid = data.id;
+      this.info.className = data.title;
     },
     showModals() {
       this.showModal = true;
@@ -245,15 +236,30 @@ export default {
       this.selectArray = data;
     },
     addItem() {
-      this.info.teacher = this.info.teacher.concat(this.selectArray);
-      console.log(this.info.teacher);
+      this.teacher = this.teacher.concat(this.selectArray);
       this.hideModal();
     },
     deleteItem(index) {
-      this.info.teacher.splice(index, 1)
+      this.teacher.splice(index, 1)
     },
     saveData() {
-      wx.navigateBack();
+      this.info['schoolid'] = wx.getStorageSync('venueid');
+      this.info['organizeid'] = wx.getStorageSync('organizeid');
+      this.info['id'] = 0;
+      this.info['flags'] = this.info.about + this.info.public;
+      let teacherArr = [];
+      this.teacher.forEach(item => {
+        teacherArr.push(item.id);
+      });
+      this.info['teacherids'] = teacherArr.toString();
+      addOrEditClass(this.info)
+      .then(res => {
+        if (res.data.data.errcode === 200) {
+          wx.navigateBack();
+        } else {
+          failTip(res.data.data.errmsg)
+        }
+      })
       console.log(this.info);
     }
   }

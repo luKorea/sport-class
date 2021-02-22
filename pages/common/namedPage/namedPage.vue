@@ -99,14 +99,14 @@
     </view>
 <!--底部固定-->
     <view class="drawer-footer" v-if="showModal">
-      <button class="cu-btn bg-white lg" style="width: 30%;">全选</button>
-      <button class="cu-btn bg-red lg" style="width: 70%;">点名</button>
+      <button class="cu-btn bg-white lg" style="width: 30%;border-radius: 0">全选</button>
+      <button class="cu-btn bg-red lg" style="width: 70%;border-radius: 0">点名</button>
     </view>
     <view class="drawer-footer" v-else>
-      <button class="cu-btn bg-orange lg" style="width: 25%;"@click="this.showModal = !this.showModal">到课</button>
-      <button class="cu-btn bg-red lg" style="width: 25%;" @click="this.showModal = !this.showModal">未到</button>
-      <button class="cu-btn bg-cyan lg" style="width: 25%;" @click="this.showModal = !this.showModal">请假</button>
-      <button class="cu-btn bg-blue lg" style="width: 25%;" @click="this.showModal = !this.showModal">迟到</button>
+      <button class="cu-btn bg-orange lg" style="width: 25%;border-radius: 0"@click="this.showModal = !this.showModal">到课</button>
+      <button class="cu-btn bg-red lg" style="width: 25%;border-radius: 0" @click="this.showModal = !this.showModal">未到</button>
+      <button class="cu-btn bg-cyan lg" style="width: 25%;border-radius: 0" @click="this.showModal = !this.showModal">请假</button>
+      <button class="cu-btn bg-blue lg" style="width: 25%;border-radius: 0" @click="this.showModal = !this.showModal">迟到</button>
     </view>
     <view class='cu-tabbar-height'></view>
   </view>

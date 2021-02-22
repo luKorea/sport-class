@@ -27,23 +27,23 @@
       </view>
       <view class="cu-bar bg-white padding-top">
         <view class="action">
-          <textarea maxlength="-1" placeholder="请输入内容" v-modal="info.content"></textarea>
+          <textarea maxlength="-1" placeholder="请输入内容" v-model="info.content"></textarea>
         </view>
       </view>
 
       <view class="cu-bar bg-white margin-top">
         <view class="action">图片上传</view>
-      </view>
-      <view class="cu-form-group">
-        <view class="grid col-4 grid-square flex-sub">
-          <view class="bg-img" v-for="(item, index) in info.imgList" :key="index">
-            <image :src='item' mode='aspectFill'></image>
-            <view class="cu-tag bg-red" @click="delImg(index)">
-              <text class="cuIcon-close"></text>
+        <view class="action" style="width: 100rpx;height: 100rpx; margin: 30rpx 30rpx 10rpx 30rpx">
+          <view class="grid col-1 grid-square flex-sub" style="flex-direction: row-reverse;">
+            <view class="bg-img" v-if="info.images !== ''">
+              <image :src='imgUrl + info.images' mode='aspectFill'></image>
+              <view class="cu-tag bg-red" @click="DelImg">
+                <text class="cuIcon-close"></text>
+              </view>
             </view>
-          </view>
-          <view class="solids" @click="chooseImage">
-            <text class="cuIcon-cameraadd"></text>
+            <view class="solids" @click="ChooseImage" v-if="info.images === ''">
+              <text class="cuIcon-add"></text>
+            </view>
           </view>
         </view>
       </view>
@@ -61,13 +61,13 @@
               <label class="flex justify-between align-center flex-sub">
                 <view class="flex-sub">
                   <text class="margin-right">{{item.name}}</text>
-                  <text v-if="item.sex === 0" class="cuIcon-male text-blue margin-right"></text>
+                  <text v-if="item.gender === 1" class="cuIcon-male text-blue margin-right"></text>
                   <text v-else class="cuIcon-female text-pink margin-right"></text>
-                  <text class="text-red text-sm margin-right">{{item.phone}}</text>
-                  <text v-if="item.time > 0">剩余 <text class="text-red text-sm">{{item.time}}</text> 课时</text>
-                  <text v-else class="text-sm">无可用课时</text>
+                  <text class="text-red text-sm margin-right">{{item.contact}}</text>
+                 <!-- <text v-if="item.time > 0">剩余 <text class="text-red text-sm">{{item.time}}</text> 课时</text>
+                  <text v-else class="text-sm">无可用课时</text> -->
                 </view>
-                <checkbox :value="item.name" style="transform:scale(0.6)"></checkbox>
+                <checkbox :value="item.id" style="transform:scale(0.6)"></checkbox>
               </label>
             </view>
           </view>
@@ -86,99 +86,88 @@
 </template>
 
 <script>
+import {getStudentsList} from '../../../../api/common/students';
+import {addNotice} from '../../../../api/principal/notice';
+import {failTip} from '../../../../utils/tip.js'; 
 export default {
   name: "addNotice",
   data() {
     return {
+      imgUrl: this.$uploadUrl,
       userModal: false,
-      userArray: [
-        {
-          id: 1,
-          name: '陈晓霞',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 0,
-          time: 8
-        },
-        {
-          id: 2,
-          name: '陈晓霞',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 1,
-          time: 8
-        },
-        {
-          id: 3,
-          name: '陈晓霞',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 0,
-          time: 0
-        },
-        {
-          id: 4,
-          name: '陈晓霞',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 1,
-          time: 8
-        },
-        {
-          id: 5,
-          name: '陈晓霞',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 0,
-          time: 0
-        },
-        {
-          id: 5,
-          name: '陈晓霞',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 0,
-          time: 0
-        },
-      ],
+      userArray: [],
       selectArray: [],
       info: {
         title: '',
-        content: '<div>Hello World!</div>',
-        imgList: []
+        images: '',
+        studentids: '',
+        type: 1
+      },
+      params:{
+        pi:1,
+        ps: 1000
       }
     }
   },
+  onLoad() {
+    this.getUserList(this.params);
+  },
   methods: {
+    getUserList(params) {
+      getStudentsList(params)
+      .then(res => {
+        this.userArray = res.data.data.list;
+      }).catch(err => console.log(err));
+    },
     showModal() {
       this.userModal = true;
     },
     hideModal() {
       this.userModal = false;
     },
-    chooseImage() {
+    // 上传图片
+    ChooseImage() {
+      let that = this;
       wx.chooseImage({
-        count: 4, //默认9
+        count: 1, //默认9
         sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album'], //从相册选择
         success: (res) => {
-          if (this.info.imgList.length !== 0) {
-            this.info.imgList = this.info.imgList.concat(res.tempFilePaths);
-          } else {
-            this.info.imgList = res.tempFilePaths
-          }
+          console.log(res);
+          this.info.image = res.tempFilePaths[0];
+          wx.uploadFile({
+            url: that.$upload + '/d/m/file/upload?type=12',
+            filePath: res.tempFilePaths[0],
+            name: 'file',
+            formData: res.tempFilePaths,
+            header: {
+              'Content-Type': 'multipart/form-data'
+            },
+            success(res) {
+              let data = JSON.parse(res.data);
+              that.info.images = data.data.path + data.data.name;
+            }
+          })
         }
       });
     },
-    delImg(index) {
-      this.info.imgList.splice(index, 1);
+    DelImg() {
+      this.info.images = '';
     },
     chooseUserItem(e) {
       let {value} = e.detail;
       this.selectArray = value;
     },
     saveData() {
-      wx.navigateBack();
+		this.info.studentids = this.selectArray.toString();
+		addNotice(this.info)
+		.then(res => {
+			if(res.data.data.errcode === 200) {
+				wx.navigateBack();
+			} else {
+				failTip(res.data.data.errmsg)
+			}
+		}).catch(err => console.log(err))
     }
   }
 }

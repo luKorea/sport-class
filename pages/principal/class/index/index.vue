@@ -5,9 +5,9 @@
       <view class="cu-bar search bg-white">
         <view class="search-form">
           <text class="cuIcon-search"></text>
-          <input type="text" placeholder="请输入班级名称" v-model="searchInput"/>
+          <input type="text" placeholder="请输入班级名称" v-model="params.keywords"/>
         </view>
-        <view class="action" @click="searchValue">
+        <view class="action" @click="getListData(params)">
           <button class="cu-btn shadow-blur text-white bg-red">搜索</button>
         </view>
       </view>
@@ -31,32 +31,21 @@
         <!--内容区域-->
         <view class="cu-form-group cu-bar bg-white">
           <view class="title">选择课程</view>
-          <picker @change="bindGradeChange($event, gradeArray)" :value="gradeIndex" :range="gradeArray" range-key="label">
-            <view class="picker">{{gradeArray[gradeIndex].label}}</view>
-          </picker>
-        </view>
-        <view class="cu-form-group cu-bar bg-white">
-          <view class="title">选择班级</view>
-          <picker @change="bindClassChange($event, classArray)" :value="classIndex" :range="classArray" range-key="label">
-            <view class="picker">{{classArray[classIndex].label}}</view>
+          <picker @change="bindGradeChange($event, gradeArray)" :value="gradeIndex" :range="gradeArray" range-key="title">
+            <view class="picker">{{gradeArray[gradeIndex].title}}</view>
           </picker>
         </view>
         <view class="cu-form-group cu-bar bg-white">
           <view class="title">选择老师</view>
-          <picker @change="bindTeacherChange($event, teacherArray)" :value="teacherIndex" :range="teacherArray" range-key="label">
-            <view class="picker">{{teacherArray[teacherIndex].label}}</view>
-          </picker>
-        </view>
-        <view class="cu-form-group cu-bar bg-white">
-          <view class="title">选择课程套餐</view>
-          <picker @change="bindPackageChange($event, packageArray)" :value="packageIndex" :range="packageArray" range-key="label">
-            <view class="picker">{{packageArray[packageIndex].label}}</view>
+          <picker @change="bindTeacherChange($event, teacherArray)" :value="teacherIndex" 
+		  :range="teacherArray" range-key="name">
+            <view class="picker">{{teacherArray[teacherIndex].name}}</view>
           </picker>
         </view>
         <view class="cu-form-group cu-bar bg-white">
           <view class="title">选择标签</view>
-          <picker @change="bindLabelChange($event, labelArray)" :value="labelIndex" :range="labelArray" range-key="label">
-            <view class="picker">{{labelArray[labelIndex].label}}</view>
+          <picker @change="bindLabelChange($event, labelArray)" :value="labelIndex" :range="labelArray" range-key="name">
+            <view class="picker">{{labelArray[labelIndex].name}}</view>
           </picker>
         </view>
         <view class="cu-form-group cu-bar bg-white">
@@ -70,7 +59,7 @@
         <view class="cu-form-group cu-bar bg-white">
           <radio-group @change="studentRadioChange" class="radio-group">
             <label v-for="(item, index) in studentRadio" :key="item.value" class="radio-group-item">
-              <radio :value="item.value" :checked="index === studentRadio" class="radio-group-item-round" />
+              <radio :value="item.value" :checked="index === studentCurrent" class="radio-group-item-round" />
               <text class="radio-group-item-text">{{item.name}}</text>
             </label>
           </radio-group>
@@ -84,21 +73,21 @@
       <!--列表-->
       <block v-if="list.length > 0">
         <view v-for="(item, index) in list" :key="index">
-          <view class="cu-bar bg-white solid-bottom margin-top" @click="goDetail(item.id)">
+          <view class="cu-bar bg-white solid-bottom margin-top" @click="goDetail(item.id, item.courseid)">
             <view class="action">
               <view class="flex flex-direction padding-top padding-bottom">
                 <view class="margin-bottom-sm">
                   <text class="ban-red">班</text>
-                  <text class="margin-right">{{item.ban}}</text>
-                  <text class="text-type">{{item.type}}</text>
+                  <text class="margin-right">{{item.name}}</text>
+                  <text class="text-type">{{item.type === 1 ? '1v1': '1vN'}}</text>
                 </view>
                 <view class="margin-bottom-sm">
                   <text class="ke-orange">课</text>
-                  <text>{{item.ke}}</text>
+                  <text>{{item.title}}</text>
                 </view>
                 <view>
                   <text class="ren-green">师</text>
-                  <text>{{item.teacher}}</text>
+                  <text>{{item.teachers !== '' ? item.teachers : '暂未添加老师'}}</text>
                 </view>
               </view>
             </view>
@@ -119,127 +108,46 @@
 </template>
 
 <script>
-// import {getMyClassList} from '../../../../api/teacher/myClass';
+import {getClassList} from "../../../../api/principal/class";
+import {getCourseSelect, getTeacherSelect, getClassTag} from '../../../../api/select.js';
+
 export default {
   data() {
     return {
       searchInput: '',
       showUp: true,
-      list: [
-        {
-          id: 1,
-          ban: '2020通用课程',
-          ke: '篮球',
-          teacher: '李老师, 张老师, 黄老师',
-          type: '1v1'
-        },
-        {
-          id: 2,
-          ban: '2020通用课程',
-          ke: '篮球',
-          teacher: '李老师, 张老师, 黄老师',
-          type: '1v1'
-        },
-        {
-          id: 3,
-          ban: '2020通用课程',
-          ke: '篮球',
-          teacher: '李老师, 张老师, 黄老师',
-          type: '1v1'
-        },
-        {
-          id: 4,
-          ban: '2020通用课程',
-          ke: '篮球',
-          teacher: '李老师, 张老师, 黄老师',
-          type: '1v1'
-        }
-      ],
+      list: [],
       params: {
-        pi : 1,
-        ps : 100,
+        pi: 1,
+        ps: 100,
+		kind: 3,
+        status: -1,
+        keywords: ''
       },
-      // 选择课程
-      classIndex: 0,
-      classArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
       // 选择课程
       gradeIndex: 0,
       gradeArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
+		  {
+			  id: '',
+			  title: '所有课程'
+		  }
+	  ],
       // 选择老师
       teacherIndex: 0,
       teacherArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
-      // 选择课程套餐
-      packageIndex: 0,
-      packageArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
+		  {
+			id: '',
+			name: '所有老师'
+		  }
+	  ],
       // 选择标签
       labelIndex: 0,
       labelArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
-      // 课时单选
+		 {
+			 id: 0,
+			 name: '所有标签'
+		 }
+	  ],
       timeRadio: [
         {
           value: 0,
@@ -247,77 +155,101 @@ export default {
         },
         {
           value: 1,
-          name: '课时有余'
+          name: '一对一'
         },
         {
           value: 2,
-          name: '课时耗尽'
+          name: '一对多'
         }
       ],
       timeCurrent: 0,
-      // 学员单选
       studentRadio: [
         {
-          value: 0,
+          value: -1,
           name: '全部'
         },
         {
           value: 1,
-          name: '在读/历史'
+          name: '已结业'
         },
         {
-          value: 2,
-          name: '潜在学员'
+          value: 0,
+          name: '未结业'
         }
       ],
       studentCurrent: 0,
     }
   },
-  onLoad() {
-    // this.getList();
+  onShow: function() {
+    this.getListData(this.params);
+	this.getCourse();
+	this.getTeacher();
+	this.getTag();
   },
   methods: {
+    getListData(params){
+      getClassList(params)
+      .then(res => {
+        if (res.data.code === 0) {
+          this.list = res.data.data.list;
+          console.log(this.list);
+        }
+      }).catch(err => console.log(err));
+    },
+
     // 筛选区域
-    // 选择课程
-    bindClassChange(e, data) {
-      const {value} = e.detail;
-      this.classIndex = value;
-      this.form.class = data[this.classIndex].id;
-    },
-    // 选择课程
-    bindGradeChange(e, data) {
-      const {value} = e.detail;
-      this.gradeIndex = value;
-      this.form.grade = data[this.gradeIndex].id;
-    },
-    // 选择课程
+	getCourse() {
+		getCourseSelect()
+		.then(res => {
+			this.gradeArray = this.gradeArray.concat(res.data.data);
+		})
+	},
+   bindGradeChange(e, data) {
+     const {value} = e.detail;
+     this.gradeIndex = value;
+     this.params.courseid = data[this.gradeIndex].id;
+   },
+	
+	getTeacher() {
+		getTeacherSelect()
+		.then(res => {
+			this.teacherArray = this.teacherArray.concat(res.data.data);
+		})
+	},
+
     bindTeacherChange(e, data) {
       const {value} = e.detail;
       this.teacherIndex = value;
-      this.form.teacher = data[this.teacherIndex].id;
+      this.params.teacherid = data[this.teacherIndex].id;
     },
-    // 选择课程
-    bindPackageChange(e, data) {
-      const {value} = e.detail;
-      this.packageIndex = value;
-      this.form.package = data[this.packageIndex].id;
-    },
-    // 选择课程
+ 
+	 getTag() {
+		getClassTag(4)
+		.then(res => {
+			this.labelArray = this.labelArray.concat(res.data.data.list);
+		})
+	 },
+
     bindLabelChange(e, data) {
       const {value} = e.detail;
       this.labelIndex = value;
-      this.form.label = data[this.labelIndex].id;
+	  if(data[this.labelIndex].id === 0) {
+		  this.params.tags = '';
+	  } else {
+		  this.params.tags = data[this.labelIndex].name;
+	  }  
     },
     // 单选课时
     timeRadioChange(e) {
-      this.form.timeSelect = e.detail.value;
+      this.params.kind = e.detail.value;
     },
     studentRadioChange(e) {
-      this.form.studentSelect = e.detail.value;
+      this.params.status = e.detail.value;
     },
     // 筛选
     searchData() {
-      console.log(this.form);
+		this.getListData(this.params);
+		this.closeDrawer();
     },
     showDrawer() {
       this.$refs['drawer'].open();
@@ -327,31 +259,22 @@ export default {
     },
     // 课时消耗操作
     setTime() {
+      this.params = {
+        ...this.params,
+        order:'signnum',
+        by: this.showUp ? 'asc' : 'desc'
+      }
+      this.getListData(this.params);
       this.showUp = !this.showUp;
-    },
-    getList() {
-      let user = wx.getStorageSync('userData'),
-      teacherid = user.venueid;
-      getMyClassList({
-        ...this.params
-      })
-      .then(res => {
-        let data = res.data.data;
-        console.log(data);
-      }).catch(err => console.log(err));
-    },
-
-    searchValue() {
-      console.log(this.searchInput);
     },
     addClass() {
       wx.navigateTo({
         url: '../addClass/addClass'
       })
     },
-    goDetail(id) {
+    goDetail(id, courseid) {
       uni.navigateTo({
-        url: `../detail/detail?id=${id}`
+        url: `../detail/detail?id=${id}&courseid=${courseid}`
       });
     }
   }

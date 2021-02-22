@@ -9,15 +9,15 @@
     </view>
     <!--基本信息-->
     <view id="tab1" class="margin-top-sm" :class="tab1">
-      <basic-component />
+      <basic-component :teacherids="teacherids"/>
     </view>
     <!--当前授课班级-->
     <view id="tab2" class="margin-top-sm" :class="tab2">
-      <classes-component/>
+      <classes-component :teacherids="teacherids"/>
     </view>
     <!--学员-->
     <view id="tab3" class="margin-top-sm" :class="tab3">
-      <students-component/>
+      <students-component :teacherids="teacherids" />
     </view>
   </view>
 </template>
@@ -34,7 +34,7 @@ export default {
   },
   data() {
     return {
-      studentId: '',
+      teacherids: '',
       navTab: ['基本信息', '当前授课班级', '学员'],
       currentTab: 0,
       tab1: 'tabshow',
@@ -44,8 +44,7 @@ export default {
   },
   onLoad(options) {
     let {id} = options;
-    this.studentId = String(id);
-    console.log(this.studentId);
+    this.teacherids = String(id);
   },
   methods: {
     setCurrentTab(index) {

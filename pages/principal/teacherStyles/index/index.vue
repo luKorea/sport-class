@@ -4,9 +4,9 @@
     <view class="cu-bar search bg-white">
       <view class="search-form">
         <text class="cuIcon-search"></text>
-        <input type="text" placeholder="请输入姓名/手机号" v-model="searchInput"/>
+        <input type="text" placeholder="请输入姓名/手机号" v-model="params.keywords"/>
       </view>
-      <view class="action" @click="searchValue">
+      <view class="action" @click="getTeacherStyles(params)">
         <button class="cu-btn shadow-blur text-white bg-red">搜索</button>
       </view>
     </view>
@@ -14,25 +14,25 @@
     <view class="cu-list menu-avatar margin-top">
       <block v-if="list.length > 0">
         <view class="cu-item solid-bottom margin-bottom" v-for="item in list"
-              :key="item.id" @click="goDetail(item)">
+              :key="item.id" @click="goDetail(item.id)">
           <view class="cu-avatar round lg"
-                :style="{backgroundImage: `url(${item.imgList})`}"
+                :style="{backgroundImage: `url(${imgUrl + item.image})`}"
                 style="border-radius: 50%"></view>
           <view class="content">
-            <view class="">{{ item.teacherName }}</view>
+            <view class="">{{ item.title }}</view>
             <view class="text-gray text-sm flex">
-              <text class="text-cut">简介：{{ item.content }}</text>
+              <text class="text-cut">简介：{{ item.describe }}</text>
             </view>
           </view>
           <view class="action">
-            <view class="text-orange" v-if="item.type === 0">开启</view>
+            <view class="text-orange" v-if="item.flags === 1">开启</view>
             <view class="text-grey" v-else>关闭</view>
           </view>
         </view>
       </block>
     </view>
 
-    <view class="fixed-right" @click="addTeacherStyles">
+    <view class="fixed-right" @click="addStudentStyles">
       <view class="cuIcon-edit"></view>
       <view class="text-sm">发布</view>
     </view>
@@ -40,84 +40,39 @@
 </template>
 
 <script>
+import {getSaleCommon} from "../../../../api/principal/saleCommon";
+
 export default {
   name: "index",
   data() {
     return {
-      searchInput: '',
-      list: [
-        //  type: 0 开启 1 关闭
-        {
-          id: 1,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          teacherName: '洪秀全',
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 0,
-          state: 0
-        },
-        {
-          id: 2,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          teacherName: '洪秀全',
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 0,
-          state: 0
-        },
-        {
-          id: 3,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          teacherName: '洪秀全',
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 1,
-          state: 0
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          teacherName: '洪秀全',
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 0,
-          state: 1
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          name: '洪秀全',
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 1,
-          state: 1
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          name: '洪秀全',
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 1,
-          state: 1
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          name: '洪秀全',
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 0,
-          state: 0
-        }
-
-      ]
+      list: [],
+      imgUrl: this.$uploadUrl,
+      params: {
+        pi: 1,
+        ps: 1000,
+        paging: false,
+        kind: 2,
+        enable: -1
+      }
     }
   },
+  onShow() {
+    this.getTeacherStyles(this.params);
+  },
   methods: {
-    searchValue() {
-      console.log(this.searchInput);
+    getTeacherStyles(params) {
+      getSaleCommon(params)
+          .then(res => {
+            this.list = res.data.data;
+          }).catch(err => console.log(err))
     },
     goDetail(id) {
-      let data = JSON.stringify(id);
       wx.navigateTo({
-        url: `../detail/detail?id=${data}`
+        url: `../detail/detail?id=${id}`
       })
     },
-    addTeacherStyles() {
+    addStudentStyles() {
       wx.navigateTo({
         url: '../addTeacherStyles/addTeacherStyles'
       })

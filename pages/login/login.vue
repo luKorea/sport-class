@@ -36,16 +36,14 @@ export default {
   name: "login",
   data() {
     return {
-      form: {}
+      form: {
+		  name: 15918773196,
+		  password: 123456
+	  }
     }
   },
-  onLoad() {
-    let token = wx.getStorageSync('token');
-    if (token) {
-      wx.redirectTo({
-        url: '/pages/teacher/index/index'
-      })
-    }
+  onShow() {
+	wx.hideHomeButton();  
   },
   methods: {
     // 切换登陆方式
@@ -56,20 +54,16 @@ export default {
     },
     // 用户登陆
     login() {
-      let token = wx.getStorageSync('token');
-      if (!token) {
-        userLogin(this.form)
-            .then(res => {
-              let data = res.data.data;
-              if (data.errcode === 200) {
-                wx.setStorageSync('token', data.data);
-                this.getUserData();
-              } else {
-                failTip(data.errmsg)
-              }
-            })
-      } else {
-      }
+      userLogin(this.form)
+          .then(res => {
+            let data = res.data.data;
+            if (data.errcode === 200) {
+              wx.setStorageSync('token', data.data);
+              this.getUserData();
+            } else {
+              failTip(data.errmsg)
+            }
+          })
     },
     // 获取用户信息
     getUserData() {
@@ -81,6 +75,10 @@ export default {
             let floowname = token.permitname ? token.permitname : token.name;
             Cookies.set("userTele", floowname);
             wx.setStorageSync('userTele', floowname);
+            // 上课点ID
+            wx.setStorageSync('venueid', token.venueid);
+            // 机构ID
+            wx.setStorageSync('organizeid', token.organizeid);
             /*恢复上次打开的上课点*/
             let storageId = Cookies.get('venueid');
             let name = Cookies.get("user");
@@ -94,7 +92,7 @@ export default {
                   Cookies.set("venueid", storageId)
                   window.location.reload();
                   wx.redirectTo({
-                    url: '/pages/teacher/index/index'
+                    url: '/pages/principal/index/index'
                   })
                 } else {
                   Cookies.remove('venueid');
@@ -146,7 +144,7 @@ export default {
                         wx.setStorageSync('SET_ROLES', val.permit.split(','));
                       }
                       wx.redirectTo({
-                        url: '/pages/teacher/index/index'
+                        url: '/pages/principal/index/index'
                       })
                     }
                   }

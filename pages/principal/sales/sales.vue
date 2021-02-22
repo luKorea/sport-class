@@ -60,9 +60,9 @@ export default {
     return {
       iconList: [
         {
-          img: this.$imageurl + 'tongzhi.png',
-          url: '/pages/principal/notice/index/index',
-          name: '消息通知'
+          img: this.$imageurl + 'jigoudongtai.png',
+          url: '/pages/principal/institutions/index/index',
+          name: '机构动态'
         },
         {
           img: this.$imageurl + 'mingshifengcai.png',
@@ -75,14 +75,14 @@ export default {
           name: '明星学员'
         },
         {
+          img: this.$imageurl + 'tongzhi.png',
+          url: '/pages/principal/notice/index/index',
+          name: '消息通知'
+        },
+        {
           img: this.$imageurl + 'xchengzhangjilu.png',
           url: '/pages/common/record/index/index',
           name: '成长记录'
-        },
-        {
-          img: this.$imageurl + 'jigoudongtai.png',
-          url: '/pages/principal/institutions/index/index',
-          name: '机构动态'
         },
         {
           img: this.$imageurl + 'weihuodong.png',
@@ -133,6 +133,9 @@ export default {
         url: url
       })
     },
+	onShow() {
+		wx.hideHomeButton();  
+	},
     goItem(url) {
       wx.redirectTo({
         url: url

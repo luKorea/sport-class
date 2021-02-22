@@ -48,9 +48,14 @@
 </template>
 
 <script>
+import {getCourseList} from "../../../../api/principal/course";
+
 export default {
   data() {
     return {
+      params: {
+
+      },
       searchInput: '',
       list: [
         //  type 0. 通用 1. 1v1 2. 1vN
@@ -112,7 +117,18 @@ export default {
       ],
     }
   },
+  onLoad() {
+    this.getListData(this.params);
+  },
   methods: {
+    getListData(params) {
+      getCourseList(params)
+      .then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err)
+      })
+    },
 
     searchValue() {
       console.log(this.searchInput);

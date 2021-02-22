@@ -131,6 +131,8 @@
 		getattendance,
 		getcoursehourstatistics,
 		getteacherhourstatistics,
+		getdurationsummary,
+		getcostsummary
 	} from '../../../api/principal/attendanceRate.js'
 	import {
 		chooseTime
@@ -314,6 +316,60 @@
 					type: 1,
 				}
 				obj = chooseTime(obj, '4');
+				
+				
+				
+				// 课时课消
+				getdurationsummary(obj).then((res) => {
+					if (res.data.code === 0) {
+						if (res.data.data.length > 0) {
+							
+							return// 此处没有折现图，计算数字就好
+							let LineA = {
+								categories: [],
+								series: [{
+										name: "一对一",
+										data: []
+									},
+									{
+										name: "一对多",
+										data: []
+									}
+								]
+							};
+							res.data.data.list.map((item, index) => {
+								LineA.categories.push(`${item.day}`);
+								if (item.type === 1) {
+									LineA.series[0].data.push(item.c1)
+								} else {
+									LineA.series[1].data.push(item.c1)
+								}
+							})
+							LineA.categories = [...new Set(LineA.categories)]
+							_self.showLineA("canvasLineA", LineA);
+						} else {
+							let LineA = {
+								categories: this.getMonths(),
+								series: [{
+										name: "一对一",
+										data: [0, 0, 0, 0, 0, 0]
+									},
+									{
+										name: "一对多",
+										data: [0, 0, 0, 0, 0, 0]
+									}
+								]
+							};
+							LineA.categories = [...new Set(LineA.categories)]
+							_self.showLineA("canvasLineA", LineA);
+						}
+				
+				
+					}
+				
+				})
+				
+				// 出勤
 				getattendance(obj).then((res) => {
 					if (res.data.code === 0) {
 						if (res.data.data.list.length > 0) {

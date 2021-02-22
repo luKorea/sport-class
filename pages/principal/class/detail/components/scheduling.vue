@@ -10,9 +10,9 @@
       <block v-if="list.length > 0">
         <view class="cu-bar bg-white solid-bottom" v-for="(item, index) in list" :key="index">
           <view class="action text-orange flex flex-common" @click="goDetail(item.id)">
-            <text class="text-sm">{{item.type}}</text>
-            <text class="text-sm">{{item.startDate}}~{{item.endDate}}</text>
-            <text class="text-sm">{{item.startTime}}~{{item.endTime}}</text>
+            <text class="text-sm">{{item.interval == 0 ? '每周循环' : '隔周循环'}}</text>
+            <text class="text-sm">{{item.btime}}~{{item.etime}}</text>
+            <text class="text-sm">{{item.begintime | FormatDate}}~{{item.endtime | FormatDate}}</text>
           </view>
           <view class="action" v-for="(child, i) in item.teacher" :key="i" @click="setTeacher(child.id)">
             <text v-if="child.name !== ''" class="text-sm">{{child.name}}</text>
@@ -61,88 +61,28 @@
 </template>
 
 <script>
+import {
+  getClassCalendar,
+  getClassRules
+} from "../../../../../api/principal/class";
+import {getDate} from "../../../../../utils";
+
+// interval: 0 间隔周期（单位：周，0=表示不间断、1=表示隔周，以开始日期为基准）
+
 export default {
   name: "scheduling",
+  props: {
+    classId: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
+
       showModal: false,
       dateInfo: ['星期一', '星期二',' 星期三', '星期四', '星期五','星期六', '星期日'],
-      list: [
-        {
-          type: '每周循环',
-          startDate: '03-03',
-          endDate: '08-03',
-          startTime: '11:00',
-          endTime: '14:00',
-          teacher: [
-            {
-              id: 0,
-              name: '彭老师',
-            },
-            {
-              id: 1,
-              name: '',
-            },
-            {
-              id: 2,
-              name: '彭老师',
-            },
-            {
-              id: 3,
-              name: '',
-            },
-            {
-              id: 4,
-              name: '彭老师',
-            },
-            {
-              id: 5,
-              name: '彭老师',
-            },
-            {
-              id: 6,
-              name: '',
-            }
-          ]
-        },
-        {
-          type: '每周循环',
-          startDate: '03-03',
-          endDate: '08-03',
-          startTime: '11:00',
-          endTime: '14:00',
-          teacher: [
-            {
-              id: 0,
-              name: '彭老师',
-            },
-            {
-              id: 1,
-              name: '',
-            },
-            {
-              id: 2,
-              name: '彭老师',
-            },
-            {
-              id: 3,
-              name: '',
-            },
-            {
-              id: 4,
-              name: '彭老师',
-            },
-            {
-              id: 5,
-              name: '彭老师',
-            },
-            {
-              id: 6,
-              name: '',
-            }
-          ]
-        }
-      ],
+      list: [],
       teacherArray: [
         //  type 0 主教 1 助教
         {
@@ -157,10 +97,36 @@ export default {
         }
       ],
       selectId: 0,
-      form: {}
+      form: {},
+      params: {
+        btime: getDate(new Date()),
+        etime: '9999-12-31',
+        paging: false,
+        irregular: true,
+      }
     }
   },
+  mounted() {
+    this.getRulesData(this.classId);
+    this.params['classid'] = this.classId;
+    this.getCalendar(this.params);
+  },
   methods: {
+    // 获取规则排课
+    getRulesData(id) {
+      getClassRules(id)
+      .then(res => {
+        this.list = res.data.data.schedulelist;
+        console.log(res);
+      }).catch(err => console.log(err))
+    },
+    // 获取日历排课
+    getCalendar(params) {
+      getClassCalendar(params)
+      .then(res => {
+        console.log(res);
+      }).catch(err => console.log(err))
+    },
     setTeacher(id) {
       this.showModal = true;
       this.selectId = id;

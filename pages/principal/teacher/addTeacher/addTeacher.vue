@@ -9,7 +9,7 @@
     <view class="cu-bar bg-white margin-top">
       <view class="action">手机号码</view>
       <view class="action text-right">
-        <input v-model="info.phone" type="number" placeholder="请填写手机号码"/>
+        <input v-model="info.contact" type="number" placeholder="请填写手机号码"/>
       </view>
     </view>
 
@@ -45,6 +45,8 @@
 
 <script>
 import {getDate} from "../../../../utils";
+import {addOrEditTeacher} from "../../../../api/principal/teacher";
+import {failTip} from "../../../../utils/tip";
 
 export default {
   name: "index",
@@ -59,14 +61,21 @@ export default {
       sexArray: [
         {
           label: '男',
-          value: 0
+          value: 1
         },
         {
           label: '女',
-          value: 1
+          value: 2
         }
       ],
-      info: {}
+      info: {
+        isused: false,
+        id: 0,
+        name: '',
+        gender: 1,
+        contact: '',
+        birthday: ''
+      }
     }
   },
   computed: {
@@ -80,22 +89,26 @@ export default {
   methods: {
     setStatus(e) {
       let {value} = e.detail;
-      this.info.status = value === true ? 1 : 0;
-      console.log(this.info.status);
+      this.info.isused = value;
     },
-    // 选择意向级别
     bindSexChange(e, data) {
       const {value} = e.detail;
       this.sexIndex = value;
-      this.info.sex = data[this.sexIndex].id;
+      this.info.gender = data[this.sexIndex].value;
     },
-    // 选择下次跟进时间
     bindDateChange(e) {
       this.date = e.target.value;
-      this.info.time = e.target.value;
+      this.info.birthday = e.target.value;
     },
     saveData() {
-      console.log(this.info);
+      addOrEditTeacher(this.info)
+      .then(res => {
+        if (res.data.data.errcode === 200) {
+          wx.navigateBack();
+        } else {
+          failTip(res.data.data.errmsg)
+        }
+      })
     }
   }
 }

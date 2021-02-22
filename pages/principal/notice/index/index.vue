@@ -5,24 +5,24 @@
       <view class="cu-bar search bg-white">
         <view class="search-form">
           <text class="cuIcon-search"></text>
-          <input type="text" placeholder="请输入关键字" v-model="searchInput"/>
+          <input type="text" placeholder="请输入关键字" v-model="params.keywords"/>
         </view>
-        <view class="action" @click="searchValue">
+        <view class="action" @click="getData(params)">
           <button class="cu-btn shadow-blur text-white bg-red">搜索</button>
         </view>
       </view>
       <block v-if="info.length > 0">
-        <view v-for="item in info"  :key="item.id" @click="goDetail(item.id)">
+        <view v-for="item in info"  :key="item.noticeid" @click="goDetail(item.noticeid)">
           <view class="margin-top cu-bar bg-white">
             <view class="action text-bold">{{item.title}}</view>
             <view class="action">
-              <text class="text-orange">已读{{item.readNumber}}</text>
+              <text class="text-orange">已读{{item.readnum}} / {{item.numcount}}</text>
               <text class="text-gray cuIcon-right"></text>
             </view>
           </view>
           <view class="bg-white padding-left">
-            <view class="action text-gray" style="margin-bottom: 10rpx">发送者：{{item.sendUser}}</view>
-            <view class="action text-gray" style="padding-bottom: 20rpx">发送时间：{{item.sendTime}}</view>
+            <view class="action text-gray" style="margin-bottom: 10rpx">发送者：{{item.sendname}}</view>
+            <view class="action text-gray" style="padding-bottom: 20rpx">发送时间：{{item.datetime}}</view>
           </view>
         </view>
       </block>
@@ -35,55 +35,30 @@
 </template>
 
 <script>
+import {getNoticeList} from '../../../../api/principal/notice';
 export default {
   name: "index",
   data() {
     return {
-      searchInput: '',
-      info: [
-        {
-          id: 1,
-          title: '消息通知啦',
-          sendUser: '李老师',
-          readNumber: '1/12',
-          sendTime: '2020-12-21 18:52'
-        },
-        {
-          id: 2,
-          title: '消息通知啦',
-          sendUser: '李老师',
-          readNumber: '1/12',
-          sendTime: '2020-12-21 18:52'
-        },
-        {
-          id: 3,
-          title: '消息通知啦',
-          sendUser: '李老师',
-          readNumber: '1/12',
-          sendTime: '2020-12-21 18:52'
-        },
-        {
-          id: 4,
-          title: '消息通知啦',
-          sendUser: '李老师',
-          readNumber: '1/12',
-          sendTime: '2020-12-21 18:52'
-        },
-        {
-          id: 5,
-          title: '消息通知啦',
-          sendUser: '李老师',
-          readNumber: '1/12',
-          sendTime: '2020-12-21 18:52'
-        }
-      ]
+      params: {
+        pi: 1,
+        ps: 1000
+      },
+      info: []
     }
   },
+  onShow() {
+    this.getData(this.params);
+  },
   methods: {
-    searchValue() {
-      console.log(this.searchInput);
+    getData(params) {
+      getNoticeList(params)
+      .then(res => {
+        this.info = res.data.data.list;
+      }).catch(err => console.log(err));
     },
     goDetail(id) {
+      console.log(id);
       wx.navigateTo({
         url: `../detail/detail?id=${id}`
       })

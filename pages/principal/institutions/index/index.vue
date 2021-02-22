@@ -4,9 +4,9 @@
     <view class="cu-bar search bg-white">
       <view class="search-form">
         <text class="cuIcon-search"></text>
-        <input type="text" placeholder="请输入标题" v-model="searchInput"/>
+        <input type="text" placeholder="请输入标题" v-model="params.keywords"/>
       </view>
-      <view class="action" @click="searchValue">
+      <view class="action" @click="getInstitutions(params)">
         <button class="cu-btn shadow-blur text-white bg-red">搜索</button>
       </view>
     </view>
@@ -14,15 +14,21 @@
 
     <block v-if="list.length > 0">
       <view class="cu-bar margin-top bg-white" v-for="item in list"
-            :key="item.id" @click="goDetail(item)">
+            :key="item.id" @click="goDetail(item.id)">
         <view class="action flex-due flex-direction" style="margin: 30rpx">
           <text class="margin-bottom-sm">{{item.title}}</text>
-          <text class="text-gray text-sm">发布时间：{{item.time}}</text>
+          <text class="text-gray text-sm">发布时间：{{item.datetime}}</text>
         </view>
         <view class="action">
-          <view class="text-orange" v-if="item.type === 0">开启</view>
+          <view class="text-orange" v-if="item.flags === 1">开启</view>
           <view class="text-grey" v-else>关闭</view>
         </view>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="cu-form-group cu-bar bg-white flex justify-center align-center margin-top-sm">
+        <view class="title">暂无数据</view>
       </view>
     </block>
 
@@ -34,83 +40,35 @@
 </template>
 
 <script>
-import {formatTime} from "../../../../utils";
+import {getSaleCommon} from "../../../../api/principal/saleCommon";
 
 export default {
   name: "index",
   data() {
     return {
-      searchInput: '',
-      list: [
-        //  type: 0 开启 1 关闭
-        {
-          id: 1,
-          title: '测试机构动态',
-          time: formatTime(new Date()),
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 0,
-          state: 0
-        },
-        {
-          id: 2,
-          title: '测试机构动态',
-          time: formatTime(new Date()),
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 0,
-          state: 0
-        },
-        {
-          id: 3,
-          title: '测试机构动态',
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          time: formatTime(new Date()),
-          type: 1,
-          state: 0
-        },
-        {
-          id: 4,
-          title: '测试机构动态',
-          time: formatTime(new Date()),
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 0,
-          state: 1
-        },
-        {
-          id: 4,
-          title: '测试机构动态',
-          time: formatTime(new Date()),
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 1,
-          state: 1
-        },
-        {
-          id: 4,
-          title: '测试机构动态',
-          time: formatTime(new Date()),
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 1,
-          state: 1
-        },
-        {
-          id: 4,
-          title: '测试机构动态',
-          time: formatTime(new Date()),
-          content: ' 我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。',
-          type: 0,
-          state: 0
-        }
-
-      ]
+      list: [],
+      params: {
+        pi: 1,
+        ps: 1000,
+        paging: false,
+        kind: 0,
+        enable: -1
+      }
     }
   },
+  onShow() {
+    this.getInstitutions(this.params);
+  },
   methods: {
-    searchValue() {
-      console.log(this.searchInput);
+    getInstitutions(params) {
+      getSaleCommon(params)
+      .then(res => {
+        this.list = res.data.data;
+      }).catch(err => console.log(err))
     },
     goDetail(id) {
-      let data = JSON.stringify(id);
       wx.navigateTo({
-        url: `../detail/detail?id=${data}`
+        url: `../detail/detail?id=${id}`
       })
     },
     addInstitutions() {

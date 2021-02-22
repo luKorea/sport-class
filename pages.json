@@ -7,21 +7,15 @@
 			}
 		},
 		{
-			"path":"pages/principal/mime/mime",
-			"style": {
-				"navigationBarTitleText":"个人中心"
-			}
-		},
-		{
-			"path":"pages/teacher/index/index",
-			"style": {
-				"navigationBarTitleText":"首页"
-			}
-		},
-		{
 			"path":"pages/principal/sales/sales",
 			"style": {
 				"navigationBarTitleText":"销售"
+			}
+		},
+		{
+			"path":"pages/login/login",
+			"style": {
+				"navigationBarTitleText":"运动课"
 			}
 		},
 		{
@@ -73,6 +67,24 @@
 			"path":"pages/principal/class/transferClass/transferClass",
 			"style": {
 				"navigationBarTitleText":"调课"
+			}
+		},
+		{
+			"path":"pages/login/codeLogin",
+			"style": {
+				"navigationBarTitleText":"运动课"
+			}
+		},
+		{
+			"path":"pages/principal/mime/mime",
+			"style": {
+				"navigationBarTitleText":"个人中心"
+			}
+		},
+		{
+			"path":"pages/teacher/index/index",
+			"style": {
+				"navigationBarTitleText":"首页"
 			}
 		},
 		{
@@ -357,18 +369,6 @@
 			"path":"pages/teacher/mime/mime",
 			"style": {
 				"navigationBarTitleText":"个人中心"
-			}
-		},
-		{
-			"path":"pages/login/login",
-			"style": {
-				"navigationBarTitleText":"运动课"
-			}
-		},
-		{
-			"path":"pages/login/codeLogin",
-			"style": {
-				"navigationBarTitleText":"运动课"
 			}
 		},
 		{

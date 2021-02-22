@@ -148,6 +148,16 @@ export default {
         name: '老师'
       },
       {
+        img: 'https://yundongke.gzbigbang.cn/banji.png',
+        url: '../class/index/index',
+        name: '班级'
+      },
+      {
+        img: 'https://yundongke.gzbigbang.cn/qianbao.png',
+        url: '../charges/index/index',
+        name: '收费项'
+      },
+      {
         img: 'https://yundongke.gzbigbang.cn/xueyuan.png',
         url: '/pages/common/students/index/index',
         name: '学员'
@@ -171,16 +181,6 @@ export default {
         img: 'https://yundongke.gzbigbang.cn/qingdan.png',
         url: '../receipt/index/index',
         name: '收据清单'
-      },
-      {
-        img: 'https://yundongke.gzbigbang.cn/qianbao.png',
-        url: '../charges/index/index',
-        name: '收费项'
-      },
-      {
-        img: 'https://yundongke.gzbigbang.cn/banji.png',
-        url: '../class/index/index',
-        name: '班级'
       },
 		  {
 		    img: 'https://yundongke.gzbigbang.cn/kecheng.png',

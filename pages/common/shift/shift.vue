@@ -39,7 +39,7 @@
     </view>
     <!--底部按钮-->
     <view class="drawer-footer" @click="goBack">
-      <button class="cu-btn lg bg-red" style="width: 100%">完成</button>
+      <button class="cu-btn lg bg-red" style="width: 100%;border-radius: 0">完成</button>
     </view>
   </view>
 </template>

@@ -10,19 +10,19 @@
     </view>
     <!--基础资料-->
     <view id="tab1" class="margin-top-sm" :class="tab1">
-      <basic-component />
+      <basic-component :classId="classId" :courseid="courseid"  />
     </view>
     <!--班级学生-->
     <view id="tab2" class="margin-top-sm" :class="tab2">
-      <students-component />
+      <students-component :classId="classId" :courseid="courseid"  />
     </view>
     <!--上课情况-->
     <view id="tab3" class="margin-top-sm" :class="tab3">
-      <classes-component />
+      <classes-component :classId="classId" :courseid="courseid" />
     </view>
     <!--班级排课-->
     <view id="tab4" class="margin-top-sm" :class="tab4">
-      <scheduling-component :student-id="studentId" />
+      <scheduling-component :classId="classId" :courseid="courseid"  />
     </view>
   </view>
 </template>
@@ -32,6 +32,9 @@ import BasicComponent from './components/basic';
 import StudentsComponent from './components/students';
 import ClassesComponent from './components/classes';
 import SchedulingComponent from './components/scheduling';
+
+import {getClassDetails} from '../../../../api/principal/class';
+
 export default {
   components: {
     BasicComponent,
@@ -41,7 +44,8 @@ export default {
   },
   data() {
     return {
-      studentId: '',
+      classId: '',
+      courseid: '',
       navTab: ['基础资料', '班级学生', '上课情况', '班级排课'],
       currentTab: 0,
       tab1: 'tabshow',
@@ -51,9 +55,9 @@ export default {
     }
   },
   onLoad(options) {
-    let {id} = options;
-    this.studentId = String(id);
-    console.log(this.studentId);
+    let {id, courseid} = options;
+    this.classId = String(id);
+    this.courseid = String(courseid);
   },
   methods: {
     setCurrentTab(index) {

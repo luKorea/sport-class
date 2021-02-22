@@ -3,20 +3,24 @@
     <view class="cu-bar bg-white">
       <view class="action">名称</view>
       <view class="action text-right">
-        <input v-model="info.name" placeholder="请填写名称"/>
+        <input v-model="info.title" placeholder="请填写名称"/>
       </view>
     </view>
     <view class="cu-bar bg-white margin-top">
       <view class="action">类型</view>
       <view class="action">
-        <text v-if="info.type === 1">物品</text>
-        <text v-else>费用</text>
+        <picker @change="bindKindChange($event, kindArray)" :value="kindIndex"
+                :range="kindArray" range-key="label">
+          <view class="picker">
+            {{kindArray[kindIndex].label}}
+          </view>
+        </picker>
       </view>
     </view>
     <view class="cu-bar bg-white margin-top">
       <view class="action">价格</view>
       <view class="action text-right">
-        <input v-model="info.money" type="number" placeholder="请填写价格"/>
+        <input v-model="info.price" type="number" placeholder="请填写价格"/>
       </view>
     </view>
     <view class="cu-bar bg-white margin-top">
@@ -32,22 +36,56 @@
 </template>
 
 <script>
+import {addOrEditCharges} from "../../../../api/principal/charges";
+import {failTip} from "../../../../utils/tip";
+
 export default {
   name: "detail",
   data() {
     return {
-      info: {}
+      // 种类
+      kindIndex: 0,
+      kindArray: [
+        {
+          label: '费用',
+          value: 1
+        },
+        {
+          label: '物品',
+          value: 2
+        }
+      ],
+      info: {
+        id: 0,
+        title: '',
+        price: '', // 单价
+        count: 0,  //  库存数量
+        kind: 1, // 种类（1=费用、2=物品）
+        status: 0, // 状态（0=停用、1=启用）
+      }
     }
   },
   methods: {
     setStatus(e) {
       let {value} = e.detail;
       this.info.status = value === true ? 1 : 0;
-      console.log(this.info.status);
+    },
+    bindKindChange(e, data) {
+      const {value} = e.detail;
+      this.kindIndex = value;
+      this.info.kind = data[this.kindIndex].value;
     },
     saveData() {
-      wx.navigateBack();
-      console.log(this.info);
+      addOrEditCharges(this.info)
+      .then(res => {
+        if (res.data.data.errcode === 200) {
+          wx.navigateBack();
+        } else {
+          failTip(res.data.data.errmsg)
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }

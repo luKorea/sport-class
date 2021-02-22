@@ -103,6 +103,9 @@ export default {
   },
   onLoad() {
   },
+  onShow() {
+  	wx.hideHomeButton();  
+  },
   methods: {
     goItem(url) {
       wx.redirectTo({

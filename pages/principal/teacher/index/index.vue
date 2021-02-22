@@ -6,16 +6,16 @@
       <view class="cu-bar search bg-white">
         <view class="search-form">
           <text class="cuIcon-search"></text>
-          <input type="text" placeholder="请输入姓名或手机号" v-model="searchInput"/>
+          <input type="text" placeholder="请输入姓名或手机号" v-model="params.keywords"/>
         </view>
-        <view class="action" @click="searchValue">
+        <view class="action" @click="getTeacherData(params)">
           <button class="cu-btn shadow-blur text-white bg-red">搜索</button>
         </view>
       </view>
       <!--筛选-->
       <view class="cu-bar search bg-white margin-top justify-around">
         <view class="action" @click="showSex">
-          <text style="margin-right: 6rpx">性别</text>
+          <text style="margin-right: 6rpx">{{form.name ? form.name : '性别'}}</text>
           <text class="cuIcon-triangledownfill text-gray text-sm"></text>
         </view>
         <view class="action" @click="setTime">
@@ -32,19 +32,19 @@
                 <view class="margin-bottom-sm">
                   <text class="margin-right-sm">{{item.name}}</text>
                   <text class="margin-right-sm">
-                    <text v-if="item.sex === 0" class="cuIcon-male text-blue"></text>
+                    <text v-if="item.gender === 1" class="cuIcon-male text-blue"></text>
                     <text v-else class="cuIcon-female text-pink"></text>
                   </text>
-                  <text>{{item.phone}}</text>
+                  <text>{{item.contact}}</text>
                 </view>
                 <view class="text-gray text-sm">
-                  <text v-if="item.time > 0">剩余 <text class="text-red">{{item.time}}</text> 课时</text>
+                  <text v-if="item.thismonthnum !== null">剩余 <text class="text-red">{{item.thismonthnum}}</text> 课时</text>
                   <text v-else>无可用课时</text>
                 </view>
               </view>
             </view>
             <view class='action'>
-              <button class="cu-btn bg-orange" v-if="item.type === 1">开启</button>
+              <button class="cu-btn bg-orange" v-if="(item.flags&8) === 0">开启</button>
               <button class="cu-btn bg-red" v-else>关闭</button>
             </view>
           </view>
@@ -70,7 +70,7 @@
                 <view class="flex-sub">
                   <text class="margin-right">{{item.label}}</text>
                 </view>
-                <radio class="round" :value="item.value"></radio>
+                <radio class="round" :value="JSON.stringify(item)"></radio>
               </label>
             </view>
           </view>
@@ -89,6 +89,9 @@
 </template>
 
 <script>
+import {getTeacherList} from "../../../../api/principal/teacher";
+import {failTip} from "../../../../utils/tip";
+
 export default {
   data() {
     return {
@@ -103,78 +106,38 @@ export default {
         },
         {
           id: 1,
-          label: '男',
+          label: '男性',
           value: 1
         },
         {
           id: 2,
-          label: '女',
+          label: '女性',
           value: 2
         }
       ],
-      list: [
-        //  type 1 开启 2. 关闭
-        {
-          id: 1,
-          name: '夏老师',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 0,
-          time: 8,
-          type: 1
-        },
-        {
-          id: 2,
-          name: '李老师',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 1,
-          time: 8,
-          type: 2
-        },
-        {
-          id: 3,
-          name: '刘老师',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 0,
-          time: 0,
-          type: 1
-        },
-        {
-          id: 4,
-          name: '陈老师',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 1,
-          time: 8,
-          type: 2
-        },
-        {
-          id: 5,
-          name: '黄老师',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 0,
-          time: 0,
-          type: 2
-        },
-        {
-          id: 5,
-          name: '陆老师',
-          phone: '1380138000',
-          ke: '篮球',
-          sex: 0,
-          time: 0,
-          type: 2
-        },
-      ],
-      form: {}
+      list: [],
+      form: {},
+      params: {
+        pi: 1,
+        ps: 1000,
+      }
     }
   },
-  onLoad() {
+  onShow() {
+    this.getTeacherData(this.params);
   },
   methods: {
+    getTeacherData(params){
+      getTeacherList(params)
+      .then(res => {
+        if (res.data.code === 0) {
+          this.list = res.data.data.list;
+          console.log(this.list);
+        } else {
+          failTip('出错啦');
+        }
+      })
+    },
     showSex() {
       this.showSexModal = true;
     },
@@ -182,15 +145,23 @@ export default {
       this.showSexModal = false;
     },
     chooseSexItem(e) {
-      let {value} = e.detail;
-      this.form.sex = value;
+      let {value} = e.detail,
+          data = JSON.parse(value);
+      this.form.name = data.label;
+      this.params.gender = data.value;
     },
     searchSex() {
       this.hideSex();
-      console.log(this.form.sex);
+      this.getTeacherData(this.params);
     },
     // 课时消耗操作
     setTime() {
+      this.params = {
+        ...this.params,
+        order:'rank',
+        by: this.showUp ? 'asc' : 'desc'
+      }
+      this.getTeacherData(this.params);
       this.showUp = !this.showUp;
     },
     addTeacher() {

@@ -15,7 +15,7 @@
         <view @click="login">
           <button class="lg cu-btn bg-red margin-top-xl" style="width: 100%">登陆</button>
         </view>
-<!--        <view class='margin-top-xl text-right text-gray' @click="goCodeLogin">手机验证码登录</view>-->
+       <view class='margin-top-xl text-right text-gray' @click="goCodeLogin">手机验证码登录</view>
       </view>
     </view>
   </view>
@@ -54,6 +54,7 @@ export default {
     },
     // 用户登陆
     login() {
+		console.log(111112221)
       userLogin(this.form)
           .then(res => {
             let data = res.data.data;

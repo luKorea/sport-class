@@ -2,32 +2,25 @@
 <template>
   <view class="follow-container">
     <view class="margin" style="margin-bottom: 140rpx">
-      <block v-if="list.length > 0">
-        <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id" @click="goDetail(item.id)">
+        <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id" @click="goDetail(item)">
           <view class="action flex-direction flex-due">
             <view class="text-sm class-block">
               <view class="small-block-orange"></view>
-              <text>{{item.class}}</text>
+              <text>{{item.title}}</text>
             </view>
-            <view class="text-sm">{{item.grade}}</view>
-            <view style="margin: 20rpx 0" class="text-sm">{{item.time}}</view>
+            <view class="text-sm">{{item.classname}}</view>
+            <view style="margin: 20rpx 0" class="text-sm">{{item.datetime}}</view>
           </view>
           <view class="action flex-direction flex-due">
             <view style="margin: 20rpx 0" class="text-sm">
               <text class="cuIcon-titles text-white"></text>
             </view>
-            <view class="text-sm">已阅：{{item.yue}}</view>
-            <view style="margin: 20rpx 0" class="text-sm">提交：{{item.send}}</view>
+            <view class="text-sm">已阅：{{item.readnum||0}}/{{item.studentcount}}</view>
+            <view style="margin: 20rpx 0" class="text-sm">提交：{{item.submitnum||0}}/{{item.studentcount}}</view>
           </view>
         </view>
-      </block>
-      <block v-else>
-        <view
-            class="cu-form-group cu-bar bg-white flex justify-center align-center">
-          <view class="title">暂无数据</view>
-        </view>
-      </block>
     </view>
+    <uni-load-more :status="loadingType"></uni-load-more>
     <view class="flex flex-direction fixed-bottom">
       <button class="add-btn" @click="addTask">布置作业</button>
     </view>
@@ -41,62 +34,68 @@ import {formatTime} from "../../../../utils";
 export default {
   data() {
     return {
-      list: [
-        {
-          id: 1,
-          class: '2020通用课程',
-          grade: '足球2+1班',
-          yue: '1/6',
-          send: '1/6',
-          time: formatTime(new Date())
-        },
-        {
-          id: 2,
-          class: '2020通用课程',
-          grade: '足球2+1班',
-          yue: '1/6',
-          send: '1/6',
-          time: formatTime(new Date())
-        },
-        {
-          id: 3,
-          class: '2020通用课程',
-          grade: '足球2+1班',
-          yue: '1/6',
-          send: '1/6',
-          time: formatTime(new Date())
-        },
-        {
-          id: 4,
-          class: '2020通用课程',
-          grade: '足球2+1班',
-          yue: '1/6',
-          send: '1/6',
-          time: formatTime(new Date())
-        },
-        {
-          id: 5,
-          class: '2020通用课程',
-          grade: '足球2+1班',
-          yue: '1/6',
-          send: '1/6',
-          time: formatTime(new Date())
-        },
-        {
-          id: 6,
-          class: '2020通用课程',
-          grade: '足球2+1班',
-          yue: '1/6',
-          send: '1/6',
-          time: formatTime(new Date())
-        }
-      ]
+      list:[],
+      listQuery:{
+        paging: true,
+        pi: 0,
+        ps: 20,
+        keywords:''
+      },
+      loadingType: 'more'
     }
   },
+  onLoad() {
+    this.loadData()
+  },
+  //下拉刷新
+  onPullDownRefresh(){
+  	this.loadData('refresh');
+  },
+  //加载更多
+  onReachBottom(){
+  	this.loadData();
+  },
+  
   methods: {
-    goDetail(id) {
+    loadData(type='add', loading) {
+      //没有更多直接返回
+      if(type === 'add'){
+        if(this.loadingType === 'nomore'){
+            return;
+        }
+        this.loadingType = 'loading';
+      }else{
+          this.loadingType = 'more'
+      }
+        if(type === 'refresh'){
+          this.listQuery.pi=1
+          this.list = [];
+          this.loadingType = 'loading';
+        }else{
+            this.listQuery.pi++;
+        }
+      //模拟api请求数据
+        this.$api.lessonwork.lessonworklist(this.listQuery).then((res)=>{
+            this.list = this.list.concat(res.data.data.list);
+            //判断是否还有下一页，有是more  没有是nomore(测试数据判断大于30就没有了)
+            this.loadingType  = this.list.length >= res.data.data.page.total ? 'nomore' : 'more';
+            
+        }).catch(()=>{
+            this.loadingType = 'nomore';
+        }).finally(()=>{
+            if(type === 'refresh'){
+              if(loading == 1){
+                  uni.hideLoading()
+              }else{
+                  uni.stopPullDownRefresh();
+              }
+            }
+        })
+      
+    },
+    goDetail(data) {console.log('data',data)
       uni.navigateTo({
-        url: `../detail/detail?id=${id}`
+        url: `../detail/detail?id=${data.id}&readnum=${data.readnum||0}&submitnum=${data.submitnum||0}&studentcount=${data.studentcount||0}`
       })
     },
     addTask() {
@@ -108,7 +107,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+  page{
+    background-color: $uni-bg-color-grey;
+  }
 .flex-due {
   justify-content: start;
   align-items: start;

@@ -47,12 +47,12 @@
           </view>
         </uni-drawer>
       </view>
-      <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id">
+      <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id" @click="addRecord(item.id)">
         <view class="action flex-direction">
           <view class="flex-due">
             <view style="margin: 16rpx 0 0 0" class="text-sm">
               <text class="ban-red" v-if="listQuery.type==1">班</text>
-              <text class="ke-orange" v-else>课</text>
+              <text class="ke-orange" v-else>学</text>
               <text>{{item.target}}</text>
             </view>
             <view style="margin: 16rpx 0"  class="text-sm text-gray">{{item.templatename}}</view>
@@ -69,7 +69,7 @@
     <uni-load-more :status="loadingType"></uni-load-more>
 <!--添加-->
     <view class="flex flex-direction fixed-bottom">
-      <button class="add-btn" @click="addRecord">+ 添加</button>
+      <button class="add-btn" @click="addRecord()">+ 添加</button>
     </view>
   </view>
 </template>
@@ -98,7 +98,7 @@ export default {
       loadingType: 'more'
     }
   },
-  onLoad(options) {
+  onShow(options) {
     let {id} = options;
     console.log(id);
     this.loadData();
@@ -203,9 +203,9 @@ export default {
     searchGrade() {
       this.loadData('refresh');
     },
-    addRecord() {
+    addRecord(id) {
       wx.navigateTo({
-        url: '../addRecord/addRecord'
+        url: '../addRecord/addRecord?type='+this.listQuery.type+'&id='+(id||'')
       })
     }
   }

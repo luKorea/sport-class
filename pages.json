@@ -132,7 +132,8 @@
 		{
 			"path":"pages/principal/microActivities/index/index",
 			"style": {
-				"navigationBarTitleText": "微活动"
+				"navigationBarTitleText": "微活动",
+        "enablePullDownRefresh": true
 			}
 		},
 		{
@@ -332,7 +333,8 @@
 		{
 			"path":"pages/teacher/task/index/index",
 			"style": {
-				"navigationBarTitleText":"作业"
+				"navigationBarTitleText":"作业",
+        "enablePullDownRefresh": true
 			}
 		},
 		{
@@ -345,6 +347,19 @@
 			"path":"pages/teacher/task/detail/detail",
 			"style": {
 				"navigationBarTitleText":"作业详情"
+			}
+		},
+		{
+			"path":"pages/teacher/task/detail/recordList",
+			"style": {
+				"navigationBarTitleText":"学员完成情况",
+        "enablePullDownRefresh": true
+			}
+		},
+		{
+			"path":"pages/teacher/task/detail/recordDetail",
+			"style": {
+				"navigationBarTitleText":"作业提交详情"
 			}
 		},
 		{
@@ -382,6 +397,20 @@
 			"path":"pages/common/record/addRecord/addRecord",
 			"style": {
 				"navigationBarTitleText":"添加成长记录"
+			}
+		},
+		{
+			"path":"pages/common/record/addRecord/selectClass",
+			"style": {
+				"navigationBarTitleText":"添加班级",
+        "enablePullDownRefresh": true
+			}
+		},
+		{
+			"path":"pages/common/record/addRecord/selectStudent",
+			"style": {
+				"navigationBarTitleText":"添加学员",
+        "enablePullDownRefresh": true
 			}
 		},
 		{

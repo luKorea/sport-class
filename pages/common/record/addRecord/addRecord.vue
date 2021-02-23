@@ -1,13 +1,10 @@
 <template>
   <view class="add-follow-container margin">
-    <view class="cu-form-group margin-top cu-bar bg-white">
-      <view class="title">记录对象</view>
-      <picker @change="bindStateChange($event, stateArray)" :value="stateIndex"
-              :range="stateArray" range-key="name">
-        <view class="picker">
-          {{stateArray[stateIndex] &&stateArray[stateIndex].name}}
-        </view>
-      </picker>
+    <view class="cu-form-group margin-top cu-bar bg-white arrow-item" @click="toTargetSelect">
+      <view class="title" style="white-space: nowrap;">记录对象</view>
+      <view v-if="form.target">{{form.target}} </view>
+      <view v-else class="color-gray">添加{{form.type==1?'班级':'学员'}}</view>
+      <view class="arrow-right"><i class="cuIcon-right"></i></view>
     </view>
     <view class="cu-form-group margin-top cu-bar bg-white">
       <view class="title">模板类型</view>
@@ -19,7 +16,7 @@
         </view>
       </picker>
     </view>
-    <view class="cu-form-group margin-top cu-bar bg-white">
+    <!-- <view class="cu-form-group margin-top cu-bar bg-white">
       <view class="title" style="white-space: nowrap;">内容</view>
       <textarea class="text-right" type="text" placeholder="(1024字以内)" maxlength="1024" v-model="form.content"></textarea>
     </view>
@@ -28,19 +25,21 @@
         <view class="item" v-for="(item,index) in extraImages">
           <image class="img" :src="baseUrl + item.imgurl"></image>
           <textarea class="textarea" placeholder="20字以内说明" maxlength="20" v-model="item.explain"></textarea>
+          <view class="btn-remove"><van-icon name="close" /></view>
         </view>
       </view>
       <view class="btn-upload" @click="toUpload">上传</view>
     </view>
-
-    <!-- <view class="margin-top cu-bar bg-white">
+ -->
+    <view class="margin-top cu-bar bg-white">
       <view class="action">推送给学员</view>
       <view class="action">
-        <switch />
+        <switch @change="switchChange" />
       </view>
-    </view> -->
+    </view>
+    <template-form v-if="growthtemplateinfo.extendfield" :extendfield="growthtemplateinfo.extendfield" :info="growthtemplateinfo.info" @change="onTemplateChange"></template-form>
 
-    <view class="flex flex-direction margin-top-xl" @click="sendFollow">
+    <view class="flex flex-direction margin-top-xl fixed-bottom" @click="sendFollow">
       <button class="cu-btn bg-my-red lg">保存</button>
     </view>
 
@@ -49,23 +48,18 @@
 
 <script>
 import {getDate} from "../../../../utils";
-
+import TemplateForm from './templateForm';
 export default {
+  components:{TemplateForm},
   data() {
     const currentDate = getDate({
       format: true
     })
     return {
-      baseUrl: this.$uploadUrl,
-      // 跟进状态
-      stateIndex: 0,
-      stateArray: [],
-      date: currentDate,
       // 意向级别
       levelIndex: 0,
       levelArray: [],
       growthtemplateinfo: {},
-      extraImages:[],
       form: {
         id: 0,
         sourceid: '',//模板id
@@ -76,7 +70,8 @@ export default {
         images: '',
         targetdata:'',//目标对象id
         fielddata:[]
-      }
+      },
+      switchFlag: false
     }
   },
   computed: {
@@ -88,17 +83,12 @@ export default {
     }
   },
   onLoad(options) {
-    let {id} = options;
-    console.log(id);
-    this.getClassList();
+    let {id,type} = options;
+    this.form.type = type || 1;
+    this.form.id = id || 0;
     this.getTemplateList();
   },
   methods: {
-    // 选择下次跟进时间
-    bindDateChange(e) {
-      this.date = e.target.value;
-      this.form.time = e.target.value;
-    },
     // 选择摸版
     bindLevelChange(e, data) {
       const {value} = e.detail;
@@ -106,36 +96,33 @@ export default {
       this.form.sourceid = data[this.levelIndex].id;
       this.getTemplateDetail()
     },
-    // 选择记录对象
-    bindStateChange(e, data) {
-      const {value} = e.detail;
-      this.stateIndex = value;
-      this.form.target = data[this.stateIndex].name;
-      this.form.targetdata = data[this.stateIndex].id;
+    onTemplateChange(data){
+      this.form.fielddata = JSON.stringify(data.fielddata);
+      this.form.images = data.images&&data.images.map(a=>a.imgurl).join(',')||'';
+      this.form.content = data.content;
     },
     // 提交跟进记录
     sendFollow() {
-      console.log(this.form);
+      // console.log(this.form);
+      if(!this.form.target){
+        return uni.showToast({title:'请添加记录对象',icon: 'none'})
+      }
       var postData = {};
       for(const i in this.form){
         postData[i] = this.form[i]
       }
-      postData.fielddata = this.growthtemplateinfo.extendfield.map(item=>{
-        return {
-          id: postData.sourceid,
-          fieldid: item.id,
-          value: item.title=='内容'?postData.content:item.title=='图片'?JSON.stringify(this.extraImages):''
-        }
-      })
-      postData.fielddata = JSON.stringify(postData.fielddata)
-      postData.images = this.extraImages.map(a=>a.imgurl).join(',');
       // return console.log('postData',postData)
       this.$api.student.operatorgrowth(postData).then(res=>{
         if(res.data.data.errcode==200){
-          uni.showToast({
-            title:"添加成功"
-          })
-          uni.navigateBack();
+          uni.showToast({ title:"添加成功" })
+          //如果需要推送，则调用推送接口
+          if(this.switchFlag){
+            this.$api.wechatmessage.growthmessage({ids: [res.data.data.data]}).finally(res=>{
+              uni.navigateBack();
+            })
+          }else{
+            uni.navigateBack();
+          }
         }else{
           uni.showToast({
             title: res.data.data.errmsg || "添加失败，请稍后重试",
@@ -144,13 +131,6 @@ export default {
         }
       })
       
-    },
-    getClassList(){
-      this.$api.class.list({paging: false}).then((res)=>{
-        this.stateArray = res.data.data
-        this.form.target = this.stateArray[0].name;
-        this.form.targetdata = this.stateArray[0].id;
-      })
     },
     getTemplateList(){
       this.$api.student.sourcelist({type: 3}).then((res)=>{
@@ -164,98 +144,49 @@ export default {
         this.growthtemplateinfo = res.data.data
       })
     },
-    toUpload(){
-      const that = this;
-      wx.chooseImage({
-        count: 6, //默认9
-        sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-        sourceType: ['album','camera'], //从相册选择
-        success: (res) => {
-          console.log(res);
-          // this.info.image = res.tempFilePaths[0];
-          wx.uploadFile({
-            url: that.$upload + '/d/m/file/upload?type=17',
-            filePath: res.tempFilePaths[0],
-            name: 'file',
-            formData: {},
-            header: {
-              'Content-Type': 'multipart/form-data'
-            },
-            success(res) {
-              let data = JSON.parse(res.data);
-              if(data.code!=0){
-                return uni.showToast({
-                  title: data.data.message || '上传失败',
-                  icon: 'none'
-                })
-              }
-              that.extraImages.push({
-                imgurl: data.data.path + data.data.name,
-                explain: ''
-              })
-            },
-            fail(err){
-              console.log('err',err)
-            }
-          })
-        }
-      });
+    toTargetSelect(){
+      const url = this.form.type==1?'/pages/common/record/addRecord/selectClass':'/pages/common/record/addRecord/selectStudent'
+      uni.navigateTo({
+        url: url+'?data='+this.form.targetdata
+      })
+    },
+    setData(data){
+      if(data.classList){
+        this.form.target = data.classList.map(a=>a.name).join(',');
+        this.form.targetdata = data.classList.map(a=>a.id).join(',');
+      }
+      if(data.studentList){
+        this.form.target = data.studentList.map(a=>a.name).join(',');
+        this.form.targetdata = data.studentList.map(a=>a.id).join(',');
+      }
+      
+    },
+    switchChange(e){
+      this.switchFlag = e.target.value
     }
+    
   },
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 page{
     background: $uni-bg-color-grey;
 }
-.record-img-list{
-  .item{
-    position: relative;
-    padding: 20rpx 0;
-    padding-left: 240rpx;
-    min-height: 200rpx;
-    .img{
-      width: 200rpx;
-      height: 200rpx;
+.add-follow-container{
+  .cu-form-group{
+    &.arrow-item{
+      padding-right: 50rpx;
+    }
+    .arrow-right{
       position: absolute;
-      left: 20rpx;
-      top: 20rpx;
+      right: 20rpx;
+      top: 50%;
+      transform: translateY(-50%);
     }
-    .textarea{
-      height:200rpx;
-      width: 100%;
+    .color-gray{
+      color: #aaa;
     }
-    &:after{
-      content: "";
-      display: table;
-      clear: both;
-    }
-  }
-}
-.btn-upload{
-  width: 200rpx;
-  height: 200rpx;
-  margin: 20rpx;
-  border: 1px dashed #ddd;
-  position: relative;
-  text-indent: -9999px;
-  overflow: hidden;
-  &:before,&:after{
-    content: "";
-    display: block;
-    width: 50%;
-    height: 2px;
-    background-color: #ddd;
-    position: absolute;
-    top: 50%;
-    left: 25%;
-  }
-  &:after{
-    transform: rotate(90deg);
-  }
-  &:active{
-    border-color:$uni-color-primary;
   }
 }
 </style>

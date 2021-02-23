@@ -216,6 +216,9 @@ export default {
 page{
     background: $uni-bg-color-grey;
 }
+.record-container{
+  padding-bottom: 100rpx;
+}
 .flex-due {
   justify-content: start;
   align-items: start;

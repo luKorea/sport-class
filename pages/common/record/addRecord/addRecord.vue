@@ -26,7 +26,7 @@
     <view class="margin-top bg-white padding-bottom-xs padding-top-xs">
       <view class="record-img-list">
         <view class="item" v-for="(item,index) in extraImages">
-          <image class="img" :src="$uploadUrl + item.imgurl"></image>
+          <image class="img" :src="baseUrl + item.imgurl"></image>
           <textarea class="textarea" placeholder="20字以内说明" maxlength="20" v-model="item.explain"></textarea>
         </view>
       </view>
@@ -56,6 +56,7 @@ export default {
       format: true
     })
     return {
+      baseUrl: this.$uploadUrl,
       // 跟进状态
       stateIndex: 0,
       stateArray: [],
@@ -174,7 +175,7 @@ export default {
           // this.info.image = res.tempFilePaths[0];
           wx.uploadFile({
             url: that.$upload + '/d/m/file/upload?type=17',
-            // filePath: res.tempFilePaths[0],
+            filePath: res.tempFilePaths[0],
             name: 'file',
             formData: {},
             header: {
@@ -212,14 +213,14 @@ page{
   .item{
     position: relative;
     padding: 20rpx 0;
-    padding-left: 200rpx;
+    padding-left: 240rpx;
     min-height: 200rpx;
     .img{
       width: 200rpx;
       height: 200rpx;
       position: absolute;
-      left: 0;
-      top: 0;
+      left: 20rpx;
+      top: 20rpx;
     }
     .textarea{
       height:200rpx;

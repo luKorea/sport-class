@@ -53,7 +53,7 @@ export const getcostbyteacher = params => {
     })
 }
 //=====================================================
-// 本月出勤率--学员出勤率统计---有疑问
+// 本月出勤率--学员出勤率统计
 export const getattendance = params => {
     return axios({
         url: '/educationalstatistics/attendance',

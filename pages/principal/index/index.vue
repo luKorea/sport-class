@@ -47,16 +47,16 @@
 				<view class="cu-list grid col-3" style="width: 100%;">
 					<view class="cu-item">
 						<view>
-							<view class="text-red text-bold">34.33%</view>
+							<view class="text-red text-bold">{{classRate}}%</view>
 							<view>班级满班率</view>
 						</view>
 					</view>
 					<view class="cu-item">
-						<view class="text-cyan text-bold">34.33%</view>
+						<view class="text-cyan text-bold">{{refundRate}}%</view>
 						<view>学员退费率</view>
 					</view>
 					<view class="cu-item">
-						<view class="text-orange text-bold">34.33%</view>
+						<view class="text-orange text-bold">{{renewRate}}%</view>
 						<view>续签金额比</view>
 					</view>
 				</view>
@@ -132,7 +132,10 @@
 		getcoursehourstatistics,
 		getteacherhourstatistics,
 		getdurationsummary,
-		getcostsummary
+		getcostsummary,
+		getfullclassrate,
+		getrefundratebytype,
+		getrenewratebytype
 	} from '../../../api/principal/attendanceRate.js'
 	import {
 		chooseTime
@@ -151,6 +154,9 @@
 				Xc1:0,
 				Xc2:0,
 				Xc:0,
+				classRate:0,
+				refundRate:0,
+				renewRate:0,
 				cWidth: '',
 				cHeight: '',
 				pixelRatio: 1,
@@ -323,6 +329,44 @@
 				}
 				obj = chooseTime(obj, '4');
 				
+				// 满班
+				getfullclassrate(obj).then((res) =>{
+					if (res.data.code === 0) {
+						if (res.data.data.list.length > 0) {
+							let rate = 0;
+							res.data.data.list.map((item)=>{
+								rate+=Number(item.rate)
+							})
+							this.classRate = rate.toFixed(2);
+						}
+						
+					}
+				})
+				// 退费
+				getrefundratebytype(obj).then((res) =>{
+					if (res.data.code === 0) {
+						if (res.data.data.list.length > 0) {
+							let rate = 0;
+							res.data.data.list.map((item)=>{
+								rate+=Number(item.rate)
+							})
+							this.refundRate = rate.toFixed(2);
+						}
+						
+					}
+				})
+				// 续签
+				getrenewratebytype(obj).then((res) =>{
+					if (res.data.code === 0) {
+						if (res.data.data.list.length > 0) {
+							let rate = 0;
+							res.data.data.list.map((item)=>{
+								rate+=Number(item.rate)
+							})
+							this.renewRate = rate.toFixed(2);
+						}
+					}
+				})
 				
 				
 				// 课时课消

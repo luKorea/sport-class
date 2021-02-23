@@ -113,7 +113,7 @@
           <view class="cu-list menu text-left">
             <view class="cu-item" v-for="item in classArray" :key="item.id">
               <label class="flex justify-between align-center flex-sub">
-                <view class="flex-sub">{{item.name}}</view>
+                <view class="flex-sub">{{item.title}}</view>
                 <checkbox :value="JSON.stringify(item)" style="transform:scale(0.6)"></checkbox>
               </label>
             </view>
@@ -134,6 +134,10 @@
 </template>
 
 <script>
+	import {
+		getoperatorcourse,
+		getCourseList
+	} from "../../../../api/principal/course";
 export default {
   name: "addCourse",
   data() {
@@ -155,24 +159,7 @@ export default {
       classType: false,
       showClass: true,
       gradeModal: false,
-      classArray: [
-        {
-          id: 1,
-          name: '测试'
-        },
-        {
-          id: 2,
-          name: '跆拳道'
-        },
-        {
-          id: 3,
-          name: '武术'
-        },
-        {
-          id: 4,
-          name: '篮球'
-        }
-      ],
+      classArray: [],
       selectArray: []
     }
   },
@@ -188,7 +175,18 @@ export default {
       this.showClass = false;
     },
     showGradeModal() {
-      this.gradeModal = true;
+      getCourseList({
+      	keywords: '',
+      	venueid: wx.getStorageSync('userData').venueid,
+      	flags: 1024
+      }).then((res) => {
+      	if (res.data.code === 0) {
+      		if (res.data.data.list.length > 0) {
+      			this.classArray = res.data.data.list;
+      			this.gradeModal = true;
+      		}
+      	}
+      })
     },
     hideGradeModal() {
       this.gradeModal = false;
@@ -218,7 +216,78 @@ export default {
       this.selectArray = data;
     },
     saveData() {
-      wx.navigateBack();
+    	let arr = []
+    	// this.detailsinfo.agreementlist.map((item) => {
+    	// 	arr.push(item.id)
+    	// })
+    	let arr2 = []
+    	this.selectArray.map((item) => {
+    		arr2.push(item.id)
+    	});
+		let flags = 0
+		let {state,weidao,leval} = this.info;
+		if(state){
+			if(weidao&&leval){
+				flags=1+256+2048
+			}
+			if(weidao&&!leval){
+				flags=1+256
+			}
+			if(!weidao&&leval){
+				flags=1+2048
+			}
+			if(!weidao&&!leval){
+				flags=1
+			}
+		}else{
+			if(weidao&&leval){
+				flags=256+2048
+			}
+			if(weidao&&!leval){
+				flags=256
+			}
+			if(!weidao&&leval){
+				flags=2048
+			}
+			if(!weidao&&!leval){
+				flags=0
+			}
+		}
+    	let param = {
+    		id: 0, // 课程id，添加时默认为0
+    		type: this.typeIndex==0?1:2, // notnull 课程类型(1=1对1，2=1对多)
+    		cover: '', // length<=256 课程图片
+    		title: this.info.className, // notnull length<=100 课程标题
+    		begintime: '', //string 开始时间
+    		endtime: '', //string 结束时间
+    		classroom: '', //string length<=100 上课教室
+    		tel: '', //string 联系方式
+    		introduction: this.info.content, // string 课程详情
+    		score: 0, //int 积分（兑换所需）
+    		coursenum: '', //int 总共多少节课
+    		cost: this.info.money, //decimal 总学费
+    		flags:flags, //int course.flags（是否体验课，是否扣课时也请在这里处理一次，后期将移除相关2个参数）
+    		childidsstring: this.showClass ? 0 : arr2.join(','), //通用课程时关联的课程,多个以','隔开，全部课程时默认值=0
+    		agreementids: '', //string 协议id,多个以','隔开
+    		selldata: '', // string 价格列表json,
+    		comerextenddata: ''
+    	}
+    	console.log(param, "param")
+    	// this.showClass
+		// return
+    	getoperatorcourse(param).then((res) => {
+    		if (res.data.code === 0) {
+    			uni.showToast({
+    				title: '修改成功',
+    				duration: 1000
+    			});
+    			let timeout = setTimeout(function() {
+    				wx.navigateBack();
+    			}, 1000)
+    
+    		}
+    	})
+    
     }
   }
 }

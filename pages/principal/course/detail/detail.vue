@@ -302,7 +302,7 @@
 					coursenum: this.detailsinfo.info.coursenum, //int 总共多少节课
 					cost: this.info.money, //decimal 总学费
 					flags:this.info.state?(this.detailsinfo.info.flags%2==1?this.detailsinfo.info.flags:(this.detailsinfo.info.flags+1)):(this.detailsinfo.info.flags-1), //int course.flags（是否体验课，是否扣课时也请在这里处理一次，后期将移除相关2个参数）
-					childidsstring: this.showClass ? 0 : arr2.join(','), //通用课程时关联的课程,多个以','隔开，全部课程时默认值=0
+					childids: this.showClass ? 0 : arr2.join(','), //通用课程时关联的课程,多个以','隔开，全部课程时默认值=0
 					agreementids: arr.join(','), //string 协议id,多个以','隔开
 					selldata: '', // string 价格列表json,
 					comerextenddata: ''

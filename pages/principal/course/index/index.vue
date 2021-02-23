@@ -76,6 +76,12 @@
 				venueid: wx.getStorageSync('userData').venueid,
 			});
 		},
+		onShow(){
+			this.getListData({
+				keywords: this.searchInput,
+				venueid: wx.getStorageSync('userData').venueid,
+			});
+		},
 		methods: {
 			getListData(params) {
 				getCourseList(params)

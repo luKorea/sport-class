@@ -1,4 +1,4 @@
-export const chooseTime = (obj,time)=>{
+export const chooseTime = (obj, time) => {
 	const starts = new Date();
 	let end = new Date().getTime();
 	let newEnd = new Date(end)
@@ -77,3 +77,31 @@ export const chooseTime = (obj,time)=>{
 	}
 	return obj
 }
+
+export const combinationSum = (candidates, target) => {
+	const buffer = [];
+	const result = [];
+
+	const backTrace = (index, target) => {
+		if (target == 0) {
+			return result.push(buffer.slice());
+		}
+
+		if (target < 0) {
+			return;
+		}
+
+		if (index === candidates.length) return;
+
+		buffer.push(candidates[index]);
+		backTrace(index + 1, target - candidates[index]);
+		buffer.pop();
+
+		backTrace(index + 1, target);
+	}
+	backTrace(0, target);
+
+	return [...new Set(result.map(arr => arr.sort((a, b) => a - b)).map(arr => arr.join('|')))].map(item => item.split(
+		'|').map(num => +num));
+};
+// console.log(combinationSum2([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096], 2433))

@@ -22,8 +22,16 @@
 				</view>
 			</view>
 		</block>
-
-		<block>
+		<view class="cu-bar bg-white margin-top">
+			<view class="action">
+				<text>通用课程</text>
+			</view>
+			<view class="action">
+				<switch v-if="classType" checked="true" @change="setClassType" />
+				<switch v-else="classType" @change="setClassType" />
+			</view>
+		</view>
+		<block v-if="classType">
 			<view class="cu-bar bg-white margin-top solid-bottom" @click="setTongClassType1">
 				<view class="action">
 					<text>通用全部课程</text>
@@ -78,7 +86,7 @@
 				<text>启用状态</text>
 			</view>
 			<view class="action">
-				<switch v-if="detailsinfo.info.flags%2===1" checked @change="setState" />
+				<switch v-if="info.state" checked @change="setState" />
 				<switch v-else @change="setState" />
 			</view>
 		</view>
@@ -104,7 +112,9 @@
 						<view class="cu-item" v-for="item in classArray" :key="item.id">
 							<label class="flex justify-between align-center flex-sub">
 								<view class="flex-sub">{{item.title}}</view>
-								<checkbox :value="JSON.stringify(item)" style="transform:scale(0.6)"></checkbox>
+								<checkbox :value="JSON.stringify(item)" v-if="item.checked" checked style="transform:scale(0.6)"></checkbox>
+								<checkbox :value="JSON.stringify(item)" v-else style="transform:scale(0.6)"></checkbox>
+								
 							</label>
 						</view>
 					</view>
@@ -130,6 +140,9 @@
 		getchangeenable,
 		getoperatorcourse
 	} from "../../../../api/principal/course";
+	import {
+		combinationSum
+	} from '../../../../utils/chooseTime.js';
 	export default {
 		name: "addCourse",
 		data() {
@@ -202,6 +215,61 @@
 					this.info.className = this.detailsinfo.info.title
 					this.info.money = this.detailsinfo.info.cost
 					this.info.content = this.detailsinfo.info.introduction
+					
+					let bufferArr = combinationSum([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096], this.detailsinfo.info.flags)[0]
+					let flags1 = bufferArr.some((a) => {
+						return a == 1
+					});
+					if(flags1){
+						this.info.state = 1
+					}else{
+						this.info.state = 0
+					}
+					
+					
+					if (this.detailsinfo.coursestructure.length > 0) {
+						this.classType = true;
+						if (this.detailsinfo.coursestructure.some((a) => {
+								return a.childid == 0
+							})) {
+							this.showClass=true;
+						}else{
+							this.showClass=false;
+							getCourseList({
+								keywords: '',
+								venueid: wx.getStorageSync('userData').venueid,
+								// flags: 1024
+							}).then((res2) => {
+								if (res2.data.code === 0) {
+									if (res2.data.data.list.length > 0) {
+										let arr = []
+										res2.data.data.list.map((item) => {
+											let bufferArr = combinationSum([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096], item.flags)[0]
+											let flag1 = bufferArr.some((a) => {
+												return a == 1
+											});
+											let flag2 = bufferArr.some((a) => {
+												return a == 1024
+											})
+											if (flag1 && !flag2) {
+												arr.push(item)
+											}
+										})
+										arr.map((q)=>{
+											this.detailsinfo.coursestructure.map((w)=>{
+												if(q.id===w.childid){
+													q.checked = true;
+													this.selectArray.push(q)
+												}
+											})
+										})
+										this.classArray = arr;
+										// this.gradeModal = true;
+									}
+								}
+							})
+						}
+					}
 					// this.typeIndex = this.detailsinfo.info.type==1?0:1;
 				}
 			})
@@ -220,19 +288,37 @@
 				this.showClass = false;
 			},
 			showGradeModal() {
-				getCourseList({
-					keywords: '',
-					venueid: wx.getStorageSync('userData').venueid,
-					flags: 1024
-				}).then((res) => {
-					if (res.data.code === 0) {
-						if (res.data.data.list.length > 0) {
-							this.classArray = res.data.data.list;
-							this.gradeModal = true;
+				if(this.classArray.length===0){
+					getCourseList({
+						keywords: '',
+						venueid: wx.getStorageSync('userData').venueid,
+						// flags: 1024
+					}).then((res) => {
+						if (res.data.code === 0) {
+							if (res.data.data.list.length > 0) {
+								let arr = []
+								res.data.data.list.map((item) => {
+									let bufferArr = combinationSum([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096], item.flags)[0]
+									let flag1 = bufferArr.some((a) => {
+										return a == 1
+									});
+									let flag2 = bufferArr.some((a) => {
+										return a == 1024
+									})
+									if (flag1 && !flag2) {
+										arr.push(item)
+									}
+								})
+								this.classArray = arr;
+								this.gradeModal = true;
+							}
 						}
-					}
-				})
-
+					})
+					
+				}else{
+					this.gradeModal = true;
+				}
+				
 			},
 			hideGradeModal() {
 				this.gradeModal = false;
@@ -288,6 +374,45 @@
 				this.selectArray.map((item) => {
 					arr2.push(item.id)
 				})
+				
+				let flags = this.detailsinfo.info.flags
+				let {
+					state,
+				} = this.info;
+				if (state) {
+					let bufferArr = combinationSum([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096], this.detailsinfo.info.flags)[0]
+					let flag2 = bufferArr.some((a) => {
+						return a == 1024
+					});
+					let bufferflag = this.showClass ? 0 : arr2.join(',');
+					if(flag2){
+						if(bufferflag===0){
+							flags-=1024
+						}
+					}else{
+						if(bufferflag!==0){
+							flags+=1024
+						}
+					}
+					
+				}else{
+					let bufferArr = combinationSum([1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096], this.detailsinfo.info.flags)[0]
+					let flag2 = bufferArr.some((a) => {
+						return a == 1024
+					});
+					let bufferflag = this.showClass ? 0 : arr2.join(',');
+					if(flag2){
+						if(bufferflag===0){
+							flags-=1024
+						}
+					}else{
+						if(bufferflag!==0){
+							flags+=1024
+						}
+					}
+					flags-=1
+				}
+				
 				let param = {
 					id: this.detailsinfo.info.id, // 课程id，添加时默认为0
 					type: this.detailsinfo.info.type, // notnull 课程类型(1=1对1，2=1对多)
@@ -301,7 +426,7 @@
 					score: this.detailsinfo.info.score, //int 积分（兑换所需）
 					coursenum: this.detailsinfo.info.coursenum, //int 总共多少节课
 					cost: this.info.money, //decimal 总学费
-					flags:this.info.state?(this.detailsinfo.info.flags%2==1?this.detailsinfo.info.flags:(this.detailsinfo.info.flags+1)):(this.detailsinfo.info.flags-1), //int course.flags（是否体验课，是否扣课时也请在这里处理一次，后期将移除相关2个参数）
+					flags: flags, //int course.flags（是否体验课，是否扣课时也请在这里处理一次，后期将移除相关2个参数）
 					childids: this.showClass ? 0 : arr2.join(','), //通用课程时关联的课程,多个以','隔开，全部课程时默认值=0
 					agreementids: arr.join(','), //string 协议id,多个以','隔开
 					selldata: '', // string 价格列表json,

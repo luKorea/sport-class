@@ -47,7 +47,7 @@
           </view>
         </uni-drawer>
       </view>
-      <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id" @click="addRecord(item.id)">
+      <view class="cu-bar bg-white margin-top" v-for="(item,index) in list" :key="index" @click="addRecord(item.id)">
         <view class="action flex-direction">
           <view class="flex-due">
             <view style="margin: 16rpx 0 0 0" class="text-sm">
@@ -98,12 +98,15 @@ export default {
       loadingType: 'more'
     }
   },
-  onShow(options) {
+  onLoad(options) {
     let {id} = options;
     console.log(id);
     this.loadData();
     this.getTemplates();
     this.getClasses();
+  },
+  onShow(){
+    this.loadData();
   },
   //下拉刷新
   onPullDownRefresh(){
@@ -204,6 +207,11 @@ export default {
       this.loadData('refresh');
     },
     addRecord(id) {
+      if(id){
+        return wx.navigateTo({
+          url: '../detail/detail?id='+(id||'')
+        })
+      }
       wx.navigateTo({
         url: '../addRecord/addRecord?type='+this.listQuery.type+'&id='+(id||'')
       })

@@ -16,28 +16,13 @@
         </view>
       </picker>
     </view>
-    <!-- <view class="cu-form-group margin-top cu-bar bg-white">
-      <view class="title" style="white-space: nowrap;">内容</view>
-      <textarea class="text-right" type="text" placeholder="(1024字以内)" maxlength="1024" v-model="form.content"></textarea>
-    </view>
-    <view class="margin-top bg-white padding-bottom-xs padding-top-xs">
-      <view class="record-img-list">
-        <view class="item" v-for="(item,index) in extraImages">
-          <image class="img" :src="baseUrl + item.imgurl"></image>
-          <textarea class="textarea" placeholder="20字以内说明" maxlength="20" v-model="item.explain"></textarea>
-          <view class="btn-remove"><van-icon name="close" /></view>
-        </view>
-      </view>
-      <view class="btn-upload" @click="toUpload">上传</view>
-    </view>
- -->
     <view class="margin-top cu-bar bg-white">
       <view class="action">推送给学员</view>
       <view class="action">
         <switch @change="switchChange" />
       </view>
     </view>
-    <template-form v-if="growthtemplateinfo.extendfield" :extendfield="growthtemplateinfo.extendfield" :info="growthtemplateinfo.info" @change="onTemplateChange"></template-form>
+    <template-form :extendfield="growthtemplateinfo.extendfield" :info="growthtemplateinfo.info" @change="onTemplateChange"></template-form>
 
     <view class="flex flex-direction margin-top-xl fixed-bottom" @click="sendFollow">
       <button class="cu-btn bg-my-red lg">保存</button>
@@ -141,7 +126,7 @@ export default {
     },
     getTemplateDetail(){
       this.$api.student.growthtemplateinfo({id: this.form.sourceid}).then((res)=>{
-        this.growthtemplateinfo = res.data.data
+        this.growthtemplateinfo = res.data.data;
       })
     },
     toTargetSelect(){

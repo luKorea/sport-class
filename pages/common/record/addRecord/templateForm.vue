@@ -4,10 +4,8 @@
       <view class="margin-top cu-bar bg-white padding-top-xs padding-bottom-xs" v-for="(item,index) in schema" :key="item.prop" :class="{disabled: item.disabled}">
         <view class="action" v-if="item.label" style="white-space: nowrap;">{{item.label}}</view>
         <view class="action">
-          <view v-if="item.value"><rich-text :nodes="item.value"></rich-text></view>
-          <view v-if="item.getValue">{{item.getValue(form)}}</view>
           <view v-if="item.prop">
-              <input v-if="!item.type || item.type=='input'" type="text" :placeholder="'请输入'+item.label" :value="form[item.prop]" :data-key="item.prop" :disabled="item.disabled" @input="inputChange">
+              <input v-if="!item.type || item.type=='input'" :type="item.formtype || 'text'" :placeholder="'请输入'+item.label" :value="form[item.prop]" :data-key="item.prop" :disabled="item.disabled" @input="inputChange">
               <textarea class="textarea" v-if="item.type=='textarea'" :value="form[item.prop]" :data-key="item.prop" @input="inputChange" :placeholder="'请输入'+item.label"></textarea>
               <uni-number-box v-if="item.type=='number'" class="number pull-right" :min="1"  :max="99999" :value="form[item.prop]>99999?99999:form[item.prop]" :isMax="form[item.prop]>=99999?true:false" :isMin="form[item.prop]===1" :index="item.prop" @eventChange="numberChange"></uni-number-box>
               
@@ -25,7 +23,7 @@
                 <view class="item" v-for="(child,index) in item.list">
                   <view class="label">{{child.name}}</view>
                   <view class="det">
-                    <input class="input" type="number" v-model="child.value" :placeholder="'请输入设置值'+(child.max?(',最大值为'+child.max):'')" />
+                    <input class="input" type="number" v-model="child.value" :placeholder="'请输入设置值'+(child.max?(',最大值为'+child.max):'')" @input="onChange" />
                   </view>
                 </view>
               </view>
@@ -46,6 +44,10 @@ export default{
     info:{
       type: Object,
       default(){return {}}
+    },
+    extenddata:{
+      type: Array,
+      default: null
     }
   },
   data(){
@@ -61,12 +63,13 @@ export default{
         this.init();
     }
   },
-  onload(){
+  onLoad(){
     this.init();
   },
   methods:{
     init(){
       this.schema = [];
+      var schema = [];
       for(const i in this.extendfield){
         const fieldItem = this.extendfield[i]
         const schemaItem = {label: fieldItem.title,type: '',prop: fieldItem.id};
@@ -75,8 +78,9 @@ export default{
           case 8224:
             schemaItem.type="textarea";break;
           case 1:
-            schemaItem.type="number";break;
+            schemaItem.type="input";schemaItem.formtype="number";break;
           case 8200:
+            schemaItem.label = '';
             schemaItem.type="images";break;
           case 4:
             schemaItem.label = '';
@@ -86,9 +90,31 @@ export default{
               item.value = '';
             })
         }
-        this.schema.push(schemaItem);
+        schema.push(schemaItem);
       }
-      // console.log('this.schema',this.schema)
+      this.initData(schema);
+      this.schema = schema;
+      console.log('this.schema',this.schema)
+      // console.log(this.form)
+    },
+    initData(schema){
+      if(this.extenddata){
+        for(const i in this.extenddata){
+          const dataitem = this.extenddata[i];
+          const fieldItem = this.extendfield.find(a=>a.id==dataitem.fieldid);
+          const schemaItem = schema.find(a=>a.prop == fieldItem.id)
+          switch(fieldItem.flags){
+            case 8224:
+            case 1:
+            case 32:
+              this.$set(this.form,fieldItem.id,dataitem.value);break;
+            case 8200:
+              this.extraImages = JSON.parse(dataitem.value);break;
+            case 4:
+              schemaItem.list = JSON.parse(dataitem.value)
+          }
+        }
+      }
     },
     getValue(fieldItem){
       var value="";
@@ -100,8 +126,11 @@ export default{
         case 8200:
           value = JSON.stringify(this.extraImages);break;
         case 4:
-          value = JSON.stringify(this.schema.find(a=>a.prop==fieldItem.id).list)
+          value = JSON.stringify(this.schema.find(a=>a.prop==fieldItem.id).list);
+          console.log('vaue',fieldItem,value,this.schema.find(a=>a.prop==fieldItem.id).list)
+          break;
       }
+      
       return value
     },
     inputChange(e){
@@ -112,6 +141,9 @@ export default{
     numberChange(data){
       this.form[data.index] = data.number;
       this.onChange();
+    },
+    onChildChange(){
+      console.log('scha',this.schema)
     },
     onChange(){
       const data = {fielddata:[],images:[],content:''};
@@ -125,7 +157,7 @@ export default{
           value: this.getValue(item)
         }
       })
-      data.images = this.extraImages.map(a=>a.imgurl).join(',')
+      data.images = this.extraImages
       this.$emit('change',data)
     },
     toUpload(){
@@ -181,17 +213,17 @@ export default{
   .item{
     position: relative;
     padding: 20rpx 0;
-    padding-left: 240rpx;
-    min-height: 200rpx;
+    padding-left: 200rpx;
+    min-height: 160rpx;
     .img{
-      width: 200rpx;
-      height: 200rpx;
+      width: 160rpx;
+      height: 160rpx;
       position: absolute;
       left: 20rpx;
       top: 20rpx;
     }
     .textarea{
-      height:200rpx;
+      height:160rpx;
       width: 100%;
     }
     &:after{
@@ -202,8 +234,8 @@ export default{
   }
 }
 .btn-upload{
-  width: 200rpx;
-  height: 200rpx;
+  width: 160rpx;
+  height: 160rpx;
   margin: 20rpx;
   border: 1px dashed #ddd;
   position: relative;

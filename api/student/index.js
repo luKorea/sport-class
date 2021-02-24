@@ -27,11 +27,18 @@ export default{
      * ps: int notnull
      */
     growthlist(opt){
-        return axios({
-            url: '/student/growthlist',
-            method: "post",
-            data: opt
-        })
+      return axios({
+          url: '/student/growthlist',
+          method: "post",
+          data: opt
+      })
+    },
+    growthinfo(opt){
+      return axios({
+        url: '/student/growthinfo',
+        method: "post",
+        data: opt
+      })
     },
     /**
      * @param {Object} opt

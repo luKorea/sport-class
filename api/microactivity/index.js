@@ -8,6 +8,14 @@ export default{
           method: "post",
           data: opt
       })
-    }    
+    },
+    //我的微活动
+    templatelist(opt){
+      return axios({
+          url: '/microactivity/templatelist',
+          method: "post",
+          data: opt
+      })
+    }   
     
 }

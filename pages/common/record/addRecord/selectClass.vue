@@ -92,14 +92,15 @@
             </view>
           </view>
           <view class='action'>
-            <checkbox :value="item.id+''" :checked="checkMap[item.id]" />
+            <checkbox :value="item.id+''" :checked="checkMap[item.id]" v-if="!isSingle" />
+            <view class="cuIcon-right" v-else></view>
           </view>
         </view>
       </view>
       </checkbox-group>
       <uni-load-more :status="loadingType"></uni-load-more>
     </view>
-    <view class="flex flex-direction fixed-bottom" @click="confirm">
+    <view class="flex flex-direction fixed-bottom" @click="confirm" v-if="!isSingle">
       <button class="add-btn">确定</button>
     </view>
   </view>
@@ -175,7 +176,8 @@
         ],
         studentCurrent: 0,
         loadingType: 'more',
-        checkMap:{}
+        checkMap:{},
+        isSingle: false//是否是单选
       }
     },
     onShow: function() {
@@ -193,6 +195,7 @@
         }
         this.checkMap = checkMap
       }
+      this.isSingle = typeof(options.single)=='undefined'?false:options.single
       this.loadData();
     },
     //下拉刷新
@@ -335,7 +338,11 @@
           this.checkMap = newCheckMap;console.log(this.checkMap)
       },
       checked(id){
-        this.$set(this.checkMap,id,!this.checkMap[id])
+        this.$set(this.checkMap,id,!this.checkMap[id]);
+        if(this.isSingle){
+          var checkMap = {};checkMap[id] = true;this.checkMap = checkMap
+          return this.confirm();
+        }
       },
       confirm(){
         this.prePage().setData({classList: this.list.filter(item=>this.checkMap[item.id])});

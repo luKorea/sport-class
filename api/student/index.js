@@ -66,6 +66,56 @@ export default{
           method: "post",
           data: opt
       })
-    }    
+    },
+    //学员档案
+    /**
+     * @param {Object} opt
+     * btime : string 开始时间
+     * etime : string 结束时间
+     * courseid : int
+     * classid : int
+     * teacherid : int
+     * followuserid : int 跟进人userid
+     * staffflags : int 跟进人标记(配合followuserid使用)followstaff.flags
+     * salefollowuserid : int? 销售跟进人userid (id=-1时，查询没有分配销售跟进人的数据)
+     * educationaluserid : int? 教务跟进人userid (id=-1时，查询没有分配教务跟进人userid的数据)
+     * followtype : int? 跟进类型:10=已付费
+     * status : int 跟进状态 followup.status
+     * grade : int followup.grade
+     * keywords : string 学生姓名或手机号码
+     * original : string 学生来源
+     * types : int 1=潜在学员，2=历史学员，3=在读学员
+     * tags : string 标签
+     * flags : int 标记 student.flags
+     * details: bool 是否获取学生详情
+     * paging: bool
+     * pi: int notnull
+     * ps: int notnull
+     */
+    intentstudent(opt){
+      return axios({
+          url: '/student/intentstudent',
+          method: "post",
+          data: opt
+      })
+    },
+    operatorstudent(opt){
+      return axios({
+          url: '/student/operatorstudent',
+          method: "post",
+          data: opt
+      })
+    },
+    //批量添加跟进人
+    addfollowstaff(opt){
+      return axios({
+          url: '/student/addfollowstaff',
+          method: "post",
+          data: opt
+      })
+    }
+    
+    
+    
     
 }

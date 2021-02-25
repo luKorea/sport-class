@@ -1,18 +1,18 @@
 <template>
   <view style="margin: 20rpx">
     <view class="cu-card case isCard margin-bottom img-item" v-for="item in list"
-          :key="item.id" @click="goDetail(item.id)">
+          :key="item.id" @click="goDetail(item)">
       <view class="cu-item shadow img-item" style="margin: 0">
         <view class="image">
-          <image :src="baseUrl+item.image"></image>
+          <image :src="baseUrl+item.image" :alt="item.alias"></image>
         </view>
       </view>
       <view class="cu-bar bg-white" style="min-height: 80rpx">
-        <view class="action text-bold">{{item.title}}</view>
+        <view class="action text-bold">{{item.alias}}</view>
       </view>
       <view class="cu-bar bg-white" style="min-height: 80rpx">
-        <view class="action text-gray">被发布数：<text class="text-red">{{item.sendNumber}}次</text></view>
-        <view class="action text-gray">最高招生人数：<text class="text-red">{{item.studentNumber}}次</text></view>
+        <view class="action text-gray">被发布数：<text class="text-red">{{item.hits}}次</text></view>
+        <view class="action text-gray">最高招生人数：<text class="text-red">{{item.joincount}}次</text></view>
       </view>
     </view>
     <uni-load-more :status="loadingType"></uni-load-more>
@@ -24,12 +24,13 @@ export default {
 name: "index",
   data() {
     return {
-      baseUrl: this.$imageurl,
+      baseUrl: this.$imageprefix,
       list:[],
       listQuery:{
         paging: true,
         pi: 0,
         ps: 20,
+        status: -1,
         keywords:'',
       },
       loadingType: 'more'
@@ -65,7 +66,7 @@ name: "index",
             this.listQuery.pi++;
         }
       //模拟api请求数据
-        this.$api.microactivity.componentlist(this.listQuery).then((res)=>{
+        this.$api.microactivity.templatelist(this.listQuery).then((res)=>{
             this.list = this.list.concat(res.data.data.list);
             //判断是否还有下一页，有是more  没有是nomore(测试数据判断大于30就没有了)
             this.loadingType  = this.list.length >= res.data.data.page.total ? 'nomore' : 'more';
@@ -83,9 +84,9 @@ name: "index",
         })
       
     },
-    goDetail(id){
+    goDetail(data){
       wx.navigateTo({
-        url: `../detail/detail?id=${id}`
+        url: `../detail/detail?id=${data.id}&image=${data.image}`
       })
     }
   }

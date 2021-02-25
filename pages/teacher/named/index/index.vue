@@ -17,15 +17,15 @@
     <view>
       <block v-if="list.length > 0">
         <view class="margin">
-          <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id" @click="goDetail(item.id)">
+          <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id" @click="goDetail(item)">
             <view class="action flex-common padding-top padding-bottom">
-              <text class="margin-bottom-sm">{{item.time}}</text>
+              <text class="margin-bottom-sm">{{item.btime}}-{{item.etime}}</text>
               <text class="text-gray text-sm margin-bottom-sm">
-                <text class="text-gray text-sm margin-right">班级：{{item.className}}</text>
-                <text class="text-type">{{item.type}}</text>
+                <text class="text-gray text-sm margin-right">班级：{{item.classname}}</text>
+                <text class="text-type">{{item.type==1?'1v1':'1vN'}}</text>
               </text>
-              <text class="margin-bottom-sm text-gray text-sm">学生人数：{{item.studentNumber}}</text>
-              <text class="text-gray text-sm">上课课时：{{item.timeNumber}}</text>
+              <text class="margin-bottom-sm text-gray text-sm">学生人数：{{item.stucount}}</text>
+              <text class="text-gray text-sm">上课课时：  {{item.duration}}</text>
             </view>
             <view class="action">
               <text class="text-type" style="padding: 6rpx 10rpx">点名</text>
@@ -75,13 +75,14 @@
 
 <script>
 import calendar from "../../../../components/tale-calendar/calendar";
-
+import {dateFormat} from '@/utils';
 export default {
   name: "index",
   components: {
     calendar
   },
   data() {
+    var now = new Date()
     return {
       showModal: false,
       classArray: [
@@ -116,7 +117,7 @@ export default {
       ],
       searchInput: '',
       extraData: [],
-      list: [
+      list1: [
         {
           id: 1,
           className: '2020通用课程',
@@ -156,7 +157,11 @@ export default {
           timeNumber: 1,
           time: '09:00-10:00'
         }
-      ]
+      ],
+      listQuery:{classstatus:0,paging:false,btime:'',etime:''},
+      factory:{courseteacher:[],schedulelist:[],teacherlist:[]},
+      lessonlist:[],
+      currentDate:{day: now.getDate(),month: now.getMonth()+1,year: now.getFullYear(),date: dateFormat(now,'yyyy-MM-dd'),week: now.getDay(),timestemp:now.getTime()}
     }
   },
   created() {
@@ -171,9 +176,29 @@ export default {
       {date: '2021-01-27', dot: true}
     ];
   },
+  onLoad() {
+    this.getLessonData();
+  },
+  computed:{
+    list(){
+      const courseteachers = this.factory.courseteacher.filter(a=>a.day==this.currentDate.week);
+      const result = this.factory.schedulelist.filter(item=>{
+        var pass = courseteachers.some(c=>c.coursescheduleid == item.coursescheduleid);
+        var stime = new Date(item.begintime).getTime(),etime = new Date(item.endtime).getTime()
+        var timepass =  stime > etime || (stime < etime && etime>this.currentDate.timestamp)
+        return pass && timepass
+      });
+      
+      return result;
+    }
+  },
   methods: {
     calendarTap(e) {
       console.log(e);
+      const now = new Date()
+      now.setYear(e.year);now.setMonth(e.month);now.setDate(e.day)
+      this.currentDate = {day: now.getDate(),month: now.getMonth()+1,year: now.getFullYear(),date: dateFormat(now,'yyyy-MM-dd'),week: now.getDay(),timestemp: now.getTime()}
+      // console.log('this.currentDate',this.currentDate,now)
     },
     monthTap(val) {
       console.log(val);
@@ -227,11 +252,33 @@ export default {
         url: `/pages/common/classSchedule/classSchedule?id=${value}`
       })
     },
-    goDetail(id) {
+    goDetail(data) {
+      var lessonItem = this.lessonlist.find(a=>a.classid == data.classid);
       wx.navigateTo({
-        url: `/pages/common/namedPage/namedPage?id=${id}`
+        url: `/pages/common/namedPage/namedPage?lessontaskid=${lessonItem&&lessonItem.lessontaskid||''}&coursescheduleid=${data.coursescheduleid}&date=${this.currentDate.date+' '+data.btime+':00'}`
       })
-    }
+    },
+    //获取一周的时间
+    getWeekDate(){
+      var now1 = new Date(),now2 = new Date();
+      now1.setDate(now1.getDate()-3);
+      var start = dateFormat(now1,'yyyy-MM-dd');
+      now2.setDate(now2.getDate()+3);
+      var end = dateFormat(now2,'yyyy-MM-dd');
+      return {start,end}
+    },
+    getLessonData(){
+      var {start,end}=this.getWeekDate()
+      this.listQuery.btime = start;
+      this.listQuery.etime = end;
+      this.$api.lessontask.lessonlist(this.listQuery).then(res=>{
+        this.lessonlist = res.data.data
+      })
+      this.$api.lessontask.getlist().then(res=>{
+        this.factory = res.data.data;
+      })
+    },
+    
   }
 }
 </script>

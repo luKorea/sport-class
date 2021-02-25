@@ -9,6 +9,7 @@ Vue.prototype.$imageurl = "https://yundongke.gzbigbang.cn/"
 Vue.prototype.image = "https://yundongke.gzbigbang.cn"
 Vue.prototype.$uploadUrl = 'https://i.huatisport.com';
 Vue.prototype.$upload = 'https://d.huatisport.com';
+Vue.prototype.$imageprefix = "https://b.huatisport.com/static/img"
 Vue.prototype.$api = api;
 Vue.prototype.prePage = ()=>{
 	let pages = getCurrentPages();

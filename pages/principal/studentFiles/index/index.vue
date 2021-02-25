@@ -1,24 +1,23 @@
 <template>
   <view class="class-container">
-    <view class="tabNav">
+    <view class="tabNav" :style="{top: headerTop}">
       <view v-for="(item, index) in navTab" :key="index"
-            @click="setCurrentTab(index)"
-            :class="currentTab === index ? 'cur' : ''">
-        <text>{{item}}</text>
+            @click="setCurrentTab(item)"
+            :class="listQuery.types === item.value ? 'cur' : ''">
+        <text>{{item.label}}</text>
       </view>
     </view>
-    <!--潜在学员-->
-    <view id="tab1" class="margin-top-sm" :class="tab1">
-      <potential-component />
+    <view id="tab1" class="margin-top-sm">
+      <potential-component :list="list" />
+      <uni-load-more :status="loadingType"></uni-load-more>
     </view>
-    <!--在读学员-->
-    <view id="tab2" class="margin-top-sm" :class="tab2">
-      <read-component/>
+    <view class="drawer-footer" @click="addStudents" v-if="listQuery.types==1">
+      <button class="add-btn">添加</button>
     </view>
-    <!--历史学员-->
-    <view id="tab3" class="margin-top-sm" :class="tab3">
-      <history-component/>
+    <view class="fixed-right" @click="goSalesAllocation">
+      <view class="text-sm">销售分配</view>
     </view>
+
   </view>
 </template>
 
@@ -34,42 +33,92 @@ export default {
   },
   data() {
     return {
-      studentId: '',
-      navTab: ['潜在学员', '在读学员', '历史学员'],
-      currentTab: 0,
-      tab1: 'tabshow',
-      tab2: 'tabhide',
-      tab3: 'tabhide'
+			headerTop:"0px",
+      navTab: [{value: 1,label:'潜在学员'}, {value: 3,label:'在读学员'}, {value: 2,label:'历史学员'}],
+      listQuery:{
+        pi: 0,
+        ps: 20,
+        types: 1
+      },
+      list: [],
+      loadingType: 'more'
     }
   },
   onLoad(options) {
     let {id} = options;
-    this.studentId = String(id);
-    console.log(this.studentId);
+    // #ifdef H5
+    this.headerTop = document.getElementsByTagName('uni-page-head')[0].offsetHeight+'px';
+    // #endif
+    this.loadData();
+  },
+  //下拉刷新
+  onPullDownRefresh(){
+  	this.loadData('refresh');
+  },
+  //加载更多
+  onReachBottom(){
+  	this.loadData();
   },
   methods: {
-    setCurrentTab(index) {
-      if (this.currentTab === index) return;
-      this.currentTab = index;
-      if (index === 0) {
-        this.tab1 = 'tabshow';
-        this.tab2 = 'tabhide';
-        this.tab3 = 'tabhide';
-      } else if (index === 1) {
-        this.tab1 = 'tabhide';
-        this.tab2 = 'tabshow';
-        this.tab3 = 'tabhide';
-      } else if (index === 2) {
-        this.tab1 = 'tabhide';
-        this.tab2 = 'tabhide';
-        this.tab3 = 'tabshow';
+    loadData(type='add', loading) {
+      //没有更多直接返回
+      if(type === 'add'){
+        if(this.loadingType === 'nomore'){
+            return;
+        }
+        this.loadingType = 'loading';
+      }else{
+          this.loadingType = 'more'
       }
+        if(type === 'refresh'){
+          this.listQuery.pi=1
+          this.list = [];
+          this.loadingType = 'loading';
+        }else{
+            this.listQuery.pi++;
+        }
+      //模拟api请求数据
+        this.$api.student.intentstudent(this.listQuery).then((res)=>{
+            this.list = this.list.concat(res.data.data.list);
+            //判断是否还有下一页，有是more  没有是nomore(测试数据判断大于30就没有了)
+            this.loadingType  = this.list.length >= res.data.data.page.total ? 'nomore' : 'more';
+            
+        }).catch(()=>{
+            this.loadingType = 'nomore';
+        }).finally(()=>{
+            if(type === 'refresh'){
+              if(loading == 1){
+                  uni.hideLoading()
+              }else{
+                  uni.stopPullDownRefresh();
+              }
+            }
+        })
+      
+    },
+    setCurrentTab(data) {
+      if (this.listQuery.types === data.value) return;
+      this.listQuery.types = data.value;
+      this.loadData('refresh')
+    },
+    addStudents() {
+      wx.navigateTo({
+        url: '../addStudents/addStudents'
+      })
+    },
+    goSalesAllocation() {
+      wx.navigateTo({
+        url: '../salesAllocation/salesAllocation?types='+this.listQuery.types
+      })
     },
   }
 }
 </script>
 
-<style>
+<style lang="scss">
+  page{
+    background-color: $uni-bg-color-grey;
+  }
 .tabNav {
   z-index: 4;
   top: 0;
@@ -84,6 +133,7 @@ export default {
   border-bottom: 1px solid #f5f5f5;
   box-sizing: border-box;
   text-align: center;
+  position: fixed;
 }
 .tabNav> view {
   text-align: center;
@@ -100,12 +150,24 @@ export default {
   border-bottom: 5rpx solid #F40001;
   color: #F40001;
 }
-.tabshow{
-  visibility: visible;
-  display: block;
+.class-container{
+  padding-top: 100rpx;
+  padding-bottom: 100rpx;
 }
-.tabhide{
-  visibility: hidden;
-  display: none;
+.fixed-right {
+  position: fixed;
+  right: 30rpx;
+  bottom: 150rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  //z-index: 999;
+  text-align: center;
+  width: 120rpx;
+  height: 120rpx;
+  color: #ffffff;
+  background: #52CDC0;
+  border-radius: 50%;
 }
 </style>

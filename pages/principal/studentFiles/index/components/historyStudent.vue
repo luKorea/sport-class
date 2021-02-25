@@ -62,7 +62,7 @@
       <view class="cu-list menu-avatar margin-top">
         <block v-if="list.length > 0">
           <view class="cu-item solid-bottom margin-bottom" v-for="item in list"
-                :key="item.id" @click="goDetail(item)" style="z-index: -999">
+                :key="item.id" @click="goDetail(item)">
             <view class="cu-avatar round lg"
                   :style="{backgroundImage: `url(${item.imgList})`}"
                   style="border-radius: 50%"></view>

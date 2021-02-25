@@ -1,35 +1,33 @@
 import axios from '../../utils/axios';
 
 export default{
-    //作业列表
-    lessonworklist(opt){
+    //销售列表
+    lessonlist(opt){
       return axios({
-          url: '/lessonwork/lessonworklist',
+          url: '/lessontask/lessonlist',
+          method: "post",
+          data: opt
+      })
+    }, 
+    getlist(opt){
+      return axios({
+          url: '/lessontask/getlist',
           method: "post",
           data: opt
       })
     },
-    //编辑、添加作业
-    operatorlessonwork(opt){
+    info(opt){
       return axios({
-          url: '/lessonwork/operatorlessonwork',
+          url: '/lessontask/info',
           method: "post",
           data: opt
       })
-    },
-    lessonworkinfo(opt){
+    }, 
+    rollcall(opt){
       return axios({
-          url: '/lessonwork/lessonworkinfo',
-          method: "post",
-          data: opt
-      })
-    },
-    lessonrecordinfo(opt){
-      return axios({
-          url: '/lessonwork/lessonrecordinfo',
+          url: '/lessontask/rollcall',
           method: "post",
           data: opt
       })
     }
-    
 }

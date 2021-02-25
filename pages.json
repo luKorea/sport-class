@@ -108,7 +108,8 @@
 		{
 			"path":"pages/principal/studentFiles/index/index",
 			"style": {
-				"navigationBarTitleText":"学员档案"
+				"navigationBarTitleText":"学员档案",
+        "enablePullDownRefresh": true
 			}
 		},
 		{
@@ -120,7 +121,8 @@
 		{
 			"path":"pages/principal/studentFiles/salesAllocation/salesAllocation",
 			"style": {
-				"navigationBarTitleText":"销售分配"
+				"navigationBarTitleText":"销售分配",
+        "enablePullDownRefresh":true
 			}
 		},
 		{

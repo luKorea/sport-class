@@ -4,16 +4,16 @@
     <view class="margin">
       <view class="cu-bar bg-white">
         <view class='action'>班级名称</view>
-        <view class='action'>{{result.className}}</view>
+        <view class='action'>{{detail.info.classname}}</view>
       </view>
       <view class="cu-bar bg-white margin-top">
         <view class='action'>上课时间</view>
-        <view class='action'>{{result.time}}</view>
+        <view class='action'>{{detail.info.datetime}}  {{detail.info.btime}}:00-{{detail.info.etime}}:00</view>
       </view>
       <view class="cu-bar bg-white margin-top">
         <view class="action">授课课时</view>
         <view class="action">
-          <uni-number-box :step="0.5" @change="getStep" />
+          <uni-number-box :step="0.5" :value="detail.info.duration" @change="getStep" />
           <text class="cuIcon-sort text-gray" @click="this.showModal = !this.showModal"></text>
         </view>
       </view>
@@ -27,8 +27,8 @@
           <text class="cuIcon-search"></text>
           <input type="text" placeholder="请输入学员姓名" v-model="searchInput"/>
         </view>
-        <view class="action" @click="searchValue">
-          <button class="cu-btn shadow-blur text-white bg-red">搜索</button>
+        <view class="action">
+          <button class="cu-btn shadow-blur text-white bg-red" @click="searchValue">搜索</button>
           <view class="margin-left" v-if="!showModal">
             <text class="cuIcon-square text-gray" style="margin-right: 10rpx"></text>
             <text  @click="selectBorderAll" v-if="!borderClickAll">全选</text>
@@ -46,12 +46,12 @@
           <view class="action">{{type.three}}</view>
           <view class="action">{{type.four}}</view>
         </view>
-        <block v-if="result.teacherInfo.length > 0">
+        <block v-if="result.studentlist.length > 0">
           <view class="cu-bar bg-white padding-bottom-sm padding-top-sm solid-bottom"
-                v-for="(item, index) in result.teacherInfo" :key="index">
+                v-for="(item, index) in result.studentlist" :key="index">
             <view class="action flex-due" style="width: 300rpx">
               <view class="text-red" style="margin-bottom: 10rpx">{{item.name}}</view>
-              <view class="text-sm text-gray">剩余{{item.time}}课时</view>
+              <view class="text-sm text-gray">剩余{{item.course.lessonnum}}课时</view>
             </view>
             <radio-group @change="timeRadioChange($event, item.id)" class="radio-group">
               <label v-for="(info, index) in timeRadio" :key="index" class="radio-group-item">
@@ -80,7 +80,7 @@
                     :style="{backgroundImage: `url(${item.imgUrl})`}"
                     style="border-radius: 50%"></view>
               <text class="text-sm">{{ item.name }}</text>
-              <text class="text-sm">剩余{{item.time}}课时</text>
+              <text class="text-sm">剩余{{item.course.lessonnum}}课时</text>
             </view>
           </view>
         </block>
@@ -100,7 +100,7 @@
 <!--底部固定-->
     <view class="drawer-footer" v-if="showModal">
       <button class="cu-btn bg-white lg" style="width: 30%;border-radius: 0">全选</button>
-      <button class="cu-btn bg-red lg" style="width: 70%;border-radius: 0">点名</button>
+      <button class="cu-btn bg-red lg" style="width: 70%;border-radius: 0" @click="save">点名</button>
     </view>
     <view class="drawer-footer" v-else>
       <button class="cu-btn bg-orange lg" style="width: 25%;border-radius: 0"@click="this.showModal = !this.showModal">到课</button>
@@ -135,39 +135,8 @@ export default {
       borderClickAll: false,    // 是否全选
       searchInput: '',
       result: {
-        className: '篮球',
-        time: '2021-01-14  16:00:41-18:00:14',
-        teacher: '谢老师',
-        teacherInfo: [
-          {
-            name: '黄晓明',
-            imgUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-            time: '109',
-            className: '二年级2班',
-            id: 1,
-          },
-          {
-            name: '黄晓明',
-            imgUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-            time: '109',
-            className: '二年级2班',
-            id: 2,
-          },
-          {
-            name: '黄晓明',
-            imgUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-            time: '109',
-            className: '二年级2班',
-            id: 3,
-          },
-          {
-            name: '黄晓明',
-            imgUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-            time: '109',
-            className: '二年级2班',
-            id: 4,
-          }
-        ]
+        teacher: '',
+        studentlist:[]
       },
       timeCurrent: null,
       timeRadio: [
@@ -178,17 +147,28 @@ export default {
       ],
       stepValue: '',
       array: [],
-      id: ''
+      params:{},
+      detail:{info:{},classstudent:[],classteacher:[],courselist:[],lessonteacher:[],lessonstudent:[]}
     }
   },
   onLoad(options) {
     let {id} = options;
-    this.id = id;
-    console.log(id);
+    this.params = options;
+    this.getData();
   },
   methods: {
+    getData(){
+      this.$api.lessontask.info(this.params).then(res=>{
+        res.data.data.classstudent.map(item=>{
+          item.course=res.data.data.courselist.find(a=>a.studentid==item.id)||{lessonnum:0};
+        })
+        this.detail = res.data.data;
+        this.result.teacher = res.data.data.classteacher.map(a=>a.name).join(',')
+        this.result.studentlist = res.data.data.classstudent
+      })
+    },
     searchValue() {
-      console.log(this.searchInput);
+      this.result.studentlist = this.detail.classstudent.filter(a=>a.name.indexOf(this.searchInput)>-1)
     },
     // 获取用户输入的步长值
     getStep(e) {
@@ -230,12 +210,18 @@ export default {
       }else{  // 未选中,点击选中
         this.borderArray.push(key);
       }
+    },
+    save(){
+      console.log('array',this.array)
     }
   },
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  page{
+    background-color: $uni-bg-color-grey;
+  }
 .flex-due {
   flex-direction: column;
   justify-content: start;

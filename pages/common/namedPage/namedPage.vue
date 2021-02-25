@@ -235,7 +235,7 @@ export default {
       }
     },
     save(){
-      if(this.array.length < this.detail.classstudent.length){
+      if(this.array.length<=0){
         return uni.showToast({ title:"学生未点完",icon:'none' });
       }
       var data = {
@@ -261,7 +261,6 @@ export default {
       })
     },
     dianming(flag){
-      console.log('borderArray',this.borderArray)
       var data = {
         lessontaskid: this.params.lessontaskid || 0,
         coursescheduleid: this.params.coursescheduleid,

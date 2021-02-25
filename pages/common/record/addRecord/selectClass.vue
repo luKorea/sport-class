@@ -12,7 +12,7 @@
         </view>
       </view>
       <!--筛选-->
-      <view class="cu-bar search bg-white margin-top justify-around">
+      <!-- <view class="cu-bar search bg-white margin-top justify-around">
         <view class="action" @click="setTime">
           <text style="margin-right: 6rpx" :class="!showUp ? 'text-red': ''">人数</text>
           <text class="text-gray text-sm" :class="showUp ? 'cuIcon-triangledownfill' : 'cuIcon-triangleupfill'"></text>
@@ -21,7 +21,7 @@
           <text style="margin-right: 6rpx">筛选</text>
           <text class="cuIcon-triangledownfill text-gray text-sm"></text>
         </view>
-      </view>
+      </view> -->
       <!--筛选侧边栏-->
       <uni-drawer ref='drawer' mode="right">
         <!--头部-->

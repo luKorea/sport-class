@@ -186,10 +186,11 @@ export default {
         var pass = courseteachers.some(c=>c.coursescheduleid == item.coursescheduleid);
         var stime = new Date(item.begintime).getTime(),etime = new Date(item.endtime).getTime()
         var timepass =  stime > etime || (stime < etime && etime>this.currentDate.timestamp)
-        return pass && timepass
+        return pass && timepass;
       });
+      const lessionresult = this.lessonlist.filter(item=>item.dates==this.currentDate.date);
       
-      return result;
+      return [...lessionresult,...result];
     }
   },
   methods: {

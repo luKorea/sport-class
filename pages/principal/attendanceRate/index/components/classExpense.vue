@@ -260,6 +260,7 @@
 						}
 						// res.data.data.list
 						//这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
+						
 						arcbar.series = data.series;
 						_self.textarea = JSON.stringify(data);
 						_self.showArcbar("canvaArcbar", arcbar);

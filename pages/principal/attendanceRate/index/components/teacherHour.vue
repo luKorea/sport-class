@@ -252,21 +252,24 @@
 			getArcbarData(dateIndex) {
 				this.getData((res) => {
 					if (res.data.code === 0) {
-						let arcbar = {
-							series: []
-						};
-						let data = {
-							series: [{
-								name: "",
-								data: 1,
-								color: "#ea9846"
-							}]
+						if(res.data.data.list.length>0){
+							let arcbar = {
+								series: []
+							};
+							let data = {
+								series: [{
+									name: 'xx',
+									data: 1,
+									color: "#ea9846"
+								}]
+							}
+							// res.data.data.list
+							//这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
+							arcbar.series = data.series;
+							_self.textarea = JSON.stringify(data);
+							_self.showArcbar("canvaArcbar", arcbar);
 						}
-						// res.data.data.list
-						//这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
-						arcbar.series = data.series;
-						_self.textarea = JSON.stringify(data);
-						_self.showArcbar("canvaArcbar", arcbar);
+						
 					}
 				}, dateIndex)
 			},

@@ -95,7 +95,7 @@
 		data() {
 			return {
 				//  type：1 续签 2 新签 3 作废
-				payType:'',
+				payType: '',
 				type: '',
 				info: {
 					number: '123456789955',
@@ -128,7 +128,9 @@
 			}
 		},
 		onLoad(options) {
-			let item = JSON.parse(options.item)
+			let item = JSON.parse(options.item);
+			this.orderid = item.orderid;
+			this.type = item.type;
 			getorderinfo({
 				orderid: item.orderid
 			}).then((res) => {
@@ -161,12 +163,33 @@
 				}
 			})
 		},
-		methods:{
-			deleteInfo(){
-				// 删除有规则
-				// getorderabolish().then((res)=>{
-					
-				// })
+		methods: {
+			deleteInfo() {
+				uni.showModal({
+				    title: '提示',
+				    content: '确定要删除吗？',
+				    success: function (res) {
+				        if (res.confirm) {
+				            getorderabolish({
+				            	orderid: this.orderid
+				            }).then((res) => {
+				            	if (res.data.code === 0) {
+				            		uni.showToast({
+				            			title: '删除成功',
+				            			duration: 1000
+				            		});
+				            		let timeout = setTimeout(function() {
+				            			wx.navigateBack();
+				            		}, 1000)
+				            	
+				            	}
+				            });
+				        } else if (res.cancel) {
+				            console.log('用户点击取消');
+				        }
+				    }
+				});
+				
 			}
 		}
 	}

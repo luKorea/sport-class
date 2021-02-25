@@ -73,10 +73,10 @@
 		</view>
 
 		<!--底部-->
-		<view class="drawer-footer" v-if="type === 1 || type === 2">
+		<view class="drawer-footer" v-if="info.orderinfo.flagName === '续签' || info.orderinfo.flagName === '新签'">
 			<button class="cu-btn bg-orange lg" style="width: 50%;" @click="deleteInfo">删除</button>
-			<button class="cu-btn bg-red lg" style="width: 50%;" v-if="type === 1">续签</button>
-			<button class="cu-btn bg-cyan lg" style="width: 50%;" v-if="type === 2">新签</button>
+			<button class="cu-btn bg-red lg" style="width: 50%;" v-if="info.orderinfo.flagName === '续签'">续签</button>
+			<button class="cu-btn bg-cyan lg" style="width: 50%;" v-if="info.orderinfo.flagName === '新签'">新签</button>
 		</view>
 		<view class="drawer-footer" v-else>
 			<button class="cu-btn bg-gray lg" style="width: 100%;">已作废</button>
@@ -135,6 +135,16 @@
 				orderid: item.orderid
 			}).then((res) => {
 				if (res.data.code === 0) {
+					let datas = res.data.data.orderinfo
+					console.log(item,"itemitemitem")
+					if((datas.flags&0x10000000)>0){//续签
+						datas['flagName'] = '续签'
+					}else if((datas.flags&0x10000000)<=0){//新签
+						datas['flagName'] = '新签'
+					}else if((datas.flags&0x400000)<=0){//已作废
+						datas['flagName'] = '已作废'
+					}
+					
 					this.info = res.data.data;
 					switch (String(this.info.transactitem[0].paymethod)) {
 						case '0':
@@ -159,23 +169,24 @@
 							this.payType = '会员卡'
 							break;
 					}
-
+console.log(this.info.orderinfo)
 				}
 			})
 		},
 		methods: {
 			deleteInfo() {
+				let _this = this;
 				uni.showModal({
 				    title: '提示',
 				    content: '确定要删除吗？',
 				    success: function (res) {
 				        if (res.confirm) {
 				            getorderabolish({
-				            	orderid: this.orderid
+				            	orderid: _this.orderid
 				            }).then((res) => {
 				            	if (res.data.code === 0) {
 				            		uni.showToast({
-				            			title: '删除成功',
+				            			title: res.data.errMsg,
 				            			duration: 1000
 				            		});
 				            		let timeout = setTimeout(function() {

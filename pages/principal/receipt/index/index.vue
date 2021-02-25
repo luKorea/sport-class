@@ -90,10 +90,10 @@
 								</view>
 							</view>
 						</view>
-						<view class='action'>
-							<button class="cu-btn bg-orange" v-if="item.type === 1">续签</button>
-							<button class="cu-btn bg-cyan" v-if="item.type === 2">新签</button>
-							<button class="cu-btn bg-gray" v-if="item.type === 3">已作废</button>
+						<view class='action'> 
+							<button class="cu-btn bg-orange" v-if="item.flagName==='续签'">续签</button>
+							<button class="cu-btn bg-cyan" v-if="item.flagName==='新签'">新签</button>
+							<button class="cu-btn bg-gray" v-if="item.flagName==='已作废'">已作废</button>
 						</view>
 					</view>
 				</view>
@@ -322,6 +322,15 @@
 				getorderlist(param).then((res) => {
 					if (res.data.code === 0) {
 						if (res.data.data.list.length > 0) {
+							res.data.data.list.map((item)=>{
+								if((item.flags&0x10000000)>0){//续签
+									item['flagName'] = '续签'
+								}else if((item.flags&0x10000000)<=0){//新签
+									item['flagName'] = '新签'
+								}else if((item.flags&0x400000)<=0){//已作废
+									item['flagName'] = '已作废'
+								}
+							})
 							this.list = res.data.data.list
 						} else {
 							this.list = [];

@@ -224,7 +224,7 @@ export default {
     },
     goDetail(data) {
       wx.navigateTo({
-        url: `../detail/detail?id=${item.id}`
+        url: `../detail/detail?id=${data.id}`
       })
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <view class="named-page" style="margin-bottom: 100rpx">
+  <view class="named-page" style="margin-bottom: 150rpx">
 <!--学生信息-->
     <view class="margin">
       <view class="cu-bar bg-white">
@@ -14,7 +14,7 @@
         <view class="action">授课课时</view>
         <view class="action">
           <uni-number-box :step="0.5" :value="detail.info.duration" @change="getStep" />
-          <text class="cuIcon-sort text-gray" @click="this.showModal = !this.showModal"></text>
+          <text class="cuIcon-sort text-gray" @click="showModal = !showModal"></text>
         </view>
       </view>
       <view class="cu-bar bg-white margin-top">
@@ -53,10 +53,10 @@
               <view class="text-red" style="margin-bottom: 10rpx">{{item.name}}</view>
               <view class="text-sm text-gray">剩余{{item.course.lessonnum}}课时</view>
             </view>
-            <radio-group @change="timeRadioChange($event, item.id)" class="radio-group">
+            <radio-group @change="timeRadioChange($event, item.id,item)" class="radio-group">
               <label v-for="(info, index) in timeRadio" :key="index" class="radio-group-item">
                 <view class="action">
-                  <radio :value="info.value" :checked="index === timeCurrent" />
+                  <radio :value="info.value+''" :checked="info.value == item.timeValue" />
                 </view>
               </label>
             </radio-group>
@@ -70,15 +70,15 @@
         </block>
       </view>
       <view v-else class="margin-bottom margin-top">
-        <block v-if="result.teacherInfo.length > 0">
+        <block v-if="result.studentlist.length > 0">
           <view class="cu-list grid col-4 gridBorder">
             <view class="cu-item flex justify-center align-center"
-                  v-for="(item, index) in result.teacherInfo"
+                  v-for="(item, index) in result.studentlist"
                   :class="{'red':borderArray.indexOf(index)>-1}"
                   :key="index" @click="selectBorder(item.id, index)">
               <view class="cu-avatar lg bg-white"
-                    :style="{backgroundImage: `url(${item.imgUrl})`}"
-                    style="border-radius: 50%"></view>
+                    :style="{backgroundImage: `url(${item.avatar})`}"
+                    style="border-radius: 50%"><i class="cuIcon-my" v-if="!item.avatar"></i></view>
               <text class="text-sm">{{ item.name }}</text>
               <text class="text-sm">剩余{{item.course.lessonnum}}课时</text>
             </view>
@@ -93,20 +93,21 @@
       </view>
     </view>
 <!--插班-->
-    <view class="fixed-right" v-if="showModal" @click="goShift(id)">
+    <view class="fixed-right" v-if="showModal" @click="goShift()">
       <view class="cuIcon-add"></view>
       <view>插班</view>
     </view>
 <!--底部固定-->
     <view class="drawer-footer" v-if="showModal">
-      <button class="cu-btn bg-white lg" style="width: 30%;border-radius: 0">全选</button>
+      <button class="cu-btn bg-white lg" style="width: 30%;border-radius: 0"  @click="selectBorderAll" v-if="!borderClickAll">全选</button>
+      <button class="cu-btn bg-white lg" style="width: 30%;border-radius: 0"  @click="noSelectBorderAll" v-else>取消</button>
       <button class="cu-btn bg-red lg" style="width: 70%;border-radius: 0" @click="save">点名</button>
     </view>
     <view class="drawer-footer" v-else>
-      <button class="cu-btn bg-orange lg" style="width: 25%;border-radius: 0"@click="this.showModal = !this.showModal">到课</button>
-      <button class="cu-btn bg-red lg" style="width: 25%;border-radius: 0" @click="this.showModal = !this.showModal">未到</button>
-      <button class="cu-btn bg-cyan lg" style="width: 25%;border-radius: 0" @click="this.showModal = !this.showModal">请假</button>
-      <button class="cu-btn bg-blue lg" style="width: 25%;border-radius: 0" @click="this.showModal = !this.showModal">迟到</button>
+      <button class="cu-btn bg-orange lg" style="width: 25%;border-radius: 0" @click="dianming(0)">到课</button>
+      <button class="cu-btn bg-red lg" style="width: 25%;border-radius: 0" @click="dianming(1)">未到</button>
+      <button class="cu-btn bg-cyan lg" style="width: 25%;border-radius: 0" @click="dianming(2)">请假</button>
+      <button class="cu-btn bg-blue lg" style="width: 25%;border-radius: 0" @click="dianming(4)">迟到</button>
     </view>
     <view class='cu-tabbar-height'></view>
   </view>
@@ -143,9 +144,8 @@ export default {
         {value: 0},
         {value: 1},
         {value: 2},
-        {value: 3}
+        {value: 4}
       ],
-      stepValue: '',
       array: [],
       params:{},
       detail:{info:{},classstudent:[],classteacher:[],courselist:[],lessonteacher:[],lessonstudent:[]}
@@ -163,7 +163,7 @@ export default {
           item.course=res.data.data.courselist.find(a=>a.studentid==item.id)||{lessonnum:0};
         })
         this.detail = res.data.data;
-        this.result.teacher = res.data.data.classteacher.map(a=>a.name).join(',')
+        this.result.teacher = res.data.data.lessonteacher.length?res.data.data.lessonteacher.map(a=>a.name).join(','):res.data.data.classteacher.map(a=>a.name).join(',')
         this.result.studentlist = res.data.data.classstudent
       })
     },
@@ -172,38 +172,61 @@ export default {
     },
     // 获取用户输入的步长值
     getStep(e) {
-      this.stepValue = e;
+      this.detail.info.duration = e;
     },
-    timeRadioChange(e, id) {
-      this.array = this.array.concat({
-        type: e.detail.value,
-        id: id
-      })
-      console.log(this.array);
+    timeRadioChange(e, id,data) {
+      var cur = this.array.find(a=>a.id==id);
+      if(cur){
+        cur.type = e.detail.value
+      }else{
+        this.array.push({
+          type: e.detail.value,
+          id: id
+        })
+      }
+      this.$set(data,'timeValue',e.detail.value)
+    },
+    setData(data){
+      this.detail.classstudent.push(data.student);
+      
     },
     // 去插班页面
-    goShift(id) {
+    goShift() {
       uni.navigateTo({
-        url: `/pages/common/shift/shift?id=${id}`
+        url: `/pages/common/shift/shift?courseid=${this.detail.info.courseid}&datetime=${this.detail.info.datetime}`
       })
     },
     // 全选弹框
     selectBorderAll() {
-      let len = this.result.teacherInfo.length;
+      let len = this.result.studentlist.length;
       this.checkBox = [];
       for (let i = 0; i < len; i++) {
         this.borderArray.push(i);
       }
       this.borderClickAll = true;
+      this.result.studentlist.map(item=>{
+        this.$set(item,"timeValue",0)
+      })
+      this.array = this.result.studentlist.map(a=>({
+        type: 0,
+        id: a.id
+      }))
     },
     // 取消全选弹框
     noSelectBorderAll() {
       this.borderArray = [];
       this.borderClickAll = false;
+      
+      var newList = this.result.studentlist.map(item=>{
+        delete item.timeValue;
+        return item;
+      })
+      this.result.studentlist = newList;
+      this.array = [];
     },
   //  选中课程弹框
     selectBorder(id, key) {
-      console.log(id);
+      // console.log(id);
       let arrIndex = this.borderArray.indexOf(key);
       if(arrIndex>-1){   // 已选中,点击取消
         this.borderArray.splice(arrIndex,1);
@@ -212,7 +235,54 @@ export default {
       }
     },
     save(){
-      console.log('array',this.array)
+      if(this.array.length < this.detail.classstudent.length){
+        return uni.showToast({ title:"学生未点完",icon:'none' });
+      }
+      var data = {
+        lessontaskid: this.params.lessontaskid || 0,
+        coursescheduleid: this.params.coursescheduleid,
+        datetime: this.detail.info.datetime,
+        duration: this.detail.info.duration,
+        tdata:JSON.stringify((this.detail.lessonteacher.length?this.detail.lessonteacher:this.detail.classteacher).map(a=>({id:a.id,flags:a.flags}))),
+        sdata:JSON.stringify(this.detail.classstudent.map(a=>({id:a.id,courseid:this.detail.info.courseid,flags:this.array.find(sitem=>sitem.id==a.id).type})))
+      }
+      this.$api.lessontask.rollcall(data).then(res=>{
+        if(res.data.data.errcode==200){
+          uni.showToast({ title:"点名成功" });
+          setTimeout(()=>{
+            uni.navigateBack();
+          },1000)
+        }else{
+          uni.showToast({
+            title: res.data.data.errmsg || "添加失败，请稍后重试",
+            icon: 'none'
+          })
+        }
+      })
+    },
+    dianming(flag){
+      console.log('borderArray',this.borderArray)
+      var data = {
+        lessontaskid: this.params.lessontaskid || 0,
+        coursescheduleid: this.params.coursescheduleid,
+        datetime: this.detail.info.datetime,
+        duration: this.detail.info.duration,
+        tdata:JSON.stringify((this.detail.lessonteacher.length?this.detail.lessonteacher:this.detail.classteacher).map(a=>({id:a.id,flags:a.flags}))),
+        sdata:JSON.stringify(this.borderArray.map(a=>this.detail.classstudent[a]).map(a=>({id:a.id,courseid:this.detail.info.courseid,flags:flag})))
+      }
+      this.$api.lessontask.rollcall(data).then(res=>{
+        if(res.data.data.errcode==200){
+          uni.showToast({ title:"点名成功" });
+          setTimeout(()=>{
+            uni.navigateBack();
+          },1000)
+        }else{
+          uni.showToast({
+            title: res.data.data.errmsg || "添加失败，请稍后重试",
+            icon: 'none'
+          })
+        }
+      })
     }
   },
 }
@@ -221,6 +291,9 @@ export default {
 <style scoped lang="scss">
   page{
     background-color: $uni-bg-color-grey;
+  }
+  .named-page{
+    padding-bottom: 100rpx;
   }
 .flex-due {
   flex-direction: column;

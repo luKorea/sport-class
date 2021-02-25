@@ -18,4 +18,11 @@ export default{
             data: opt
         })
     },
+    getstudentlist(opt){
+      return axios({
+          url: '/class/getstudentlist',
+          method: "post",
+          data: opt
+      })
+    }
 }

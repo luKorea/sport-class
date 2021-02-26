@@ -348,7 +348,8 @@
 		{
 			"path":"pages/teacher/task/detail/detail",
 			"style": {
-				"navigationBarTitleText":"作业详情"
+				"navigationBarTitleText":"作业详情",
+        "enablePullDownRefresh": true
 			}
 		},
 		{

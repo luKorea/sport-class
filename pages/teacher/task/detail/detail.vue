@@ -43,7 +43,8 @@ export default {
       detail:{info:{}},
       readnum: 0,
       submitnum: 0,
-      studentcount: 0
+      studentcount: 0,
+      id:''
     }
   },
   onLoad(options) {
@@ -51,15 +52,25 @@ export default {
     this.readnum = readnum||0;
     this.submitnum = submitnum||0;
     this.studentcount = studentcount||0;
-    this.getDetail(id);
+    this.id = id;
+    this.getDetail();
+  },
+  //下拉刷新
+  onPullDownRefresh(){
+  	this.getDetail();
   },
   methods: {
-    getDetail(id){
-      this.$api.lessonwork.lessonworkinfo({id}).then(res=>{
+    getDetail(){
+      this.$api.lessonwork.lessonworkinfo({id:this.id}).then(res=>{
         this.detail = res.data.data;
+      }).finally(()=>{
+        uni.stopPullDownRefresh();
       })
     },
     editTask() {
+      wx.navigateTo({
+        url: `../addTask/addTask?id=${this.detail.info.id}`
+      })
     },
     toRecord(){
       uni.navigateTo({

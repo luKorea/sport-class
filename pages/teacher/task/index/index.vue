@@ -3,7 +3,7 @@
   <view class="follow-container">
     <view class="margin" style="margin-bottom: 140rpx">
         <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id" @click="goDetail(item)">
-          <view class="action flex-direction flex-due">
+          <view class="action flex-direction flex-due" style="text-align: left;">
             <view class="text-sm class-block">
               <view class="small-block-orange"></view>
               <text>{{item.title}}</text>
@@ -93,7 +93,7 @@ export default {
         })
       
     },
-    goDetail(data) {console.log('data',data)
+    goDetail(data) {
       uni.navigateTo({
         url: `../detail/detail?id=${data.id}&readnum=${data.readnum||0}&submitnum=${data.submitnum||0}&studentcount=${data.studentcount||0}`
       })

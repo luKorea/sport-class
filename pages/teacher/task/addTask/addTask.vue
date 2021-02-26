@@ -28,7 +28,7 @@
     <view class="cu-form-group">
       <view class="grid col-4 grid-square flex-sub">
         <view class="bg-img" v-for="(item, index) in info.imgList" :key="index">
-          <image :src='item' mode='aspectFill'></image>
+          <image :src='baseUrl+item' mode='aspectFill'></image>
           <view class="cu-tag bg-red" @click="delImg(index)">
             <text class="cuIcon-close"></text>
           </view>
@@ -58,6 +58,7 @@ export default {
   name: "addTask",
   data() {
     return {
+      baseUrl: this.$uploadUrl,
       form:{
         id: 0,//int id(添加时默认0)
         schoolid: '',//int notnull 上课点id
@@ -73,23 +74,59 @@ export default {
         classname:'',
         imgList: [],
         url:''
-      }
+      },
+      detail:{}
+    }
+  },
+  onLoad(options) {
+    if(options.id){
+      this.form.id = options.id;
+      this.getDetail();
     }
   },
   methods: {
     // 上传图片
     chooseImage() {
+      var that = this;
       wx.chooseImage({
         count: 9, //默认9
         sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album'], //从相册选择
         success: (res) => {
           console.log(res);
-          if (this.info.imgList.length !== 0) {
-            this.info.imgList = this.info.imgList.concat(res.tempFilePaths)
-          } else {
-            this.info.imgList = res.tempFilePaths;
-          }
+          
+          uni.showLoading({
+            title:"上传中"
+          })
+          wx.uploadFile({
+            url: that.$upload + '/d/m/file/upload?type=17',
+            filePath: res.tempFilePaths[0],
+            name: 'file',
+            formData: {},
+            header: {
+              'Content-Type': 'multipart/form-data'
+            },
+            success(res) {
+              let data = JSON.parse(res.data);
+              if(data.code!=0){
+                return uni.showToast({
+                  title: data.data.message || '上传失败',
+                  icon: 'none'
+                })
+              }
+              if (that.info.imgList.length !== 0) {
+                that.info.imgList.push(data.data.path + data.data.name)
+              } else {
+                that.info.imgList = [data.data.path + data.data.name];
+              }
+            },
+            fail(err){
+              console.log('err',err)
+            },
+            complete(){
+              uni.hideLoading()
+            }
+          })
         }
       });
     },
@@ -97,6 +134,7 @@ export default {
       this.info.imgList.splice(index, 1);
     },
     toSelectClass(){
+      if(this.form.id){return}
       const url ='/pages/common/record/addRecord/selectClass'
       uni.navigateTo({
         url: url+`?data=${this.form.classid}&single=1`
@@ -109,6 +147,31 @@ export default {
         this.info.classname = classdata.name
         this.form.schoolid = classdata.schoolid
       }
+    },
+    getDetail(){
+      this.$api.lessonwork.lessonworkinfo({id:this.form.id}).then(res=>{
+        this.detail = res.data.data;
+        for(const i in this.form){
+          if(typeof res.data.data.info[i] !=='undefined'){
+            this.form[i] = res.data.data.info[i];
+          }
+        }
+        this.info.classname = res.data.data.info.classname||'';
+        if(this.form.extra){
+          var extra = JSON.parse(this.form.extra);
+          this.info.imgList = extra.image
+          this.info.url = extra.video && extra.video.length && extra.video[0] || ''
+          console.log('this.info.url',this.info,extra)
+        }
+        this.getClassDetail();
+      })
+    },
+    getClassDetail(){
+      this.$api.class.list({keywords: this.info.classname,paging: false}).then(res=>{
+        var list = res.data.data
+        var classitem = list.find(a=>a.id==this.form.classid);
+        this.form.schoolid = classitem && classitem.schoolid ||'';
+      })
     },
     save(){
       var extra = {image:[],video:[]};

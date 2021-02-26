@@ -12,7 +12,7 @@
           <text class="cuIcon-lock text-gray margin-right"></text>
           <input v-model="form.password" placeholder="请输入密码" type="password" />
         </view>
-        <view @click="login">
+        <view @click="login1">
           <button class="lg cu-btn bg-red margin-top-xl" style="width: 100%">登陆</button>
         </view>
        <view class='margin-top-xl text-right text-gray' @click="goCodeLogin">手机验证码登录</view>
@@ -53,7 +53,7 @@ export default {
       })
     },
     // 用户登陆
-    login() {
+    login1() {
 		console.log(111112221)
       userLogin(this.form)
           .then(res => {

@@ -17,7 +17,7 @@
     <view>
       <block v-if="list.length > 0">
         <view class="margin">
-          <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id" @click="goDetail(item)">
+          <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.coursescheduleid" @click="goDetail(item.coursescheduleid)">
             <view class="action flex-common padding-top padding-bottom">
               <text class="margin-bottom-sm">{{item.btime}}-{{item.etime}}</text>
               <text class="text-gray text-sm margin-bottom-sm">
@@ -85,79 +85,9 @@ export default {
     var now = new Date()
     return {
       showModal: false,
-      classArray: [
-        {
-          id: 1,
-          name: '高一一班',
-          teacher: '李老师',
-          number: 10,
-          type: '1v1'
-        },
-        {
-          id: 2,
-          name: '高一二班',
-          teacher: '李老师',
-          number: 10,
-          type: '1vN'
-        },
-        {
-          id: 3,
-          name: '高一三班',
-          teacher: '李老师',
-          number: 10,
-          type: '1v1'
-        },
-        {
-          id: 4,
-          name: '高一四班',
-          teacher: '李老师',
-          number: 10,
-          type: '1vN'
-        },
-      ],
+      classArray: [],
       searchInput: '',
       extraData: [],
-      list1: [
-        {
-          id: 1,
-          className: '2020通用课程',
-          type: '1v1',
-          studentNumber: '0/2',
-          timeNumber: 1,
-          time: '09:00-10:00'
-        },
-        {
-          id: 2,
-          className: '2020通用课程',
-          type: '1v1',
-          studentNumber: '0/2',
-          timeNumber: 1,
-          time: '09:00-10:00'
-        }, {
-          id: 3,
-          className: '2020通用课程',
-          type: '1v1',
-          studentNumber: '0/2',
-          timeNumber: 1,
-          time: '09:00-10:00'
-        },
-        {
-          id: 4,
-          className: '2020通用课程',
-          type: '1v1',
-          studentNumber: '0/2',
-          timeNumber: 1,
-          time: '09:00-10:00'
-        },
-        {
-          id: 5,
-          className: '2020通用课程',
-          type: '1v1',
-          studentNumber: '0/2',
-          timeNumber: 1,
-          time: '09:00-10:00'
-        }
-      ],
       listQuery:{classstatus:0,paging:false,btime:'',etime:''},
       factory:{courseteacher:[],schedulelist:[],teacherlist:[]},
       lessonlist:[],
@@ -181,7 +111,8 @@ export default {
   },
   computed:{
     list(){
-      const courseteachers = this.factory.courseteacher.filter(a=>a.day==this.currentDate.week);
+      var weekMap = [1,2,4,8,16,32,64]
+      const courseteachers = this.factory.courseteacher.filter(a=>a.day==weekMap[this.currentDate.week-1]);
       const result = this.factory.schedulelist.filter(item=>{
         var pass = courseteachers.some(c=>c.coursescheduleid == item.coursescheduleid);
         var stime = new Date(item.begintime).getTime(),etime = new Date(item.endtime).getTime()
@@ -202,7 +133,6 @@ export default {
       // console.log('this.currentDate',this.currentDate,now)
     },
     monthTap(val) {
-      console.log(val);
       let {year, month} = val;
       this.month = {
         year: year,
@@ -253,7 +183,8 @@ export default {
         url: `/pages/common/classSchedule/classSchedule?id=${value}`
       })
     },
-    goDetail(data) {
+    goDetail(coursescheduleid) {console.log('dataid',coursescheduleid)
+      var data = this.list.find(a=>a.coursescheduleid==coursescheduleid);
       var lessonItem = this.lessonlist.find(a=>a.classid == data.classid);
       wx.navigateTo({
         url: `/pages/common/namedPage/namedPage?lessontaskid=${lessonItem&&lessonItem.lessontaskid||''}&coursescheduleid=${data.coursescheduleid}&date=${this.currentDate.date+' '+data.btime+':00'}`

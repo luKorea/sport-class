@@ -16,7 +16,7 @@
     </view>
     <template-form :extendfield="detail.extendfield" :info="detail.info" :extenddata="detail.extenddata" @change="onTemplateChange"></template-form>
 
-    <view class="flex flex-direction margin-top-xl fixed-bottom" @click="sendFollow">
+    <view class="flex flex-direction fixed-bottom" style="z-index: 90;" @click="sendFollow">
       <button class="cu-btn bg-my-red lg">保存</button>
     </view>
 

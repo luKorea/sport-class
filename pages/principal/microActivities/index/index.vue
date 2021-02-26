@@ -1,7 +1,7 @@
 <template>
   <view style="margin: 20rpx">
-    <view class="cu-card case isCard margin-bottom img-item" v-for="item in list"
-          :key="item.id" @click="goDetail(item)">
+    <view class="cu-card case isCard margin-bottom img-item" v-for="(item,index) in list"
+          :key="index" @click="goDetail(item)">
       <view class="cu-item shadow img-item" style="margin: 0">
         <view class="image">
           <image :src="baseUrl+item.image" :alt="item.alias"></image>

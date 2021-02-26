@@ -23,7 +23,7 @@
                 <view class="item" v-for="(child,index) in item.list">
                   <view class="label">{{child.name}}</view>
                   <view class="det">
-                    <input class="input" type="number" v-model="child.value" :placeholder="'请输入设置值'+(child.max?(',最大值为'+child.max):'')" @input="onChange" />
+                    <input class="input" type="number" v-model="child.value" :placeholder="'请输入设置值'+(child.max?(',最大值为'+child.max):'')" placeholder-style="color:#ccc" @input="onChange" />
                   </view>
                 </view>
               </view>
@@ -283,5 +283,9 @@ export default{
       border-bottom: 0;
     }
   }
+}
+
+.uni-placeholder{
+  color: #aaa;
 }
 </style>

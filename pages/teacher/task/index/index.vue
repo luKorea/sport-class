@@ -3,12 +3,12 @@
   <view class="follow-container">
     <view class="margin" style="margin-bottom: 140rpx">
         <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id" @click="goDetail(item)">
-          <view class="action flex-direction flex-due" style="text-align: left;">
-            <view class="text-sm class-block">
-              <view class="small-block-orange"></view>
+          <view class="action flex-direction flex-due" style="text-align: left;    display: block;">
+            <view class="text-sm">
+              <view class="small-block-orange" style="display: inline-block;"></view>
               <text>{{item.title}}</text>
             </view>
-            <view class="text-sm">{{item.classname}}</view>
+            <view style="margin: 20rpx 0" class="text-sm">{{item.classname}}</view>
             <view style="margin: 20rpx 0" class="text-sm">{{item.datetime}}</view>
           </view>
           <view class="action flex-direction flex-due">

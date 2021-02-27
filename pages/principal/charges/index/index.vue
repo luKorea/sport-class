@@ -7,41 +7,34 @@
           <text class="cuIcon-search"></text>
           <input type="text" placeholder="请输入关键字" v-model="params.keywords"/>
         </view>
-        <view class="action" @click="getListData(params)">
+        <view class="action" @click="loadData('refresh')">
           <button class="cu-btn shadow-blur text-white bg-red">搜索</button>
         </view>
       </view>
       <!--列表-->
-      <block v-if="list.length > 0">
-        <view v-for="(item, index) in list" :key="index">
-          <view class="cu-bar bg-white solid-bottom margin-top"
-                @click="goDetail(item.id)">
-            <view class="action">
-              <view class="flex flex-direction padding-top padding-bottom">
-                <view class="margin-bottom-sm">
-                  <text class="wu-gran" v-if="item.kind === 2">物</text>
-                  <text class="ban-red" v-if="item.kind === 1">费</text>
-                  <text class="text-center">{{ item.title }}</text>
-                </view>
-                <view>
-                  <text class="text-center text-gray text-sm">{{ item.price }} 元</text>
-                </view>
+      <view v-for="(item, index) in list" :key="index">
+        <view class="cu-bar bg-white solid-bottom margin-top"
+              @click="goDetail(item.id)">
+          <view class="action">
+            <view class="flex flex-direction padding-top padding-bottom">
+              <view class="margin-bottom-sm">
+                <text class="wu-gran" v-if="item.kind === 2">物</text>
+                <text class="ban-red" v-if="item.kind === 1">费</text>
+                <text class="text-center">{{ item.title }}</text>
+              </view>
+              <view>
+                <text class="text-center text-gray text-sm">{{ item.price }} 元</text>
               </view>
             </view>
-            <view class='action'>
-              <button class="cu-btn bg-orange" v-if="item.status === 1">开启
-              </button>
-              <button class="cu-btn bg-red" v-else>关闭</button>
-            </view>
+          </view>
+          <view class='action'>
+            <button class="cu-btn bg-orange" v-if="item.status === 1">开启
+            </button>
+            <button class="cu-btn bg-red" v-else>关闭</button>
           </view>
         </view>
-      </block>
-      <block wx:else>
-        <view
-            class="cu-form-group cu-bar bg-white flex justify-center align-center margin-top-sm">
-          <view class="title">暂无数据</view>
-        </view>
-      </block>
+      </view>
+      <uni-load-more :status="loadingType"></uni-load-more>
     </view>
     <view class="flex flex-direction fixed-bottom" @click="addCharges">
       <button class="cu-btn bg-red add-btn" style="width: 100%;">+添加</button>
@@ -50,7 +43,6 @@
 </template>
 
 <script>
-import {getChargesList} from '../../../../api/principal/charges';
 export default {
   data() {
     return {
@@ -68,6 +60,14 @@ export default {
   },
   onShow() {
     this.loadData();
+  },
+  //下拉刷新
+  onPullDownRefresh(){
+  	this.loadData('refresh');
+  },
+  //加载更多
+  onReachBottom(){
+  	this.loadData();
   },
   methods: {
     loadData(type='add', loading) {
@@ -106,16 +106,7 @@ export default {
         })
       
     },
-    getListData(params) {
-      getChargesList(params)
-          .then(res => {
-            this.list = res.data.data;
-          }).catch(err => {
-        console.log(err)
-      })
-    },
     goDetail(id) {
-      console.log(id);
       uni.navigateTo({
         url: `../detail/detail?id=${id}`
       });
@@ -129,5 +120,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+page{
+  background-color: $uni-bg-color-grey;
+}
 </style>

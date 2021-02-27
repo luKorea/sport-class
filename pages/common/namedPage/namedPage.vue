@@ -56,8 +56,7 @@
             <radio-group @change="timeRadioChange($event, item.id,item)" class="radio-group">
               <label v-for="(info, index) in timeRadio" :key="index" class="radio-group-item">
                 <view class="action">
-                  <radio :value="info.value+''" :checked="info.value == item.timeValue" v-if="item.course.lessonnum>0" />
-                  <!-- <i class="cuIcon-round" v-else style="font-size: 50rpx;color: #ccc;"></i> -->
+                  <radio :value="info.value+''" :checked="info.value == item.timeValue" v-if="item.course.lessonnum>0"/>
                 </view>
               </label>
             </radio-group>

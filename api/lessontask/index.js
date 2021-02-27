@@ -1,33 +1,25 @@
 import axios from '../../utils/axios';
 
 export default{
-    //销售列表
-    lessonlist(opt){
-      return axios({
-          url: '/lessontask/lessonlist',
-          method: "post",
-          data: opt
-      })
+    //课程列表
+    lessonlist(data){
+      return axios({ url: '/lessontask/lessonlist', method: "post", data })
     }, 
-    getlist(opt){
-      return axios({
-          url: '/lessontask/getlist',
-          method: "post",
-          data: opt
-      })
+    getlist(data){
+      return axios({ url: '/lessontask/getlist', method: "post", data })
     },
-    info(opt){
-      return axios({
-          url: '/lessontask/info',
-          method: "post",
-          data: opt
-      })
+    info(data){
+      return axios({ url: '/lessontask/info', method: "post", data })
     }, 
-    rollcall(opt){
-      return axios({
-          url: '/lessontask/rollcall',
-          method: "post",
-          data: opt
-      })
+    //点名
+    rollcall(data){
+      return axios({ url: '/lessontask/rollcall', method: "post", data })
+    },
+    temporaryrollcalldetails(data){
+      return axios({ url: '/lessontask/temporaryrollcalldetails', method: "post", data })
+    },
+    //插班点名
+    temporaryrollcall(data){
+      return axios({ url: '/lessontask/temporaryrollcall', method: "post", data })
     }
 }

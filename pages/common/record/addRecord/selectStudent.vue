@@ -498,14 +498,6 @@ export default {
       pointer-events: none;
     }
   }
-  /deep/uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked{
-    color: $uni-color-base!important;
-    border: 1px solid $uni-color-base;
-    
-  }
-  /deep/ uni-radio::before, uni-checkbox::before{
-    display: none;
-  }
   .fixed-bottom{
     z-index: 10;
   }

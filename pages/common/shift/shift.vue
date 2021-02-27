@@ -13,7 +13,8 @@
       </view>
       <!--学生区域-->
       <block v-if="list.length > 0">
-        <view class="cu-bar margin-top bg-white" v-for="(item, index) in list" :key="index" @click="selectItem(item.id, index)">
+      <block v-for="(item, index) in list">
+        <view class="cu-bar margin-top bg-white" :key="index" v-if="!selectedIdMap[item.id]" @click="selectItem(item.id, index)">
           <view class="action">{{item.name}}</view>
           <view class="action flex-due">
             <radio-group @change="onCourseChange($event,index)">
@@ -27,10 +28,12 @@
               <view class="text-gray" style="margin: 15rpx">剩余{{child.lessonnum}}课时</view>
             </block>
           </view>
-          <view class="action" v-if="showBtn && index === selectIndex">
-            <text class="cuIcon-roundcheckfill text-red"></text>
+          <view class="action">
+            <text class="cuIcon-roundcheckfill text-red" v-if="showBtn && index === selectIndex"></text>
+            <text class="cuIcon-round" v-else></text>
           </view>
         </view>
+        </block>
       </block>
       <block v-else>
         <view
@@ -66,12 +69,17 @@ export default {
         datetime:'',
         haslesson:true
       },
+      selectedIdMap:{},
       loadingType: 'more'
     }
   },
   onLoad(options) {
     this.listQuery.courseid = options.courseid;
     this.listQuery.datetime = options.datetime;
+    var selectedIds = options.selectedIds.split(',');
+    for(const i in selectedIds){
+      this.$set(this.selectedIdMap,selectedIds[i],true)
+    }
     this.loadData()
   },
   //下拉刷新
@@ -102,7 +110,7 @@ export default {
         }
       //模拟api请求数据
         this.$api.class.getstudentlist(this.listQuery).then((res)=>{
-          this.courselist = this.courselist.concat(res.data.data.courselist)
+          this.courselist = this.courselist.concat(res.data.data.courselist);
           this.list = this.list.concat(res.data.data.list.map(item=>{
             item.courselist = res.data.data.courselist.filter(a=>a.studentid==item.id);
             if(item.courselist.length>1){

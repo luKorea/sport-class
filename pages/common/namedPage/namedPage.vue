@@ -4,11 +4,11 @@
     <view class="margin">
       <view class="cu-bar bg-white">
         <view class='action'>班级名称</view>
-        <view class='action'>{{detail.info.classname}}</view>
+        <view class='action'>{{result.classname}}</view>
       </view>
       <view class="cu-bar bg-white margin-top">
         <view class='action'>上课时间</view>
-        <view class='action'>{{detail.info.datetime}}  {{detail.info.btime}}:00-{{detail.info.etime}}:00</view>
+        <view class='action'>{{result.classtime}}</view>
       </view>
       <view class="cu-bar bg-white margin-top">
         <view class="action">授课课时</view>
@@ -56,7 +56,8 @@
             <radio-group @change="timeRadioChange($event, item.id,item)" class="radio-group">
               <label v-for="(info, index) in timeRadio" :key="index" class="radio-group-item">
                 <view class="action">
-                  <radio :value="info.value+''" :checked="info.value == item.timeValue" />
+                  <radio :value="info.value+''" :checked="info.value == item.timeValue" v-if="item.course.lessonnum>0" />
+                  <!-- <i class="cuIcon-round" v-else style="font-size: 50rpx;color: #ccc;"></i> -->
                 </view>
               </label>
             </radio-group>
@@ -137,7 +138,11 @@ export default {
       searchInput: '',
       result: {
         teacher: '',
-        studentlist:[]
+        classtime:'',
+        duration: 1,
+        studentlist:[],
+        teacherlist:[],
+        allStudentList:[]
       },
       timeCurrent: null,
       timeRadio: [
@@ -146,6 +151,7 @@ export default {
         {value: 2},
         {value: 4}
       ],
+      temporary:{classid:'',classname:'',teacher: '',btime: '',etime: '',duration:'',date: ''},
       array: [],
       params:{},
       detail:{info:{},classstudent:[],classteacher:[],courselist:[],lessonteacher:[],lessonstudent:[]}
@@ -153,26 +159,82 @@ export default {
   },
   onLoad(options) {
     let {id} = options;
-    this.params = options;
-    this.getData();
+    if(options.temporary){
+      this.temporary = JSON.parse(decodeURIComponent(options.temporary));
+      this.result.teacherlist = this.temporary.teacher.split(';').map(a=>({id: a.split(':').shift(),name: a.split(':').pop()}));
+      this.result.teacher = this.result.teacherlist.map(a=>a.name).join(',');
+      this.result.classname = this.temporary.classname;
+      this.result.classtime = this.temporary.date + '  '+this.temporary.btime + ':00-'+this.temporary.etime+':00';
+      this.getTemporaryInfo()
+    }else{
+      this.params = options;
+      this.getData();
+    }
+    
   },
   methods: {
     getData(){
       this.$api.lessontask.info(this.params).then(res=>{
-        res.data.data.classstudent.map(item=>{
-          item.course=res.data.data.courselist.find(a=>a.studentid==item.id)||{lessonnum:0};
+        var resdata = res.data.data
+        
+        resdata.classstudent.map(item=>{
+          item.course=resdata.courselist.find(a=>a.studentid==item.id)||{lessonnum:0};
         })
-        this.detail = res.data.data;
-        this.result.teacher = res.data.data.lessonteacher.length?res.data.data.lessonteacher.map(a=>a.name).join(','):res.data.data.classteacher.map(a=>a.name).join(',')
-        this.result.studentlist = res.data.data.classstudent
+        this.detail = resdata;
+        this.result.classname = resdata.info.classname;
+        this.result.duration = resdata.info.duration;
+        this.result.classtime = resdata.info.datetime+' '+resdata.info.btime+':00-'+resdata.info.etime+':00'
+        this.result.studentlist = resdata.classstudent
+        this.result.allStudentList = resdata.classstudent
+        this.result.teacherlist = resdata.lessonteacher.length?resdata.lessonteacher:resdata.classteacher
+        this.result.teacher = this.result.teacherlist.map(a=>a.name).join(',')
+        
+        
+        if(resdata.lessonstudent &&resdata.lessonstudent.length){
+          //flags  1=签到、2=扣课时、4=旷课/缺课、8=请假、16=点评、32=反馈、64=家长已查看、128=计划/提前申请请假、256=预约/约课、512=按期消耗/不计次数、1024=数据升级更新、2048=提前消耗并修复、4096=课时单独设置、8192=课消成本单独设置、0x4000=手动绑定订单、0x8000=插班记录、0x10000=老师代替约课、0x20000=迟到、0x40000=补课、0x80000=有考勤访问记录、0x100000=试课、0x200000=试课完成
+          var flagMap = {
+            1: 0,4:1,8:2,0x20000:4
+          }
+          resdata.lessonstudent.map(stu=>{
+            var cur = this.result.studentlist.find(a=>a.id==stu.studentid);
+            if(cur && typeof flagMap[stu.flags] !=='undefined'){
+              this.$set(cur,"timeValue",flagMap[stu.flags]);
+              this.array.push({
+                type: flagMap[stu.flags],
+                id: stu.studentid
+              })
+            }
+          })
+          this.result.studentlist.map(item=>{
+            this.$set(item,"timeValue",0)
+          })
+          this.array = this.result.studentlist.map(a=>({
+            type: 0,
+            id: a.id
+          }))
+        }
+        
+      })
+    },
+    getTemporaryInfo(){
+      this.$api.lessontask.temporaryrollcalldetails({classid:this.temporary.classid,datetime: this.temporary.date+' '+this.temporary.btime}).then(res=>{
+        var resdata = res.data.data
+        resdata.classstudent.map(item=>{
+          item.course=resdata.courselist.find(a=>a.studentid==item.id)||{lessonnum:0};
+        })
+        resdata.info.datetime = this.temporary.date
+        this.result.studentlist = resdata.classstudent;
+        this.result.allStudentList = resdata.classstudent;
+        this.detail = resdata
+        // console.log(result,'result')
       })
     },
     searchValue() {
-      this.result.studentlist = this.detail.classstudent.filter(a=>a.name.indexOf(this.searchInput)>-1)
+      this.result.studentlist = this.result.allStudentList.filter(a=>a.name.indexOf(this.searchInput)>-1)
     },
     // 获取用户输入的步长值
     getStep(e) {
-      this.detail.info.duration = e;
+      this.result.duration = e;
     },
     timeRadioChange(e, id,data) {
       var cur = this.array.find(a=>a.id==id);
@@ -187,13 +249,14 @@ export default {
       this.$set(data,'timeValue',e.detail.value)
     },
     setData(data){
-      this.detail.classstudent.push(data.student);
+      this.result.studentlist.push(data.student);
+      this.result.allStudentList.push(data.student);
       
     },
     // 去插班页面
     goShift() {
       uni.navigateTo({
-        url: `/pages/common/shift/shift?courseid=${this.detail.info.courseid}&datetime=${this.detail.info.datetime}`
+        url: `/pages/common/shift/shift?courseid=${this.detail.info.courseid}&datetime=${this.detail.info.datetime}&selectedIds=${this.result.studentlist.map(a=>a.id).join(',')}`
       })
     },
     // 全选弹框
@@ -205,9 +268,11 @@ export default {
       }
       this.borderClickAll = true;
       this.result.studentlist.map(item=>{
-        this.$set(item,"timeValue",0)
+        if(item.course.lessonnum>0){
+          this.$set(item,"timeValue",0)
+        }
       })
-      this.array = this.result.studentlist.map(a=>({
+      this.array = this.result.studentlist.filter(a=>a.course.lessonnum>0).map(a=>({
         type: 0,
         id: a.id
       }))
@@ -235,41 +300,43 @@ export default {
       }
     },
     save(){
-      if(this.array.length<=0){
-        return uni.showToast({ title:"学生未点完",icon:'none' });
-      }
+      // if(this.array.length<=0){
+      //   return uni.showToast({ title:"学生未点完",icon:'none' });
+      // }
       var data = {
         lessontaskid: this.params.lessontaskid || 0,
         coursescheduleid: this.params.coursescheduleid,
         datetime: this.detail.info.datetime,
-        duration: this.detail.info.duration,
-        tdata:JSON.stringify((this.detail.lessonteacher.length?this.detail.lessonteacher:this.detail.classteacher).map(a=>({id:a.id,flags:a.flags}))),
-        sdata:JSON.stringify(this.detail.classstudent.map(a=>({id:a.id,courseid:this.detail.info.courseid,flags:this.array.find(sitem=>sitem.id==a.id).type})))
+        duration: this.result.duration,
+        tdata:JSON.stringify(this.result.teacherlist.map(a=>({id: Number(a.id),flags:a.flags || 1}))),
+        sdata:JSON.stringify(this.array.map(a=>({id:a.id,courseid:this.detail.info.courseid,flags: Number(a.type)})))
       }
-      this.$api.lessontask.rollcall(data).then(res=>{
-        if(res.data.data.errcode==200){
-          uni.showToast({ title:"点名成功" });
-          setTimeout(()=>{
-            uni.navigateBack();
-          },1000)
-        }else{
-          uni.showToast({
-            title: res.data.data.errmsg || "添加失败，请稍后重试",
-            icon: 'none'
-          })
-        }
-      })
+      this.startPost(data)
     },
     dianming(flag){
       var data = {
         lessontaskid: this.params.lessontaskid || 0,
         coursescheduleid: this.params.coursescheduleid,
         datetime: this.detail.info.datetime,
-        duration: this.detail.info.duration,
-        tdata:JSON.stringify((this.detail.lessonteacher.length?this.detail.lessonteacher:this.detail.classteacher).map(a=>({id:a.id,flags:a.flags}))),
-        sdata:JSON.stringify(this.borderArray.map(a=>this.detail.classstudent[a]).map(a=>({id:a.id,courseid:this.detail.info.courseid,flags:flag})))
+        duration: this.result.duration,
+        tdata:JSON.stringify(this.result.teacherlist.map(a=>({id:Number(a.id),flags:a.flags || 1}))),
+        sdata:JSON.stringify(this.borderArray.map(a=>this.result.studentlist[a]).map(a=>({id:a.id,courseid:this.detail.info.courseid,flags:flag})))
       }
-      this.$api.lessontask.rollcall(data).then(res=>{
+      this.startPost(data)
+      
+    },
+    startPost(data){
+      let api = this.$api.lessontask.rollcall;
+      if(this.temporary){
+        api = this.$api.lessontask.temporaryrollcall;
+        data.btime = this.temporary.btime;
+        data.etime = this.temporary.etime;
+        data.classid = this.temporary.classid;
+        data.datetime = data.datetime.replace(/\-/g,'/').replace(/\/0/g,'/')
+        delete data.coursescheduleid;
+        delete data.lessontaskid;
+      }
+      api(data).then(res=>{
         if(res.data.data.errcode==200){
           uni.showToast({ title:"点名成功" });
           setTimeout(()=>{

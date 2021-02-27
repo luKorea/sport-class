@@ -305,7 +305,8 @@
 		{
 			"path":"pages/principal/charges/index/index",
 			"style": {
-				"navigationBarTitleText":"收费项"
+				"navigationBarTitleText":"收费项",
+        "enablePullDownRefresh": true
 			}
 		},
 		{

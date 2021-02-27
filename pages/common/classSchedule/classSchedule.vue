@@ -31,7 +31,7 @@
     <view class="bg-white cu-bar margin-top">
       <view class="action">上课老师</view>
       <view class="action" @click="setTeacher">
-        <text class="text-sm text-gray">{{info.name ? info.name : '请选择上课老师'}}</text>
+        <text class="text-sm text-gray">{{info.teacherName ? info.teacherName : '请选择上课老师'}}</text>
       </view>
     </view>
 
@@ -53,8 +53,9 @@
             <view class="cu-item" v-for="item in teacherArray" :key="item.id">
               <label class="flex justify-between align-center flex-sub">
                 <view class="flex-sub">
-                  <text class="margin-right">{{item.name}}</text>
-                  <text class="text-type">{{item.type === 0 ? '主教' : '助教'}}</text>
+                  <text>{{item.name}}</text>
+                  <gender-icon :value="item.gender" class="margin-right"></gender-icon>
+                  <text class="text-type">{{item.type === 1 ? '主教' : '助教'}}</text>
                 </view>
                 <radio class="round" :value="item.name"></radio>
               </label>
@@ -79,39 +80,31 @@
 <script>
 import uniNumberBox from '../../../components/uni-number-box/uni-number-box';
 import {getDate} from "../../../utils";
-
+import GenderIcon from '@/components/gender-icon'
 export default {
   name: "transferClass",
   components: {
-    uniNumberBox
+    uniNumberBox,GenderIcon
   },
   data() {
     const currentDate = getDate({
       format: true
     })
+    var transfer = (val)=>val<10?"0"+val:val
     return {
       date: currentDate,
-      startTime: `${new Date().getHours()}:${new Date().getMinutes()}`,
-      endTime: `${new Date().getHours()}:${new Date().getMinutes()}`,
+      startTime: `${transfer(new Date().getHours())}:${transfer(new Date().getMinutes())}`,
+      endTime: `${transfer(new Date().getHours())}:${transfer(new Date().getMinutes())}`,
       showModal: false,
-      teacherArray: [
-        //  type 0 主教 1 助教
-        {
-          id: 1,
-          name: '彭老师',
-          type: 0
-        },
-        {
-          id: 2,
-          name: '彭老师',
-          type: 1
-        }
-      ],
+      teacherArray: [],//teacher.flags : 1=主教、2=助教
+      selectedTeachers:[],
       info: {
-        className: '测试班级',
-        teacherName: '李老师',
-        content: ''
-      }
+        className: '',
+        teacherName: '',
+        content: '',
+        date: ''
+      },
+      classid: ''
     }
   },
   computed: {
@@ -121,6 +114,12 @@ export default {
     endDate() {
       return getDate('end');
     }
+  },
+  onLoad(options) {
+    this.classid = options.id;
+    this.info.className = options.classname;
+    this.date = options.date
+    this.getTeacherList();
   },
   methods: {
     bindDateChange(e) {
@@ -152,14 +151,33 @@ export default {
       this.timeLimit = e;
     },
     nextOption() {
+      var temporary = {classid:this.classid,classname:this.info.className,teacher: this.selectedTeachers.map(a=>a.id+":"+a.name).join(';'),btime: this.startTime,etime: this.endTime,duration:this.timeLimit,date: this.date}
       wx.navigateTo({
-        url: '/pages/common/namedPage/namedPage'
+        url: `/pages/common/namedPage/namedPage?temporary=${encodeURIComponent(JSON.stringify(temporary))}`
+      })
+    },
+    getTeacherList(){
+      this.$api.teacher.teacherlist({classid: this.classid,paging: false,enable: 1}).then(res=>{
+        this.selectedTeachers = res.data.data
+        this.info.teacherName = this.selectedTeachers.map(a=>a.name).join(',')
+        
+        this.getAllTeacherList();
+      })
+    },
+    getAllTeacherList(){
+      this.$api.teacher.teacherlist({paging: false,enable: 1}).then(res=>{
+        this.teacherArray = res.data.data.map(item=>{
+          item.type=this.selectedTeachers.some(a=>a.id==item.id)?1:2;
+          return item;
+        }).sort((a,b)=>a.type-b.type)
       })
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+page{
+  background-color: $uni-bg-color-grey;
+}
 </style>

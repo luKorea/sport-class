@@ -56,19 +56,56 @@ export default {
     return {
       params: {
         keywords: '',
-        kind: -1, // int 种类（1=费用、2=物品）-1:查询全部
-        status: -1, //int 状态（0=停用、1=启用）-1:查询全部
-        paging: false,
-        pi: 1,
-        ps: 1000
+        kind: '', // int 种类（1=费用、2=物品）-1:查询全部
+        status: '', //int 状态（0=停用、1=启用）-1:查询全部
+        paging: true,
+        pi: 0,
+        ps: 20,
+        warning: false
       },
       list: [],
     }
   },
   onShow() {
-    this.getListData(this.params);
+    this.loadData();
   },
   methods: {
+    loadData(type='add', loading) {
+      //没有更多直接返回
+      if(type === 'add'){
+        if(this.loadingType === 'nomore'){
+            return;
+        }
+        this.loadingType = 'loading';
+      }else{
+          this.loadingType = 'more'
+      }
+        if(type === 'refresh'){
+          this.params.pi=1
+          this.list = [];
+          this.loadingType = 'loading';
+        }else{
+            this.params.pi++;
+        }
+      //模拟api请求数据
+        this.$api.commodity.commoditylist(this.params).then((res)=>{
+            this.list = this.list.concat(res.data.data.list);
+            //判断是否还有下一页，有是more  没有是nomore(测试数据判断大于30就没有了)
+            this.loadingType  = this.list.length >= res.data.data.page.total ? 'nomore' : 'more';
+            
+        }).catch(()=>{
+            this.loadingType = 'nomore';
+        }).finally(()=>{
+            if(type === 'refresh'){
+              if(loading == 1){
+                  uni.hideLoading()
+              }else{
+                  uni.stopPullDownRefresh();
+              }
+            }
+        })
+      
+    },
     getListData(params) {
       getChargesList(params)
           .then(res => {

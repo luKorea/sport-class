@@ -59,7 +59,7 @@
                 <view class="flex-sub">
                   <text class="margin-right">{{ item.name }}</text>
                   <text class="margin-right">{{ item.teacher }}</text>
-                  <text class="margin-right">学生：{{ item.number }}人</text>
+                  <!-- <text class="margin-right">学生：{{ item.number }}人</text> -->
                 </view>
                 <radio class="round" :value="item.id"></radio>
               </label>
@@ -95,19 +95,12 @@ export default {
     }
   },
   created() {
-    this.extraData = [
-      {date: '2021-01-18', dot: true},
-      {date: '2021-01-21', dot: true},
-      {date: '2021-01-22', dot: true},
-      {date: '2021-01-1', dot: true},
-      {date: '2021-01-6', dot: true},
-      {date: '2021-01-25', dot: true},
-      {date: '2021-01-9', dot: true},
-      {date: '2021-01-27', dot: true}
-    ];
+    
   },
   onLoad() {
     this.getLessonData();
+    this.getAllData();
+    this.getClassList();
   },
   computed:{
     list(){
@@ -138,9 +131,13 @@ export default {
         year: year,
         month: month,
       }
-      console.log(this.extraData);
+      // console.log(this.extraData);
       // 此处获取动态的数据，赋值给extraData
-      this.extraData = this.extraData;
+      // this.extraData = [];
+      this.getLessonData();console.log(year,month)
+      var startDate = new Date(year, month, 1);
+      var endDate = new Date(year, month+1, 0)
+      this.setDot(startDate,endDate);console.log(startDate,endDate)
     },
     showClassModal() {
       this.showModal = true;
@@ -155,7 +152,6 @@ export default {
         scanType: ['barCode', 'qrCode', 'datamatrix', 'pdf417'],
         success: res => {
           if (res.errMsg === 'scanCode:ok') {
-            console.log(res.result);
             wx.showToast({
               title: '扫码成功'
             })
@@ -179,11 +175,12 @@ export default {
     },
     goClassSchedule(e) {
       let {value} = e.detail;
+      var classItem = this.classArray.find(a=>a.id==value)
       wx.navigateTo({
-        url: `/pages/common/classSchedule/classSchedule?id=${value}`
+        url: `/pages/common/classSchedule/classSchedule?id=${value}&classname=${classItem.name}&date=${this.currentDate.date}`
       })
     },
-    goDetail(coursescheduleid) {console.log('dataid',coursescheduleid)
+    goDetail(coursescheduleid) {
       var data = this.list.find(a=>a.coursescheduleid==coursescheduleid);
       var lessonItem = this.lessonlist.find(a=>a.classid == data.classid);
       wx.navigateTo({
@@ -191,25 +188,67 @@ export default {
       })
     },
     //获取一周的时间
-    getWeekDate(){
-      var now1 = new Date(),now2 = new Date();
-      now1.setDate(now1.getDate()-3);
-      var start = dateFormat(now1,'yyyy-MM-dd');
-      now2.setDate(now2.getDate()+3);
-      var end = dateFormat(now2,'yyyy-MM-dd');
-      return {start,end}
+    getWeekDate(){console.log('this.month',this.month)
+      var now1 = new Date(),year,month;
+      if(this.month){
+        year = this.month.year;
+        month = this.month.month
+      }else{
+        year = now1.getFullYear()
+        month = now1.getMonth()
+      }
+      var startDate = new Date(year,month , 1);
+      var endDate = new Date(year, month+1, 0)
+      var start = dateFormat(startDate,'yyyy-MM-dd');
+      var end = dateFormat(endDate,'yyyy-MM-dd');
+      return {start,end,startDate,endDate}
+    },
+    getAllData(){
+      var {start,end,startDate,endDate}=this.getWeekDate()
+      this.$api.lessontask.getlist().then(res1=>{
+        var data = res1.data.data;
+        data.schedulelist = data.schedulelist.filter(item=>{
+          var stime = new Date(item.begintime).getTime(),etime = new Date(item.endtime).getTime()
+          var timepass =  stime > etime || (stime < etime && etime>=new Date(end).getTime())
+          return timepass;
+        });
+        this.factory = data;
+        this.setDot(startDate,endDate)
+      })
     },
     getLessonData(){
-      var {start,end}=this.getWeekDate()
+      var {start,end,startDate,endDate}=this.getWeekDate()
       this.listQuery.btime = start;
       this.listQuery.etime = end;
       this.$api.lessontask.lessonlist(this.listQuery).then(res=>{
-        this.lessonlist = res.data.data
+        this.lessonlist = res.data.data;
+        this.extraData = this.extraData.concat(this.lessonlist.map(a=>( {date: a.dates, dot: true})));
       })
-      this.$api.lessontask.getlist().then(res=>{
-        this.factory = res.data.data;
-      })
+      
     },
+    setDot(startDate,endDate){
+      /* 设置日历上的红点 */
+      var x = startDate.getDate(),y=endDate.getDate();
+      var weekMap = [1,2,4,8,16,32,64]
+      for(let i=x;i<=y;i++){
+        startDate.setDate(i);
+        var week = startDate.getDay();
+        var courseteachers = this.factory.courseteacher.filter(a=>a.day==weekMap[week-1])
+        const result = this.factory.schedulelist.filter(item=>{
+          var pass = courseteachers.some(c=>c.coursescheduleid == item.coursescheduleid);
+          return pass;
+        });
+        
+        if(result.length>0){
+          this.extraData.push({date: dateFormat(startDate,'yyyy-MM-dd'), dot: true})
+        }
+      }
+    },
+    getClassList(){
+      this.$api.class.classlist({status:0,paging: false}).then(res=>{
+        this.classArray = res.data.data
+      })
+    }
     
   }
 }

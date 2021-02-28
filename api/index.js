@@ -9,6 +9,8 @@ import venue from './venue/index.js'
 import lessontask from './lessontask/index.js'
 import commodity from './commodity/index.js'
 import teacher from './teacher/index.js'
+import comment from './comment/index.js'
+import course from './course/index.js'
 export default{
     student,
     class: class1,
@@ -20,5 +22,7 @@ export default{
     venue,
     lessontask,
     commodity,
-    teacher
+    teacher,
+    comment,
+    course
 }

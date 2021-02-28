@@ -100,13 +100,9 @@ export default {
   },
   onLoad(options) {
     let {id} = options;
-    console.log(id);
     this.loadData();
     this.getTemplates();
     this.getClasses();
-  },
-  onShow(){
-    this.loadData();
   },
   //下拉刷新
   onPullDownRefresh(){

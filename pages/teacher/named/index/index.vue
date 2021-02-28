@@ -134,10 +134,10 @@ export default {
       // console.log(this.extraData);
       // 此处获取动态的数据，赋值给extraData
       // this.extraData = [];
-      this.getLessonData();console.log(year,month)
+      this.getLessonData();
       var startDate = new Date(year, month, 1);
       var endDate = new Date(year, month+1, 0)
-      this.setDot(startDate,endDate);console.log(startDate,endDate)
+      this.setDot(startDate,endDate);
     },
     showClassModal() {
       this.showModal = true;
@@ -183,12 +183,12 @@ export default {
     goDetail(coursescheduleid) {
       var data = this.list.find(a=>a.coursescheduleid==coursescheduleid);
       var lessonItem = this.lessonlist.find(a=>a.classid == data.classid);
-      wx.navigateTo({
+      uni.navigateTo({
         url: `/pages/common/namedPage/namedPage?lessontaskid=${lessonItem&&lessonItem.lessontaskid||''}&coursescheduleid=${data.coursescheduleid}&date=${this.currentDate.date+' '+data.btime+':00'}`
       })
     },
     //获取一周的时间
-    getWeekDate(){console.log('this.month',this.month)
+    getWeekDate(){
       var now1 = new Date(),year,month;
       if(this.month){
         year = this.month.year;

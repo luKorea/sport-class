@@ -125,7 +125,7 @@
         params: {
           pi: 0,
           ps: 20,
-          kind: 3,
+          // kind: 3,
           status: -1,
           keywords: ''
         },
@@ -181,7 +181,6 @@
       }
     },
     onShow: function() {
-      // this.getListData(this.params);
       this.getCourse();
       this.getTeacher();
       this.getTag();
@@ -194,6 +193,12 @@
           checkMap[ids[i]]=true
         }
         this.checkMap = checkMap
+      }
+      if(options.params){
+        this.params = {
+          ...this.params,
+          ...JSON.parse(options.params)
+        }
       }
       this.isSingle = typeof(options.single)=='undefined'?false:options.single
       this.loadData();

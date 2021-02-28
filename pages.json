@@ -90,13 +90,26 @@
 		{
 			"path":"pages/principal/onlineClasses/index/index",
 			"style": {
-				"navigationBarTitleText":"在线报课"
+				"navigationBarTitleText":"在线报课",
+        "enablePullDownRefresh":true
 			}
 		},
 		{
 			"path":"pages/principal/onlineClasses/addOnlineClasses/addOnlineClasses",
 			"style": {
 				"navigationBarTitleText":"发布课程"
+			}
+		},
+		{
+			"path":"pages/principal/onlineClasses/addOnlineClasses/selectPrice",
+			"style": {
+				"navigationBarTitleText":"设置报名费用"
+			}
+		},
+		{
+			"path":"pages/principal/onlineClasses/addOnlineClasses/editPrice",
+			"style": {
+				"navigationBarTitleText":"设置报名费用"
 			}
 		},
 		{
@@ -510,7 +523,8 @@
 		{
 			"path":"pages/common/schedule/detail/detail",
 			"style": {
-				"navigationBarTitleText":"班级详情"
+				"navigationBarTitleText":"班级详情",
+        "enablePullDownRefresh":true
 			}
 		},
 		{

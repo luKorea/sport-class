@@ -1,272 +1,307 @@
 <!--TODO 缺课记录 -->
 <template>
-  <view class="margin">
-    <view class="cu-bar search bg-white">
-      <view class="action">
-        <picker mode="date" @change="bindStartDateChange" :value="startDate"
-                :start="startDateFormat" :end="endDateFormat">
-          <view class="picker">{{ startDate }}</view>
-        </picker>
-      </view>
-      <view class="action">至</view>
-      <view class="action">
-        <picker mode="date" @change="bindEndDateChange" :value="endDate"
-                :start="endStartDateFormat" :end="endEndDateFormat">
-          <view class="picker">{{ endDate }}</view>
-        </picker>
-      </view>
-      <view class="action" @click="showDrawer">
-        <button class="cu-btn shadow-blur text-white bg-orange">筛选</button>
-      </view>
-    </view>
-    <!--筛选侧边栏-->
-    <uni-drawer ref='drawer' mode="right">
-      <!--头部-->
-      <view class="solids-bottom flex align-center justify-center">
-        <view class="padding">筛选</view>
-      </view>
-      <!--内容区域-->
-      <view class="cu-form-group cu-bar bg-white">
-        <view class="title">选择课程</view>
-        <picker @change="bindGradeChange($event, gradeArray)" :value="gradeIndex" :range="gradeArray" range-key="label">
-          <view class="picker">{{gradeArray[gradeIndex].label}}</view>
-        </picker>
-      </view>
-      <view class="cu-form-group cu-bar bg-white">
-        <view class="title">选择班级</view>
-        <picker @change="bindClassChange($event, classArray)" :value="classIndex" :range="classArray" range-key="label">
-          <view class="picker">{{classArray[classIndex].label}}</view>
-        </picker>
-      </view>
-      <view class="cu-form-group cu-bar bg-white">
-        <view class="title">选择老师</view>
-        <picker @change="bindTeacherChange($event, teacherArray)" :value="teacherIndex" :range="teacherArray" range-key="label">
-          <view class="picker">{{teacherArray[teacherIndex].label}}</view>
-        </picker>
-      </view>
-      <!--底部区域-->
-      <view class="drawer-footer">
-        <button class="bg-gray lg cu-btn" style="width: 50%;" @click="closeDrawer">关闭</button>
-        <button class="bg-my-red lg cu-btn" style="width: 50%;" @click="searchData">确定</button>
-      </view>
-    </uni-drawer>
-    <!--列表-->
-    <block v-if="list.length > 0">
-      <view  v-for="item in list" :key="item.id">
-        <view class="margin-top bg-white cu-bar  solid-bottom">
-          <view class="action flex-due margin-top margin-bottom">
-            <view class="margin-bottom-sm">
-              <text class="cuIcon-title text-gray text-sm"></text>{{item.date}}
-            </view>
-            <view class="margin-bottom-sm">
-              <text class="cuIcon-title text-gray text-sm"></text>{{item.name}}
-            </view>
-            <view>
-              <text class="cuIcon-title text-gray text-sm"></text>{{item.className}}
-            </view>
-          </view>
-          <view class="action flex flex-due margin-top margin-bottom">
-            <view class="margin-bottom-sm">
-              <text class="cuIcon-title text-gray text-sm"></text>{{item.time}}
-            </view>
-            <view class="margin-bottom-sm">
-              <text class="cuIcon-title text-gray text-sm"></text><text class="text-red">{{item.type}}</text>
-            </view>
-            <view>
-              <text class="cuIcon-title text-gray text-sm"></text>{{item.classTime}} 课时
-            </view>
-          </view>
-        </view>
-        <view class="bg-white cu-bar text-center justify-center">
-          <view class="action text-center text-red" @click="buckleTime(item.id)">
-            扣课时
-          </view>
-        </view>
-      </view>
-    </block>
-    <block v-else>
-      <view
-          class="cu-form-group cu-bar bg-white flex justify-center align-center">
-        <view class="title">暂无数据</view>
-      </view>
-    </block>
-  </view>
+	<view class="margin">
+		<view class="cu-bar search bg-white">
+			<view class="action">
+				<picker mode="date" @change="bindStartDateChange" :value="startDate" :start="startDateFormat" :end="endDateFormat">
+					<view class="picker">{{ startDate }}</view>
+				</picker>
+			</view>
+			<view class="action">至</view>
+			<view class="action">
+				<picker mode="date" @change="bindEndDateChange" :value="endDate" :start="endStartDateFormat" :end="endEndDateFormat">
+					<view class="picker">{{ endDate }}</view>
+				</picker>
+			</view>
+			<view class="action" @click="showDrawer">
+				<button class="cu-btn shadow-blur text-white bg-orange">筛选</button>
+			</view>
+		</view>
+		<!--筛选侧边栏-->
+		<uni-drawer ref='drawer' mode="right">
+			<!--头部-->
+			<view class="solids-bottom flex align-center justify-center">
+				<view class="padding">筛选</view>
+			</view>
+			<!--内容区域-->
+			<view class="cu-form-group cu-bar bg-white">
+				<view class="title">选择课程</view>
+				<picker @change="bindGradeChange($event, gradeArray)" :value="gradeIndex" :range="gradeArray" range-key="title">
+					<view class="picker">{{ gradeArray[gradeIndex].title }}</view>
+				</picker>
+			</view>
+			<view class="cu-form-group cu-bar bg-white">
+				<view class="title">选择班级</view>
+				<picker @change="bindClassChange($event, classArray)" :value="classIndex" :range="classArray" range-key="name">
+					<view class="picker">{{ classArray[classIndex].name }}</view>
+				</picker>
+			</view>
+			<view class="cu-form-group cu-bar bg-white">
+				<view class="title">选择老师</view>
+				<picker @change="bindTeacherChange($event, teacherArray)" :value="teacherIndex" :range="teacherArray" range-key="name">
+					<view class="picker">{{ teacherArray[teacherIndex].name }}</view>
+				</picker>
+			</view>
+			<!--底部区域-->
+			<view class="drawer-footer">
+				<button class="bg-gray lg cu-btn" style="width: 50%;" @click="closeDrawer">关闭</button>
+				<button class="bg-my-red lg cu-btn" style="width: 50%;" @click="searchData">确定</button>
+			</view>
+		</uni-drawer>
+		<!--列表-->
+		<block v-if="list.length > 0">
+			<view v-for="(item,index) in list" :key="index">
+				<view class="margin-top bg-white cu-bar  solid-bottom">
+					<view class="action flex-due margin-top margin-bottom">
+						<view class="margin-bottom-sm">
+							<text class="cuIcon-title text-gray text-sm"></text>{{item.datetime}}
+						</view>
+						<view class="margin-bottom-sm">
+							<text class="cuIcon-title text-gray text-sm"></text>{{item.teachername}}
+						</view>
+						<view>
+							<text class="cuIcon-title text-gray text-sm"></text>{{item.classname}}
+						</view>
+					</view>
+					<view class="action flex flex-due margin-top margin-bottom">
+						<view class="margin-bottom-sm">
+							<text class="cuIcon-title text-gray text-sm"></text>{{item.bt}}~{{item.et}}
+						</view>
+						<view class="margin-bottom-sm">
+							<text class="cuIcon-title text-gray text-sm"></text>{{item.studentname}}
+						</view>
+						<view>
+							<text class="cuIcon-title text-gray text-sm"></text><text class="text-red">
+								<text v-if="(item.flags&4) === 0">请假</text>
+								<text v-if="(item.flags&8) === 0">未到</text>
+							</text>
+						</view>
+					</view>
+				</view>
+				<view class="bg-white cu-bar text-center justify-center">
+					<block v-if="(item.flags&4) === 0">
+						<view class="action text-center text-red" @click="buckleTime(item.lessonrecordofstudentid, 1)">
+							扣课时
+						</view>
+					</block>
+					<block v-if="(item.flags&8) === 0">
+						<view class="action text-center text-red" @click="buckleTime(item.lessonrecordofstudentid, 0)">
+							不扣课时
+						</view>
+					</block>
+				</view>
+			</view>
+		</block>
+		<block v-else>
+			<view class="cu-form-group cu-bar bg-white flex justify-center align-center">
+				<view class="title">暂无数据</view>
+			</view>
+		</block>
+	</view>
 </template>
 
 <script>
-import {getDate} from "../../../../../utils";
-
-export default {
-  data() {
-    const currentStartDate = getDate({format: true})
-    const currentEndDate = getDate({format: true})
-    return {
-      searchInput: '',
-      startDate: currentStartDate,
-      endDate: currentEndDate,
-      // 选择班级
-      classIndex: 0,
-      classArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
-      // 选择课程
-      gradeIndex: 0,
-      gradeArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
-      // 选择老师
-      teacherIndex: 0,
-      teacherArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
-      form: {},
-      list: [
-        {
-          id: 1,
-          name: '谢老师',
-          date: '2020-12-12 星期四',
-          className: '测试数据',
-          time: '16:00-17:00',
-          classTime: 1,
-          number: '3/10',
-          scope: '4/5',
-          type: '未到'
-        },
-        {
-          id: 2,
-          name: '谢老师',
-          date: '2020-12-12 星期四',
-          className: '测试数据',
-          time: '16:00-17:00',
-          classTime: 2,
-          number: '3/10',
-          scope: '4/5',
-          type: '未到'
-        },
-        {
-          id: 3,
-          name: '谢老师',
-          className: '测试数据',
-          date: '2020-12-12 星期四',
-          time: '16:00-17:00',
-          classTime: 3,
-          number: '3/10',
-          scope: '4/5',
-          type: '未到'
-        }
-      ]
-    }
-  },
-  computed: {
-    startDateFormat() {
-      return getDate('start')
-    },
-    endDateFormat() {
-      return getDate('end');
-    },
-    endStartDateFormat() {
-      return getDate('start')
-    },
-    endEndDateFormat() {
-      return getDate('end');
-    },
-  },
-  onLoad() {
-  },
-  methods: {
-    // 筛选区域
-    // 选择班级
-    bindClassChange(e, data) {
-      const {value} = e.detail;
-      this.classIndex = value;
-      this.form.class = data[this.classIndex].id;
-    },
-    // 选择课程
-    bindGradeChange(e, data) {
-      const {value} = e.detail;
-      this.gradeIndex = value;
-      this.form.grade = data[this.gradeIndex].id;
-    },
-    // 选择课程
-    bindTeacherChange(e, data) {
-      const {value} = e.detail;
-      this.teacherIndex = value;
-      this.form.teacher = data[this.teacherIndex].id;
-    },
-    // 开始时间
-    bindStartDateChange(e) {
-      this.startDate = e.target.value;
-      this.form.startTime = e.target.value;
-    },
-    // 结束时间
-    bindEndDateChange(e) {
-      this.endDate = e.target.value;
-      this.form.endTime = e.target.value;
-    },
-    showDrawer() {
-      this.$refs['drawer'].open();
-    },
-    closeDrawer() {
-      this.$refs['drawer'].close();
-    },
-    // 扣除课时
-    buckleTime(id) {
-      wx.showModal({
-        title:'扣除课时',
-        content: '请确认该次课是否扣除课时?',
-        success(res) {
-          if (res.confirm === true) {
-            console.log(id);
-          } else {
-            console.log('用户点击了取消');
-          }
-        },
-        fail(err) {
-          console.log(err);
-        }
-      })
-    }
-  }
-}
+	import {
+		getDate
+	} from "../../../../../utils";
+	import {
+		failTip
+	} from '../../../../../utils/tip.js';
+	import {
+		getAbsentList,
+		setTime
+	} from '../../../../../api/common/classRecord.js';
+	import {
+		getClassSelect,
+		getCourseSelect,
+		getTeacherSelect
+	} from "../../../../../api/select";
+	export default {
+		data() {
+			const currentStartDate = getDate({
+				format: true
+			})
+			const currentEndDate = getDate({
+				format: true
+			})
+			return {
+				params: {
+					pi: 1,
+					ps: 20
+				},
+				total: null,
+				startDate: currentStartDate,
+				endDate: currentEndDate,
+				// 选择班级
+				classIndex: 0,
+				classArray: [{
+					id: '',
+					name: '所有班级'
+				}],
+				// 选择课程
+				gradeIndex: 0,
+				gradeArray: [{
+					id: '',
+					title: '所有课程'
+				}],
+				// 选择老师
+				teacherIndex: 0,
+				teacherArray: [{
+					id: '',
+					name: '所有老师'
+				}],
+				form: {},
+				list: []
+			}
+		},
+		computed: {
+			startDateFormat() {
+				return getDate('start')
+			},
+			endDateFormat() {
+				return getDate('end');
+			},
+			endStartDateFormat() {
+				return getDate('start')
+			},
+			endEndDateFormat() {
+				return getDate('end');
+			},
+		},
+		mounted() {
+			let that = this;
+			that.getData(that.params);
+			that.getClass();
+			that.getGrade();
+			that.getTeacher();
+			uni.$on('onShow', (e) => {
+				that.params['ps'] = 20;
+				that.getData(that.params)
+			})
+			uni.$on('onReachBottom', function(data) {
+				if (that.params.ps > that.total) {
+					uni.showToast({
+						icon: 'none',
+						title: '已经没有更多数据啦'
+					})
+					return;
+				} else {
+					that.getData({
+						...that.params,
+						ps: that.params.ps += 20
+					})
+				}
+			});
+		},
+		methods: {
+			getData(params) {
+				getAbsentList(params)
+					.then(res => {
+						this.total = res.data.data.page.total;
+						this.list = res.data.data.list;
+						console.log(this.list);
+					}).catch(err => console.log(err));
+			},
+			// 筛选区域
+			// 选择班级
+			getClass() {
+				getClassSelect()
+					.then(res => {
+						this.classArray = this.classArray.concat(res.data.data.list);
+					}).catch(err => console.log(err));
+			},
+			bindClassChange(e, data) {
+				const {
+					value
+				} = e.detail;
+				this.classIndex = value;
+				this.params.classid = data[this.classIndex].id;
+			},
+			// 选择课程
+			getGrade() {
+				getCourseSelect()
+					.then(res => {
+						this.gradeArray = this.gradeArray.concat(res.data.data);
+					}).catch(err => console.log(err));
+			},
+			bindGradeChange(e, data) {
+				const {
+					value
+				} = e.detail;
+				this.gradeIndex = value;
+				this.params.courseid = data[this.gradeIndex].id;
+			},
+			// 选择老师
+			getTeacher() {
+				getTeacherSelect()
+					.then(res => {
+						this.teacherArray = this.teacherArray.concat(res.data.data);
+					}).catch(err => console.log(err));
+			},
+			bindTeacherChange(e, data) {
+				const {
+					value
+				} = e.detail;
+				this.teacherIndex = value;
+				this.params.teacherid = data[this.teacherIndex].id;
+			},
+			// 开始时间
+			bindStartDateChange(e) {
+				this.startDate = e.target.value;
+				this.params.btime = e.target.value;
+			},
+			// 结束时间
+			bindEndDateChange(e) {
+				this.endDate = e.target.value;
+				this.params.etime = e.target.value;
+				this.getData(this.params);
+			},
+			showDrawer() {
+				this.$refs['drawer'].open();
+			},
+			closeDrawer() {
+				this.$refs['drawer'].close();
+			},
+			searchData() {
+				this.closeDrawer();
+				this.getData(this.params);
+			},
+			// 扣除课时
+			buckleTime(lessonrecordofstudentid, deduct) {
+				let that = this;
+				   wx.showModal({
+				     title:'扣除课时',
+				     content: '请确认该次课是否扣除课时?',
+				     success(res) {
+				       if (res.confirm === true) {
+				         setTime({
+					lessonrecordofstudentid: lessonrecordofstudentid,
+					deduct: deduct
+				}).then(res => {
+						if (res.data.data.errcode === 200) {
+							console.log('success');
+							that.getData(that.params);
+						} else {
+							failTip(res.data.data.errmsg);
+						}
+					}).catch(err => console.log(err));
+				       } else {
+				         console.log('用户点击了取消');
+				       }
+				     },
+				     fail(err) {
+				       console.log(err);
+				     }
+				   })
+			}
+		}
+	}
 </script>
 
 <style scoped>
-.flex-due {
-  flex-direction: column;
-  justify-content: start;
-  align-items: start;
-}
+	.flex-due {
+		flex-direction: column;
+		justify-content: start;
+		align-items: start;
+	}
 </style>

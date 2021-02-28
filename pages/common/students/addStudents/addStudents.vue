@@ -2,21 +2,21 @@
 <template>
   <view class="margin">
     <!--学员照片-->
-    <view class="cu-bar bg-white margin-top">
-      <view class="action">学员照片</view>
-      <view class="action" style="width: 100rpx;height: 100rpx; margin: 30rpx 30rpx 10rpx 30rpx">
-        <view class="grid col-1 grid-square flex-sub" style="flex-direction: row-reverse;">
-          <view class="bg-img" v-if="form.imgList !== ''">
-            <image :src='form.imgList' mode='aspectFill'></image>
-            <view class="cu-tag bg-red" @click="DelImg">
-              <text class="cuIcon-close"></text>
-            </view>
-          </view>
-          <view class="solids" @click="ChooseImage" v-if="form.imgList === ''">
-            <text class="cuIcon-add"></text>
-          </view>
-        </view>
-      </view>
+    <view class="cu-bar bg-white">
+    	<view class="action">学员照片</view>
+    	<view class="action" style="width: 100rpx;height: 100rpx; margin: 30rpx 30rpx 10rpx 30rpx">
+    		<view class="grid col-1 grid-square flex-sub" style="flex-direction: row-reverse;">
+    			<view class="bg-img" v-if="form.avatar !== ''">
+    				<image :src='imgUrl + form.avatar' mode='aspectFill'></image>
+    				<view class="cu-tag bg-red" @click="DelImg">
+    					<text class="cuIcon-close"></text>
+    				</view>
+    			</view>
+    			<view class="solids" @click="ChooseImage" v-if="form.avatar === ''">
+    				<text class="cuIcon-add"></text>
+    			</view>
+    		</view>
+    	</view>
     </view>
     <view class="cu-bar bg-white margin-top">
       <view class="action">真实姓名</view>
@@ -27,7 +27,7 @@
     <view class="cu-bar bg-white margin-top">
       <view class="action">手机号码</view>
       <view class="action text-right">
-        <input v-model="form.phone" placeholder="请输入手机号码" type="number" />
+        <input v-model="form.contact" placeholder="请输入手机号码" type="number" />
         <button class="cu-btn sm bg-orange margin-left-sm" @click="sendPhone">拨打</button>
       </view>
     </view>
@@ -89,31 +89,31 @@
     <view class="cu-bar bg-white margin-top">
       <view class="action">备注</view>
       <view class="action text-right">
-        <input v-model="form.back" placeholder="50字符内" />
+        <input v-model="form.remark" placeholder="50字符内" />
       </view>
     </view>
     <view class="cu-bar bg-white margin-top">
       <view class="action">爸爸姓名</view>
       <view class="action text-right">
-        <input v-model="form.fatherName" placeholder="请输入学员爸爸姓名" />
+        <input v-model="form.ex1" placeholder="请输入学员爸爸姓名" />
       </view>
     </view>
     <view class="cu-bar bg-white margin-top">
       <view class="action">爸爸电话</view>
       <view class="action text-right">
-        <input v-model="form.fatherPhone" placeholder="请输入学员爸爸联系电话" />
+        <input v-model="form.ex2" placeholder="请输入学员爸爸联系电话" />
       </view>
     </view>
     <view class="cu-bar bg-white margin-top">
       <view class="action">妈妈姓名</view>
       <view class="action text-right">
-        <input v-model="form.motherName" placeholder="请输入学员妈妈姓名" />
+        <input v-model="form.ex3" placeholder="请输入学员妈妈姓名" />
       </view>
     </view>
     <view class="cu-bar bg-white margin-top">
       <view class="action">妈妈电话</view>
       <view class="action text-right">
-        <input v-model="form.motherPhone" placeholder="请输入学员妈妈联系电话" />
+        <input v-model="form.ex4" placeholder="请输入学员妈妈联系电话" />
       </view>
     </view>
     <view class="flex flex-direction margin-top" @click="sendData">
@@ -131,23 +131,21 @@ export default {
       format: true
     })
     return {
+	  imgUrl: this.$uploadUrl,	
       form: {
-        name: '',
-        phone: '',
-        state: 0,
-        identitycard: '',
-        imgList: ''
+		id: 0,  
+        avatar: ''
       },
       // 性别
       sexIndex: 0,
       sexArray: [
         {
           label: '男',
-          value: 0
+          value: 1
         },
         {
           label: '女',
-          value: 1
+          value: 2
         }
       ],
       // 学生来源
@@ -231,26 +229,40 @@ export default {
         phoneNumber: this.form.phone
       })
     },
-    // 上传图片
-    ChooseImage() {
-      wx.chooseImage({
-        count: 9, //默认9
-        sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-        sourceType: ['album'], //从相册选择
-        success: (res) => {
-          this.form.imgList = res.tempFilePaths[0];
-          console.log(this.form.imgList);
-        }
-      });
-    },
-    DelImg() {
-      this.form.imgList = '';
-    },
+   // 上传图片
+   ChooseImage() {
+   	let that = this;
+   	wx.chooseImage({
+   		count: 1, //默认9
+   		sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+   		sourceType: ['album'], //从相册选择
+   		success: (res) => {
+   			console.log(res);
+   			that.form.avatar = res.tempFilePaths[0];
+   			wx.uploadFile({
+   				url: that.$upload + '/d/m/file/upload?type=28',
+   				filePath: res.tempFilePaths[0],
+   				name: 'file',
+   				formData: res.tempFilePaths,
+   				header: {
+   					'Content-Type': 'multipart/form-data'
+   				},
+   				success(res) {
+   					let data = JSON.parse(res.data);
+   					that.form.avatar = data.data.path + data.data.name;
+   				}
+   			})
+   		}
+   	});
+   },
+   DelImg() {
+   	this.form.avatar = '';
+   },
     // 选择性别
     bindSexChange(e, data) {
       const {value} = e.detail;
       this.sexIndex = value;
-      this.form.sex = data[this.sexIndex].value;
+      this.form.gender = data[this.sexIndex].value;
     },
     // 选择学生来源
     bindSourceChange(e, data) {

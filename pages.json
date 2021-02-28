@@ -410,7 +410,8 @@
 		{
 			"path":"pages/common/classRecord/index/index",
 			"style": {
-				"navigationBarTitleText":"上课记录"
+				"navigationBarTitleText":"上课记录",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -422,13 +423,20 @@
 		{
 			"path": "pages/common/evaluation/index/index",
 			"style": {
-				"navigationBarTitleText": "师生互评"
+				"navigationBarTitleText": "师生互评",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path":"pages/common/evaluation/detail/detail",
 			"style": {
 				"navigationBarTitleText":"评价"
+			}
+		},
+		{
+			"path":"pages/common/evaluation/commentDetail/commentDetail",
+			"style": {
+				"navigationBarTitleText":"评价列表"
 			}
 		},
 		{
@@ -441,12 +449,14 @@
 			"path":"pages/common/students/index/index",
 			"style": {
 				"navigationBarTitleText":"学员"
+				
 			}
 		},
 		{
 			"path":"pages/common/students/detail/detail",
 			"style": {
-				"navigationBarTitleText":"学员详情"
+				"navigationBarTitleText":"学员详情",
+				"enablePullDownRefresh": true
 			}
 		},
 		{

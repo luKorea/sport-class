@@ -46,3 +46,15 @@ export const getPackSelect = () => {
         method: 'POST',
     })
 }
+
+// 获取学生来源
+// 1=学生来源、2=学生标签、3=成长记录、4=班级标签
+export const getStudentSource = type => {
+	return axios({
+		url: '/student/sourcelist',
+		method: 'POST',
+		data: {
+			type: type
+		}
+	})
+}

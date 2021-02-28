@@ -3,30 +3,26 @@
   <view class="follow-container">
     <view class="margin" style="margin-bottom: 140rpx">
       <block v-if="list.length > 0">
-        <view class="cu-bar bg-white margin-top" v-for="item in list"
-              :key="item.id">
+        <view class="cu-bar bg-white margin-top" v-for="(item, index) in list"
+              :key="index">
           <view class="action flex-direction flex-due">
             <view class="text-sm flex-title">
               <text class="bg-orange" style="padding: 8rpx 20rpx">
                 {{item.name}}
               </text>
-              <text>{{item.time}}</text>
+              <text>{{item.datetime}}</text>
             </view>
             <view class="text-sm" style="margin: 10rpx 0">
               <text class="cuIcon-title text-orange"></text>
-              {{item.start}}
+              {{item.intent}}
             </view>
             <view class="text-sm" style="margin: 10rpx 0">
               <text class="cuIcon-title text-orange"></text>
-              {{item.leave}}
+              下次跟进时间：{{item.nexttime | FormatDate}}
             </view>
             <view class="text-sm" style="margin: 10rpx 0">
               <text class="cuIcon-title text-orange"></text>
-              {{item.endTime}}
-            </view>
-            <view class="text-sm" style="margin: 10rpx 0">
-              <text class="cuIcon-title text-orange"></text>
-              {{item.content}}
+              {{item.note}}
             </view>
           </view>
         </view>
@@ -47,75 +43,31 @@
 <script>
 
 import {formatTime} from "../../../../../utils";
+import {getStudentFollow} from '../../../../../api/common/students.js';
 
 export default {
   props: {
     studentId: {
-      type: String,
-      default: ''
+      type: Number,
+      default: null
     }
   },
   data() {
     return {
-      list: [
-        {
-          id: 1,
-          name: '谢老师',
-          start: '待跟进',
-          leave: '不明确',
-          endTime: '2020-01-01',
-          content: '我们在上课',
-          time: formatTime(new Date())
-        },
-        {
-          id: 2,
-          name: '谢老师',
-          start: '待跟进',
-          leave: '不明确',
-          endTime: '2020-01-01',
-          content: '我们在上课',
-          time: formatTime(new Date())
-        },
-        {
-          id: 3,
-          name: '谢老师',
-          start: '待跟进',
-          leave: '不明确',
-          endTime: '2020-01-01',
-          content: '我们在上课',
-          time: formatTime(new Date())
-        },
-        {
-          id: 4,
-          name: '谢老师',
-          start: '待跟进',
-          leave: '不明确',
-          endTime: '2020-01-01',
-          content: '我们在上课',
-          time: formatTime(new Date())
-        },
-        {
-          id: 5,
-          name: '谢老师',
-          start: '待跟进',
-          leave: '不明确',
-          endTime: '2020-01-01',
-          content: '我们在上课',
-          time: formatTime(new Date())
-        },
-        {
-          id: 6,
-          name: '谢老师',
-          start: '待跟进',
-          leave: '不明确',
-          endTime: '2020-01-01',
-          content: '我们在上课',
-          time: formatTime(new Date())
-        }
-      ]
+      list: []
     }
   },
+  mounted() {
+  	this.getData(this.studentId);
+	uni.$on('onShow', e => this.getData(this.studentId));
+  },
   methods: {
+	getData(id) {
+		getStudentFollow(id)
+		.then(res => {
+			this.list = res.data.data.followuprecord;
+		}).catch(err => console.log(err));
+	},  
     addFollow() {
       console.log(this.studentId);
       wx.navigateTo({

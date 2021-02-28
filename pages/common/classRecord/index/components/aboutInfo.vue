@@ -28,20 +28,20 @@
       <!--内容区域-->
       <view class="cu-form-group cu-bar bg-white">
         <view class="title">选择课程</view>
-        <picker @change="bindGradeChange($event, gradeArray)" :value="gradeIndex" :range="gradeArray" range-key="label">
-          <view class="picker">{{gradeArray[gradeIndex].label}}</view>
+        <picker @change="bindGradeChange($event, gradeArray)" :value="gradeIndex" :range="gradeArray" range-key="title">
+          <view class="picker">{{ gradeArray[gradeIndex].title }}</view>
         </picker>
       </view>
       <view class="cu-form-group cu-bar bg-white">
         <view class="title">选择班级</view>
-        <picker @change="bindClassChange($event, classArray)" :value="classIndex" :range="classArray" range-key="label">
-          <view class="picker">{{classArray[classIndex].label}}</view>
+        <picker @change="bindClassChange($event, classArray)" :value="classIndex" :range="classArray" range-key="name">
+          <view class="picker">{{ classArray[classIndex].name }}</view>
         </picker>
       </view>
       <view class="cu-form-group cu-bar bg-white">
         <view class="title">选择老师</view>
-        <picker @change="bindTeacherChange($event, teacherArray)" :value="teacherIndex" :range="teacherArray" range-key="label">
-          <view class="picker">{{teacherArray[teacherIndex].label}}</view>
+        <picker @change="bindTeacherChange($event, teacherArray)" :value="teacherIndex" :range="teacherArray" range-key="name">
+          <view class="picker">{{ teacherArray[teacherIndex].name }}</view>
         </picker>
       </view>
       <!--底部区域-->
@@ -52,7 +52,7 @@
     </uni-drawer>
     <!--列表-->
     <block v-if="list.length > 0">
-      <view  v-for="item in list" :key="item.id" @click="goNamePage(item.id)">
+      <view  v-for="(item, index) in list" :key="index" @click="goNamePage(item.id)">
         <view class="margin-top bg-white cu-bar  solid-bottom">
           <view class="action flex-due margin-top margin-bottom">
             <view class="margin-bottom-sm">
@@ -86,7 +86,7 @@
     </block>
     <block v-else>
       <view
-          class="cu-form-group cu-bar bg-white flex justify-center align-center">
+          class=" margin-top cu-form-group cu-bar bg-white flex justify-center align-center">
         <view class="title">暂无数据</view>
       </view>
     </block>
@@ -95,96 +95,49 @@
 
 <script>
 import {getDate} from "../../../../../utils";
-
+import {
+  failTip
+} from '../../../../../utils/tip.js';
+import {
+  getAboutList,
+  setTime
+} from '../../../../../api/common/classRecord.js';
+import {
+  getClassSelect,
+  getCourseSelect,
+  getTeacherSelect
+} from "../../../../../api/select";
 export default {
   data() {
     const currentStartDate = getDate({format: true})
     const currentEndDate = getDate({format: true})
     return {
-      searchInput: '',
+      params: {
+        pi: 1,
+        ps: 20
+      },
+      total: null,
       startDate: currentStartDate,
       endDate: currentEndDate,
       // 选择班级
       classIndex: 0,
-      classArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
+      classArray: [{
+        id: '',
+        name: '所有班级'
+      }],
       // 选择课程
       gradeIndex: 0,
-      gradeArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
+      gradeArray: [{
+        id: '',
+        title: '所有课程'
+      }],
       // 选择老师
       teacherIndex: 0,
-      teacherArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
-      form: {},
-      list: [
-        {
-          id: 1,
-          name: '谢老师',
-          date: '2020-12-12 星期四',
-          className: '测试数据',
-          time: '16:00-17:00',
-          classTime: 1,
-          number: '3/10',
-          scope: '4/5'
-        },
-        {
-          id: 2,
-          name: '谢老师',
-          date: '2020-12-12 星期四',
-          className: '测试数据',
-          time: '16:00-17:00',
-          classTime: 2,
-          number: '3/10',
-          scope: '4/5'
-        },
-        {
-          id: 3,
-          name: '谢老师',
-          className: '测试数据',
-          date: '2020-12-12 星期四',
-          time: '16:00-17:00',
-          classTime: 3,
-          number: '3/10',
-          scope: '4/5'
-        }
-      ]
+      teacherArray: [{
+        id: '',
+        name: '所有老师'
+      }],
+      list: []
     }
   },
   computed: {
@@ -201,43 +154,103 @@ export default {
       return getDate('end');
     },
   },
-  onLoad() {
+  mounted() {
+    let that = this;
+    that.getData(that.params);
+    that.getClass();
+    that.getGrade();
+    that.getTeacher();
+    uni.$on('onShow', (e) => {
+      that.params['ps'] = 20;
+      that.getData(that.params)
+    })
+    uni.$on('onReachBottom', function(data) {
+      if (that.params.ps > that.total) {
+        uni.showToast({
+          icon: 'none',
+          title: '已经没有更多数据啦'
+        })
+        return;
+      } else {
+        that.getData({
+          ...that.params,
+          ps: that.params.ps += 20
+        })
+      }
+    });
   },
   methods: {
+    getData(params) {
+      getAboutList(params)
+          .then(res => {
+            this.total = res.data.data.page.total;
+            this.list = res.data.data.list;
+            console.log(this.list);
+          }).catch(err => console.log(err));
+    },
     // 筛选区域
     // 选择班级
+    getClass() {
+      getClassSelect()
+          .then(res => {
+            this.classArray = this.classArray.concat(res.data.data.list);
+          }).catch(err => console.log(err));
+    },
     bindClassChange(e, data) {
-      const {value} = e.detail;
+      const {
+        value
+      } = e.detail;
       this.classIndex = value;
-      this.form.class = data[this.classIndex].id;
+      this.params.classid = data[this.classIndex].id;
     },
     // 选择课程
+    getGrade() {
+      getCourseSelect()
+          .then(res => {
+            this.gradeArray = this.gradeArray.concat(res.data.data);
+          }).catch(err => console.log(err));
+    },
     bindGradeChange(e, data) {
-      const {value} = e.detail;
+      const {
+        value
+      } = e.detail;
       this.gradeIndex = value;
-      this.form.grade = data[this.gradeIndex].id;
+      this.params.courseid = data[this.gradeIndex].id;
     },
-    // 选择课程
+    // 选择老师
+    getTeacher() {
+      getTeacherSelect()
+          .then(res => {
+            this.teacherArray = this.teacherArray.concat(res.data.data);
+          }).catch(err => console.log(err));
+    },
     bindTeacherChange(e, data) {
-      const {value} = e.detail;
+      const {
+        value
+      } = e.detail;
       this.teacherIndex = value;
-      this.form.teacher = data[this.teacherIndex].id;
+      this.params.teacherid = data[this.teacherIndex].id;
     },
     // 开始时间
     bindStartDateChange(e) {
       this.startDate = e.target.value;
-      this.form.startTime = e.target.value;
+      this.params.btime = e.target.value;
     },
     // 结束时间
     bindEndDateChange(e) {
       this.endDate = e.target.value;
-      this.form.endTime = e.target.value;
+      this.params.etime = e.target.value;
+      this.getData(this.params);
     },
     showDrawer() {
       this.$refs['drawer'].open();
     },
     closeDrawer() {
       this.$refs['drawer'].close();
+    },
+    searchData() {
+      this.closeDrawer();
+      this.getData(this.params);
     },
     goNamePage(id) {
       wx.navigateTo({

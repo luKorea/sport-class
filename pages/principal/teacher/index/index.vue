@@ -119,18 +119,34 @@ export default {
       form: {},
       params: {
         pi: 1,
-        ps: 1000,
-      }
+        ps: 20,
+      },
+	  total: 0
     }
   },
   onShow() {
     this.getTeacherData(this.params);
+  },
+  onReachBottom(e) {
+  	if (this.params.ps > this.total) {
+  		uni.showToast({
+  			icon: 'none',
+  			title: '已经没有更多数据啦'
+  		})
+  		return;
+  	} else {
+  		this.getTeacherData({
+  			...this.params,
+  			ps: this.params.ps += 20
+  		})
+  	}
   },
   methods: {
     getTeacherData(params){
       getTeacherList(params)
       .then(res => {
         if (res.data.code === 0) {
+		  this.total = res.data.data.page.total;
           this.list = res.data.data.list;
           console.log(this.list);
         } else {

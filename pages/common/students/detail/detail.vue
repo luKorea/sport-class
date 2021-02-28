@@ -11,19 +11,19 @@
     </view>
     <!--基础资料-->
     <view id="tab1" class="margin-top-sm" :class="tab1">
-      <basic-component />
+      <basic-component :studentId='studentId' />
     </view>
     <!--报读班级-->
     <view id="tab2" class="margin-top-sm" :class="tab2">
-      <report-component  />
+      <report-component :studentId='studentId'  />
     </view>
     <!--报名记录-->
     <view id="tab3" class="margin-top-sm" :class="tab3">
-      <recording-component />
+      <recording-component :studentId='studentId' />
     </view>
     <!--跟进记录-->
     <view id="tab4" class="margin-top-sm" :class="tab4">
-      <follow-component :student-id="studentId" />
+      <follow-component :studentId='studentId' />
     </view>
   </view>
 </template>
@@ -53,9 +53,17 @@ export default {
   },
   onLoad(options) {
     let {id} = options;
-    this.studentId = String(id);
-    console.log(this.studentId);
+    this.studentId = Number(id);
+    console.log(typeof this.studentId);
   },
+  onShow() {
+  	uni.$emit('onShow')
+  },
+  onReachBottom() {
+  	uni.$emit('onReachBottom');
+  },
+  
+  
   methods: {
     setCurrentTab(index) {
       if (this.currentTab === index) return;

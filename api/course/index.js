@@ -12,5 +12,9 @@ export default{
     //课程列表
     coursebaselist(data){
       return axios({ url: '/course/coursebaselist', method: "post", data })
+    },
+    //添加、编辑课程
+    operatorcoursepack(data){
+      return axios({ url: '/course/operatorcoursepack', method: "post", data })
     }
 }

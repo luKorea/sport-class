@@ -162,14 +162,14 @@ export default{
     },
     toUpload(){
       const that = this;
-      wx.chooseImage({
+      uni.chooseImage({
         count: 6, //默认9
         sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album','camera'], //从相册选择
         success: (res) => {
           console.log(res);
           // this.info.image = res.tempFilePaths[0];
-          wx.uploadFile({
+          uni.uploadFile({
             url: that.$upload + '/d/m/file/upload?type=17',
             filePath: res.tempFilePaths[0],
             name: 'file',

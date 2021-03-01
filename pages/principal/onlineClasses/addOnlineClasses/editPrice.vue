@@ -17,7 +17,7 @@
     <view class="cu-form-group margin-top cu-bar bg-white">
       <view class="title">收费方式</view>
       <picker @change="bindChargeChange($event, chargeArray)" :value="chargeIndex" :range="chargeArray">
-        <view class="picker"><text class="color-gray" v-if="chargeIndex<0">请选择</text><text v-else>{{chargeArray[chargeIndex]}}</text></view>
+        <view class="picker"><text class="color-gray" v-if="chargeIndex<0">请选择</text><text v-else>{{chargeArray[chargeIndex].label}}</text></view>
       </picker>
     </view>
     <view class="cu-bar bg-white margin-top" v-if="chargeIndex==0">
@@ -103,7 +103,7 @@ export default{
         type: 1,//int 类型（0=未定义、1=课程、2=课程促销套餐<暂未使用>、3=套餐）
         relate: "",//int 引用id
         name: "",//string notnull length<32 标题
-        rule: "",//具体查看 Promotion.Rule,3=按次数,8=按期限 
+        rule: 3,//具体查看 Promotion.Rule,3=按次数,5=按期限 
         duration: "",//时长
         time: "",//int 时长（可用天数）
         count: "",//int 次数（课程表示对应的课节数量，其他类型暂时没有用到）
@@ -117,14 +117,16 @@ export default{
         bestow: "",//double 赠送课时
         classid: "",//int 班级id
         flags: 0,//int 标记 coursesell.flags
-        limit: ""//int  购买限制（总购买次数，0表示无限制）
+        limit: "",//int  购买限制（总购买次数，0表示无限制）
+        raterrule: 1,//1:按金额，2:按折扣
+        timerule: 1,//有效期方式 1:按固定天数，2：固定日期
       },
       result:{
         classname:'',
         courseid:''
       },
       chargeIndex: 0,
-      chargeArray:['按课时','按期限'],
+      chargeArray:[{label:'按课时',value: 3},{label:'按期限',value: 5}],
       periodIndex: 0,
       periodArray:['固定天数','固定日期'],
       discountIndex: 0,//优惠方式
@@ -153,7 +155,10 @@ export default{
     }
   },
   onLoad(options){
-    this.result.courseid = options.courseid
+    this.result.courseid = options.courseid;
+    if(options.data){
+      this.form = JSON.parse(options.data)
+    }
   },
   methods:{
     toSelectClass(){
@@ -173,11 +178,13 @@ export default{
     bindChargeChange(e, data) {
       const {value} = e.detail;
       this.chargeIndex = value;
+      this.form.rule = data[value].value
     },
     // 选择有效期方式
     bindPeriodChange(e, data) {
       const {value} = e.detail;
       this.periodIndex = value;
+      this.form.timerule = value+1;
     },
     // 选择开始时间
     bindSDateChange(e) {
@@ -192,6 +199,7 @@ export default{
       this.discountIndex = val;
       this.form.rate = 100;
       this.form.discount = 0;
+      this.form.raterrule = val+1;
     },
     confirm(){
       if(!this.form.name){

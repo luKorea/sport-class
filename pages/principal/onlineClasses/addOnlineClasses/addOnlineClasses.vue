@@ -7,7 +7,7 @@
         <view class="grid col-1 grid-square flex-sub"
               style="flex-direction: row-reverse;">
           <view class="bg-img" v-if="form.cover !== ''">
-            <image :src='form.cover' mode='aspectFill'></image>
+            <image :src='baseUrl + form.cover' mode='aspectFill'></image>
             <view class="cu-tag bg-red" @click="DelImg">
               <text class="cuIcon-close"></text>
             </view>
@@ -89,7 +89,8 @@
     <view class="cu-bar bg-white margin-top" @click="toPrice">
       <view class="action">报名费用</view>
       <view class="action">
-        <text class="text-gray text-sm">请选择</text>
+        <text class="text-sm" v-if="result.selldata.length">已选择</text>
+        <text class="text-gray text-sm" v-else>请选择</text>
         <text class="text-gray cuIcon-right"></text>
       </view>
     </view>
@@ -97,7 +98,7 @@
     <view class="cu-bar margin-top bg-white">
       <view class="action">是否线上展示</view>
       <view class="action">
-        <switch @change="bindSwitch"/>
+        <switch checked @change="bindSwitch"/>
       </view>
     </view>
 
@@ -149,6 +150,7 @@ export default {
       format: true
     })
     return {
+      baseUrl: this.$uploadUrl,
       showClassModal: false,
       showGradeModal: false,
       // 学校
@@ -163,7 +165,7 @@ export default {
         schoolid: '',//int notnull 上课点id
         classid: '',//int notnull 班级id
         type: 1,//int 类型（0=未定义、1=课程、2=课程促销套餐<暂未使用>、3=套餐）目前仅支持1,3
-        relate: '',//int 引用id
+        relate: '',//int 引用id,此处对照pc为courseid
         cover: '',//string length<64 课程图片
         title: '',//string notnull length<128 课程标题
         explain: '',//string notnull 课程详情
@@ -172,12 +174,12 @@ export default {
         begintime: '',//string notnull 开始时间
         endtime: currentDate,//string notnull 结束时间
         link: '',//string length<256 链接
-        enable: '',//bool 启用状态
-        rank: '',//double 排序(降序)
-        flags: '',//int 标记2048=私人定制(不展示)
-        numberofvirtual: '',//int 虚拟报名人数
+        enable: true,//bool 启用状态
+        rank: 0,//double 排序(降序)
+        flags: 0,//int 标记2048=私人定制(不展示)
+        numberofvirtual: 0,//int 虚拟报名人数
         agreementids: '',//string 协议id,多个以','隔开
-        selldata: [],//string 价格列表json
+        selldata: '',//string 价格列表json
 
       }
     }
@@ -190,16 +192,28 @@ export default {
       return getDate('end');
     }
   },
-  onLoad() {
-    this.form['schoolid'] = wx.getStorageSync('venueid');
+  onLoad(options) {
+    if(options.data){
+      var data = JSON.parse(decodeURIComponent(options.data));
+      for(let i in this.form){
+        if(typeof data[i] !=='undefined'){
+          this.form[i] = data[i]
+        }
+      }
+    }else{
+      this.form['schoolid'] = wx.getStorageSync('venueid');
+    }
     this.getSchoolList();
     this.getCourseList();
   },
   methods: {
     toSelectClass(){
+      if(!this.result.course.id){
+        return uni.showToast({ title:'请先选择课程',icon: 'none' })
+      }
       const url ='/pages/common/record/addRecord/selectClass'
       uni.navigateTo({
-        url: url+'?data='+this.form.classid+'&single=1'
+        url: url+'?data='+this.form.classid+'&single=1&params='+JSON.stringify({courseid:this.result.course.id})
       })
     },
     toPrice(){
@@ -208,16 +222,17 @@ export default {
       }
       const url ='./selectPrice'
       uni.navigateTo({
-        url: url+'?courseid='+this.result.course.id+'&selldata='+JSON.stringify(this.form.selldata)
+        url: url+'?courseid='+this.result.course.id+'&selldata='+JSON.stringify(this.result.selldata)
       })
     },
     setData(data){
       if(data.classList){
         this.form.classid = data.classList[0].id;
         this.result.classname = data.classList[0].name;
+        
       }
       if(data.selldata){
-        this.form.selldata = data.selldata;
+        this.result.selldata = data.selldata;
       }
       
     },
@@ -242,17 +257,41 @@ export default {
     },
     chooseGradeItem(e) {
       let {value} = e.detail;
-      this.result.course = this.gradeArray.find(a=>a.id==value);
+      const data = this.gradeArray.find(a=>a.id==value);
+      //切换了课程后，需要清空班级
+      if(this.result.course.id != data.id){
+        this.form.classid='';
+        this.result.classname=''
+      }
+      this.result.course = data;
+      this.form.relate = this.result.course?.id;
     },
     // 上传图片
     ChooseImage() {
-      wx.chooseImage({
-        count: 9, //默认9
+      var that = this;
+      uni.chooseImage({
+        count: 6, //默认9
         sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-        sourceType: ['album'], //从相册选择
+        sourceType: ['album','camera'], //从相册选择
         success: (res) => {
-          this.result.imgList = res.tempFilePaths[0];
-          console.log(this.result.imgList);
+          console.log(res);
+          // this.info.image = res.tempFilePaths[0];
+          uni.uploadFile({
+            url: that.$upload + '/d/m/file/upload?type=17',
+            filePath: res.tempFilePaths[0],
+            name: 'file',
+            header: { 'Content-Type': 'multipart/form-data' },
+            success(res) {
+              let data = JSON.parse(res.data);
+              if(data.code!=0){
+                return uni.showToast({ title: data.data.message || '上传失败', icon: 'none' })
+              }
+              that.form.cover= data.data.path + data.data.name
+            },
+            fail(err){
+              console.log('err',err)
+            }
+          })
         }
       });
     },
@@ -270,8 +309,6 @@ export default {
       const {value} = e.detail;
       this.schoolIndex = value;
       this.result.school = data[this.schoolIndex].name;
-      // this.form.schoolIndex = data[this.schoolIndex].id;
-      // this.form.school = data[this.schoolIndex].label;
     },
     // 选择出生日期
     bindDateChange(e) {
@@ -286,6 +323,35 @@ export default {
     // 保存数据
     sendData() {
       console.log(this.form);
+      if(!this.form.title){
+        return uni.showToast({ title:'请输入课程名称',icon: 'none' })
+      }
+      if(!this.form.relate){
+        return uni.showToast({ title:'请选择课程',icon: 'none' })
+      }
+      if(!this.form.telephone){
+        return uni.showToast({ title:'请输入联系电话',icon: 'none' })
+      }
+      if(!this.form.explain){
+        return uni.showToast({ title:'请输入课程介绍',icon: 'none' })
+      }
+      if(!this.result.selldata.length){
+        return uni.showToast({ title:'请选择报名费用',icon: 'none' })
+      }
+      this.form.selldata = JSON.stringify(this.result.selldata);
+      this.$api.course.operatorcoursepack(this.form).then(res=>{
+        if(res.data.data.errcode==200){
+          uni.showToast({ title:"保存成功" });
+          setTimeout(()=>{
+            uni.navigateBack();
+          },1000)
+        }else{
+          uni.showToast({
+            title: res.data.data.errmsg || "保存失败，请稍后重试",
+            icon: 'none'
+          })
+        }
+      })
     }
   },
 }

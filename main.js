@@ -48,7 +48,10 @@ function formatDate(date, fmt) {
 Vue.filter("FormatDate", function(date, fmt) {
     return formatDate(date, fmt);
 });
-
+import * as filters from './utils/filters';
+Object.keys(filters).forEach(key => {
+    Vue.filter(key, filters[key])
+})
 const app = new Vue({
     ...App
 })

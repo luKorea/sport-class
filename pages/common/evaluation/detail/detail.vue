@@ -100,6 +100,7 @@
 		},
 		data() {
 			return {
+				id: null,
 				imgUrl: this.$uploadUrl,
 				showModal: false,
 				info: {},
@@ -116,18 +117,19 @@
 			let res = JSON.parse(data);
 			console.log(res);
 			this.info = res;
+			this.id = res.lessonrecordofstudentid;
 			this.info['content'] = '';
-			// this.getDetailData(res.lessonrecordofstudentid);
+			this.getDetailData(this.id);
 		},
 		onShow() {
 			this.getComment();
 		},
 		methods: {
-			// getDetailData(id) {
-			// 	getEvaluationDetail(id)
-			// 		.then(res => console.log(res))
-			// 		.catch(err => console.log(err))
-			// },
+			getDetailData(id) {
+				getEvaluationDetail(id)
+					.then(res => this.info['award'] = res.data.data.info.award)
+					.catch(err => console.log(err))
+			},
 			// 获取评语列表
 			getComment() {
 				getCommentaryList()
@@ -186,7 +188,7 @@
 				}).then(res => {
 					if (res.data.data.errcode === 200) {
 						this.hideModal();
-						wx.navigateBack();
+						this.getDetailData(this.id);
 					} else {
 						failTip(res.data.data.errmsg);
 					}

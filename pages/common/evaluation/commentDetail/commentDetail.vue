@@ -112,6 +112,7 @@
 			getDetailData(id) {
 				getEvaluationDetail(id)
 					.then(res => {
+						this.info['award'] = res.data.data.info.award;
 						let data = res.data.data.list,
 						imgArr = [];
 						data.forEach(item => {
@@ -140,7 +141,7 @@
 				}).then(res => {
 					if (res.data.data.errcode === 200) {
 						this.hideModal();
-						wx.navigateBack();
+						this.getDetailData(this.id);
 					} else {
 						failTip(res.data.data.errmsg);
 					}

@@ -76,21 +76,26 @@ export default {
       this.info.kind = data[this.kindIndex].value;
     },
     saveData() {
-      addOrEditCharges(this.info)
-      .then(res => {
-        if (res.data.data.errcode === 200) {
-          wx.navigateBack();
-        } else {
-          failTip(res.data.data.errmsg)
+      this.$api.commodity.operatorcommodity(this.info).then(res=>{
+        if(res.data.data.errcode==200){
+          uni.showToast({ title:"保存成功" });
+          setTimeout(()=>{
+            uni.navigateBack();
+          },1000)
+        }else{
+          uni.showToast({
+            title: res.data.data.errmsg || "保存失败，请稍后重试",
+            icon: 'none'
+          })
         }
-      }).catch(err => {
-        console.log(err)
       })
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+page{
+  background-color: $uni-bg-color-grey;
+}
 </style>

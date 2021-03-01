@@ -1,5 +1,5 @@
 <template>
-  <view style="padding-bottom: 100rpx">
+  <view>
     <view class="margin">
       <!--搜索区域-->
       <view class="cu-bar search bg-white">
@@ -62,14 +62,15 @@
       <view class="cu-list menu-avatar margin-top">
         <block v-if="list.length > 0">
           <view class="cu-item solid-bottom margin-bottom" v-for="item in list"
-                :key="item.id" @click="goDetail(item)" style="z-index: -999">
+                :key="item.id" @click="goDetail(item)">
             <view class="cu-avatar round lg"
-                  :style="{backgroundImage: `url(${item.imgList})`}"
-                  style="border-radius: 50%"></view>
+                  :style="{backgroundImage: `url(${item.avatar && (baseUrl+item.avatar) || ''})`}"
+                  style="border-radius: 50%"><i class="cuIcon-my" v-if="!item.avatar"></i></view>
             <view class="content">
-              <view class="">{{ item.studentsName }}</view>
+              <view class="">{{ item.name }}<i class="cuIcon-male color-male" v-if="item.gender==1"></i><i class="cuIcon-female  color-female" v-else></i></view>
               <view class="text-gray text-sm flex">
-                <text class="text-cut">{{ item.content }}</text>
+                <text class="text-cut" v-if="item.salefollowuserid">跟进人：{{ item.salename }}</text>
+                <text class="text-cut" v-if="!item.salefollowuserid">待分配跟进人</text>
               </view>
             </view>
             <view class="action">
@@ -81,13 +82,6 @@
 
     </view>
 
-    <view class="fixed-right" @click="goSalesAllocation">
-      <view class="text-sm">销售分配</view>
-    </view>
-
-    <view class="drawer-footer" @click="addStudents">
-      <button class="add-btn">添加</button>
-    </view>
 
   </view>
 </template>
@@ -95,60 +89,15 @@
 <script>
 export default {
   name: "potentialStudent",
+  props:{
+    list:{
+      type: Array,
+      default(){return []}
+    }
+  },
   data() {
     return {
-      list: [
-        {
-          id: 1,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: '待跟进'
-        },
-        {
-          id: 2,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: ''
-        },
-        {
-          id: 3,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: '待跟进'
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: ''
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: '待跟进'
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: '待跟进'
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: ''
-        }
-
-      ],
+      baseUrl: this.$uploadUrl,
       searchGradeInput: '',
       // 选择课程
       classIndex: 0,
@@ -273,20 +222,9 @@ export default {
       this.labelIndex = value;
       this.form.label = data[this.labelIndex].id;
     },
-    addStudents() {
-      console.log(1);
-      wx.navigateTo({
-        url: '../addStudents/addStudents'
-      })
-    },
-    goSalesAllocation() {
-      wx.navigateTo({
-        url: '../salesAllocation/salesAllocation'
-      })
-    },
     goDetail(data) {
       wx.navigateTo({
-        url: `../detail/detail?id=${item.id}`
+        url: `../detail/detail?id=${data.id}`
       })
     }
   }
@@ -294,20 +232,11 @@ export default {
 </script>
 
 <style scoped>
-.fixed-right {
-  position: fixed;
-  right: 30rpx;
-  bottom: 150rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  //z-index: 999;
-  text-align: center;
-  width: 120rpx;
-  height: 120rpx;
-  color: #ffffff;
-  background: #52CDC0;
-  border-radius: 50%;
+
+.color-male{
+  color: #00B7EE;
+}
+.color-female{
+  color: #DD524D;
 }
 </style>

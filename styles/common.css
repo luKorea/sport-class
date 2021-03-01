@@ -159,3 +159,15 @@
     justify-content: center;
     align-items: center;
 }
+/*重置checkbox*/
+uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked{
+  color: $uni-color-base!important;
+  border: 1px solid $uni-color-base;
+}
+  
+uni-radio::before, uni-checkbox::before{
+  display: none;
+}
+.input-placeholder{
+  color:#bbb;
+}

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App'
-
+import api from './api'
 Vue.config.productionTip = false
 
 App.mpType = 'app'
@@ -9,6 +9,18 @@ Vue.prototype.$imageurl = "https://yundongke.gzbigbang.cn/"
 Vue.prototype.image = "https://yundongke.gzbigbang.cn"
 Vue.prototype.$uploadUrl = 'https://i.huatisport.com';
 Vue.prototype.$upload = 'https://d.huatisport.com';
+Vue.prototype.$imageprefix = "https://b.huatisport.com/static/img"
+Vue.prototype.$api = api;
+Vue.prototype.prePage = ()=>{
+	let pages = getCurrentPages();
+	let prePage = pages[pages.length - 2];
+	// #ifdef H5
+	return prePage;
+	// #endif
+	return prePage.$vm;
+}
+
+
 
 // main.js
 function formatDate(date, fmt) {

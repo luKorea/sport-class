@@ -71,7 +71,7 @@ export default {
           rate: 11.19
         }
       ],
-      navTab: ['授课授时', '课消金额', '出勤统计'],
+      navTab: ['授课授时22', '课消金额', '出勤统计'],
       currentTab: 0,
       tab1: 'tabshow',
       tab2: 'tabhide',

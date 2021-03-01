@@ -57,7 +57,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx658425d9324f22ac",
+        "appid" : "wx757f411de1c7078c",
         "setting" : {
             "urlCheck" : true,
             "minified" : false
@@ -75,5 +75,21 @@
     },
     "uniStatistics" : {
         "enable" : false
+    },
+    "h5": {
+        "devServer": {  
+            "port": 8080,  
+            "disableHostCheck": true,  
+            "proxy": {
+                "/v1": {  
+                    "target": "https://s1.huatisport.com",  //请求的目标域名
+                    "changeOrigin": true,   
+                    "secure": false
+                    // "pathRewrite": {  //使用代理； 告诉他你这个连接要用代理
+                    //     "^/v1": "/"  
+                    // }
+                }  
+            }  
+        }  
     }
 }

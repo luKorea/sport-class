@@ -19,12 +19,12 @@
     </view>
     <view class="cu-bar bg-white margin-top">
       <view class="action">库存</view>
-      <view class="action">{{ info.count }}</view>
+      <view class="action">{{ info.inbound - info.outbound }}</view>
     </view>
     <view class="cu-bar bg-white margin-top">
       <view class="action">库存预警值</view>
       <view class="action text-right">
-        <input v-model="info.setInventory" placeholder="请填写库存预警值"/>
+        <input v-model="info.inventorywarning" placeholder="请填写库存预警值"/>
       </view>
     </view>
     <view class="cu-bar bg-white margin-top">
@@ -56,19 +56,19 @@ export default {
   name: "detail",
   data() {
     return {
-      info: {}
+      info: {},
     }
   },
   onLoad(options) {
     let {id} = options;
-    this.getDetailData(id);
+    this.info.id = id;
+    this.getData();
   },
   methods: {
-    getDetailData(id) {
-      getChargesDetail(id)
-          .then(res => {
-            this.info = res.data.data.info;
-          }).catch(err => console.log(err))
+    getData(){
+      this.$api.commodity.commodityinfo({commodityid: this.info.id}).then(res=>{
+        this.info = res.data.data.info;
+      })
     },
     setStatus(e) {
       let {value} = e.detail;
@@ -76,15 +76,18 @@ export default {
       console.log(this.info.status);
     },
     saveData() {
-      addOrEditCharges(this.info)
-          .then(res => {
-            if (res.data.data.errcode === 200) {
-              wx.navigateBack();
-            } else {
-              failTip(res.data.data.errmsg)
-            }
-          }).catch(err => {
-        console.log(err)
+      this.$api.commodity.operatorcommodity(this.info).then(res=>{
+        if(res.data.data.errcode==200){
+          uni.showToast({ title:"保存成功" });
+          setTimeout(()=>{
+            uni.navigateBack();
+          },1000)
+        }else{
+          uni.showToast({
+            title: res.data.data.errmsg || "保存失败，请稍后重试",
+            icon: 'none'
+          })
+        }
       })
     },
     removeData() {
@@ -95,10 +98,10 @@ export default {
         confirmText: '删除',
         success: function success(res) {
           if (res.confirm) {
-            removeCharges(that.info.id)
+            that.$api.commodity.deletecommodity(that.info.id)
                 .then(res => {
                   if (res.data.data.errcode === 200) {
-                    wx.navigateBack();
+                    uni.navigateBack();
                   } else {
                     failTip(res.data.data.errmsg)
                   }
@@ -113,6 +116,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+page{
+  background-color: $uni-bg-color-grey;
+}
 </style>

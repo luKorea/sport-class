@@ -18,7 +18,7 @@
         <text>报名用户数</text>
       </view>
       <view class="action">
-        <text class="text-red">线上课程{{info.user}}次</text>
+        <text class="text-red">线上课程{{info.c3}}次</text>
       </view>
     </view>
     <view class="cu-bar margin bg-white">
@@ -27,7 +27,7 @@
         <text>浏览量</text>
       </view>
       <view class="action">
-        <text class="text-orange">线上课程{{info.user}}次</text>
+        <text class="text-orange">线上课程{{info.c1}}次</text>
       </view>
     </view>
     <view class="cu-bar margin bg-white">
@@ -36,7 +36,7 @@
         <text>分享次数</text>
       </view>
       <view class="action">
-        <text class="text-cyan">线上课程{{info.user}}次</text>
+        <text class="text-cyan">线上课程{{info.c2}}次</text>
       </view>
     </view>
     
@@ -121,11 +121,14 @@ export default {
         }
       ],
       info: {
-        user: 25,
-        visit: 25,
-        share: 25
+        c1: 0,//浏览数
+        c2: 0,//分享次数
+        c3: 0//订单数
       }
     }
+  },
+  onLoad() {
+    this.getSummary()
   },
   methods: {
     goPage(url) {
@@ -133,19 +136,27 @@ export default {
         url: url
       })
     },
-	onShow() {
-		wx.hideHomeButton();  
-	},
+    onShow() {
+      wx.hideHomeButton();  
+    },
     goItem(url) {
       wx.redirectTo({
         url: url
+      })
+    },
+    getSummary(){
+      this.$api.businessstatistics.summary().then(res=>{
+        this.info = res.data.data.csummary[0]
       })
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  page{
+    background-color: $uni-bg-color-grey;
+  }
 .footer {
   position: fixed;
   bottom: 0;

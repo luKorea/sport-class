@@ -1,6 +1,6 @@
 <template>
   <view class="micro-container">
-    <img :src="info.imgUrl" alt="" class="img">
+    <image :src="baseUrl + image" alt="" class="img" mode="widthFix"></image>
   </view>
 </template>
 
@@ -9,23 +9,25 @@ export default {
 name: "detail",
   data() {
     return {
-      info: {
-        imgUrl: this.$imageurl + 'wei_detail.png'
-      }
+      baseUrl: this.$imageprefix,
+      image: ''
     }
   },
+  onLoad(options){
+    this.image = options.image.replace('micro_activity','micro_activitytwo');
+  }
 }
 </script>
 
 <style scoped>
+  page{
+  }
 .micro-container {
   width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 .img {
   width: 100%;
-  height: 100vh;
   overflow: hidden;
 }
 </style>

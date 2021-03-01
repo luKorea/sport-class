@@ -75,27 +75,24 @@
                 <label class="flex justify-between align-center flex-sub">
                   <view class="padding-top padding-bottom padding-right">
                     <view class="cu-avatar round lg"
-                          :style="{backgroundImage: `url(${item.imgList})`}"
-                          style="border-radius: 50%"></view>
+                          :style="{backgroundImage: `url(${item.avatar && (baseUrl+item.avatar) || ''})`}"
+                          style="border-radius: 50%"><i class="cuIcon-my" v-if="!item.avatar"></i></view>
                   </view>
                   <view class="flex-sub padding-top padding-bottom">
-                    <view class="padding-bottom-sm">{{
-                        item.studentsName
-                      }}
-                    </view>
+                    <view class="padding-bottom-sm">{{item.name}}<i class="cuIcon-male color-male" v-if="item.gender==1"></i><i class="cuIcon-female  color-female" v-else></i></view>
                     <view class="text-gray text-sm flex">
-                      <text class="text-cut">{{ item.content }}</text>
+                      <text class="text-cut" v-if="item.salefollowuserid">跟进人：{{ item.salename }}</text>
+                      <text class="text-cut" v-if="!item.salefollowuserid">待分配跟进人</text>
                     </view>
                   </view>
-                  <checkbox :value="Number(item.id)" :checked="item.checked"
-                            class="round"></checkbox>
+                  <checkbox :value="item.id+''" :checked="item.checked" class="round"></checkbox>
                 </label>
               </view>
             </view>
           </checkbox-group>
         </block>
       </view>
-
+      <uni-load-more :status="loadingType"></uni-load-more>
     </view>
     <view class="drawer-footer">
       <button class="cu-btn lg bg-white" style="width: 30%" @click="changeAll">
@@ -110,12 +107,13 @@
       <view class="cu-dialog">
         <radio-group class="block" @change="chooseSaleItem">
           <view class="cu-list menu text-left">
-            <view class="cu-item" v-for="item in saleArray" :key="item.id">
+            <view class="cu-item" v-for="item in saleArray" :key="item.userid">
               <label class="flex justify-between align-center flex-sub">
                 <view class="flex-sub">
                   <text class="margin-right">{{ item.name }}</text>
+                  <text class="color-gray">{{item.contact}}</text>
                 </view>
-                <radio class="round" :value="item.name"></radio>
+                <radio class="round" :value="item.userid+''"></radio>
               </label>
             </view>
           </view>
@@ -124,7 +122,7 @@
           <view class="action" @click="hideModal">
             <button class="cu-btn bg-white solid-right">取消</button>
           </view>
-          <view class="action" @click="hideModal">
+          <view class="action" @click="confirm">
             <button class="cu-btn bg-white">确定</button>
           </view>
         </view>
@@ -139,84 +137,20 @@ export default {
   name: "potentialStudent",
   data() {
     return {
-      list: [
-        {
-          id: 1,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: '待跟进',
-          checked: false,
-        },
-        {
-          id: 2,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: '',
-          checked: false,
-        },
-        {
-          id: 3,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: '待跟进',
-          checked: false,
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: '',
-          checked: false,
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: '待跟进',
-          checked: false,
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: '待跟进',
-          checked: false,
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          studentsName: '李明远',
-          content: '待分配跟进人',
-          type: '',
-          checked: false,
-        }
-
-      ],
+      baseUrl: this.$uploadUrl,
+      list: [],
+      listQuery:{
+        pi: 0,
+        ps: 20,
+        types: 1
+      },
+      loadingType: 'more',
       check: [],
       checkAll: [],
       searchGradeInput: '',
       showSalesUser: false,
       saleUser: '',
-      saleArray: [
-        {
-          id: 1,
-          name: '洪晓光'
-        },
-        {
-          id: 1,
-          name: '朱正义'
-        },
-        {
-          id: 1,
-          name: '日无长'
-        }
-      ],
+      saleArray: [],
       // 选择课程
       classIndex: 0,
       classArray: [
@@ -299,7 +233,56 @@ export default {
       ],
     }
   },
+  //下拉刷新
+  onPullDownRefresh(){
+  	this.loadData('refresh');
+  },
+  //加载更多
+  onReachBottom(){
+  	this.loadData();
+  },
+  onLoad(options){
+    this.listQuery.types = options.types||''
+    this.loadData();
+    this.getSalesList()
+  },
   methods: {
+    loadData(type='add', loading) {
+      //没有更多直接返回
+      if(type === 'add'){
+        if(this.loadingType === 'nomore'){
+            return;
+        }
+        this.loadingType = 'loading';
+      }else{
+          this.loadingType = 'more'
+      }
+        if(type === 'refresh'){
+          this.listQuery.pi=1
+          this.list = [];
+          this.loadingType = 'loading';
+        }else{
+            this.listQuery.pi++;
+        }
+      //模拟api请求数据
+        this.$api.student.intentstudent(this.listQuery).then((res)=>{
+            this.list = this.list.concat(res.data.data.list);
+            //判断是否还有下一页，有是more  没有是nomore(测试数据判断大于30就没有了)
+            this.loadingType  = this.list.length >= res.data.data.page.total ? 'nomore' : 'more';
+            
+        }).catch(()=>{
+            this.loadingType = 'nomore';
+        }).finally(()=>{
+            if(type === 'refresh'){
+              if(loading == 1){
+                  uni.hideLoading()
+              }else{
+                  uni.stopPullDownRefresh();
+              }
+            }
+        })
+      
+    },
     searchData() {
       console.log(this.form);
     },
@@ -342,7 +325,7 @@ export default {
     },
     changeAll() {
       this.list.map(item => {
-        item.checked = !item.checked;
+        this.$set(item,'checked',!item.checked)
         if (item.checked) {
           this.checkAll = this.checkAll.concat(item.id);
         } else {
@@ -373,14 +356,59 @@ export default {
     hideModal() {
       this.showSalesUser = false;
     },
+    getSalesList(){
+      this.$api.venue.getuserlist({paging: false}).then(res=>{
+        if(res.data.data){
+          this.saleArray = res.data.data;
+        }
+      })
+    },
     chooseSaleItem(e) {
       let {value} = e.detail;
       this.saleUser = value;
+    },
+    confirm(){
+      var postData = {data:JSON.stringify(this.check.map(item=>({studentid:Number(item),userid: Number(this.saleUser),flags: 16})))};
+      this.$api.student.addfollowstaff(postData).then(res=>{
+        if(res.data.data.errcode==200){
+          uni.showToast({ title:"保存成功" });
+          setTimeout(()=>{
+            uni.navigateBack();
+          },1000)
+        }else{
+          uni.showToast({
+            title: res.data.data.errmsg || "保存失败，请稍后重试",
+            icon: 'none'
+          })
+        }
+      }).finally(()=>{
+          this.hideModal();
+      })
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+page{
+  background-color: $uni-bg-color-grey;
+}
+.color-gray{
+  color: #999;
+}
+.color-male{
+  color: #00B7EE;
+}
+.color-female{
+  color: #DD524D;
+}
+/deep/uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked{
+    color: $uni-color-base!important;
+    border: 1px solid $uni-color-base;
+    
+  }
+  
+  /deep/ uni-radio::before, uni-checkbox::before{
+    display: none;
+  }
 </style>

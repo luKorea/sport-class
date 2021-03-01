@@ -53,6 +53,7 @@ export default {
     return {
       imageurl: '',
       userInfo: {},
+      venue:{},
       iconList: [
         {
           img: this.$imageurl + 'banji.png',
@@ -99,9 +100,12 @@ export default {
   },
   onLoad() {
     this.imageurl = this.$imageurl;
-    let userInfo = wx.getStorageSync('userData');
+    let userInfo = uni.getStorageSync('userData');
     console.log(userInfo);
     this.userInfo = userInfo;
+    const venulist = uni.getStorageSync('SET_LIST');
+    this.venue = venulist.find(a=>a.id==userInfo.venueid);
+    this.iconList[2].url+='?teacherid='+this.venue.teacherid
   },
   methods: {
     goPage(url) {

@@ -17,15 +17,15 @@
     <view>
       <block v-if="list.length > 0">
         <view class="margin">
-          <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id" @click="goDetail(item.id)">
+          <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.coursescheduleid" @click="goDetail(item.coursescheduleid)">
             <view class="action flex-common padding-top padding-bottom">
-              <text class="margin-bottom-sm">{{item.time}}</text>
+              <text class="margin-bottom-sm">{{item.btime}}-{{item.etime}}</text>
               <text class="text-gray text-sm margin-bottom-sm">
-                <text class="text-gray text-sm margin-right">班级：{{item.className}}</text>
-                <text class="text-type">{{item.type}}</text>
+                <text class="text-gray text-sm margin-right">班级：{{item.classname}}</text>
+                <text class="text-type">{{item.type==1?'1v1':'1vN'}}</text>
               </text>
-              <text class="margin-bottom-sm text-gray text-sm">学生人数：{{item.studentNumber}}</text>
-              <text class="text-gray text-sm">上课课时：{{item.timeNumber}}</text>
+              <text class="margin-bottom-sm text-gray text-sm">学生人数：{{item.stucount}}</text>
+              <text class="text-gray text-sm">上课课时：  {{item.duration}}</text>
             </view>
             <view class="action">
               <text class="text-type" style="padding: 6rpx 10rpx">点名</text>
@@ -59,7 +59,7 @@
                 <view class="flex-sub">
                   <text class="margin-right">{{ item.name }}</text>
                   <text class="margin-right">{{ item.teacher }}</text>
-                  <text class="margin-right">学生：{{ item.number }}人</text>
+                  <!-- <text class="margin-right">学生：{{ item.number }}人</text> -->
                 </view>
                 <radio class="round" :value="item.id"></radio>
               </label>
@@ -75,116 +75,69 @@
 
 <script>
 import calendar from "../../../../components/tale-calendar/calendar";
-
+import {dateFormat} from '@/utils';
 export default {
   name: "index",
   components: {
     calendar
   },
   data() {
+    var now = new Date()
     return {
       showModal: false,
-      classArray: [
-        {
-          id: 1,
-          name: '高一一班',
-          teacher: '李老师',
-          number: 10,
-          type: '1v1'
-        },
-        {
-          id: 2,
-          name: '高一二班',
-          teacher: '李老师',
-          number: 10,
-          type: '1vN'
-        },
-        {
-          id: 3,
-          name: '高一三班',
-          teacher: '李老师',
-          number: 10,
-          type: '1v1'
-        },
-        {
-          id: 4,
-          name: '高一四班',
-          teacher: '李老师',
-          number: 10,
-          type: '1vN'
-        },
-      ],
+      classArray: [],
       searchInput: '',
       extraData: [],
-      list: [
-        {
-          id: 1,
-          className: '2020通用课程',
-          type: '1v1',
-          studentNumber: '0/2',
-          timeNumber: 1,
-          time: '09:00-10:00'
-        },
-        {
-          id: 2,
-          className: '2020通用课程',
-          type: '1v1',
-          studentNumber: '0/2',
-          timeNumber: 1,
-          time: '09:00-10:00'
-        }, {
-          id: 3,
-          className: '2020通用课程',
-          type: '1v1',
-          studentNumber: '0/2',
-          timeNumber: 1,
-          time: '09:00-10:00'
-        },
-        {
-          id: 4,
-          className: '2020通用课程',
-          type: '1v1',
-          studentNumber: '0/2',
-          timeNumber: 1,
-          time: '09:00-10:00'
-        },
-        {
-          id: 5,
-          className: '2020通用课程',
-          type: '1v1',
-          studentNumber: '0/2',
-          timeNumber: 1,
-          time: '09:00-10:00'
-        }
-      ]
+      listQuery:{classstatus:0,paging:false,btime:'',etime:''},
+      factory:{courseteacher:[],schedulelist:[],teacherlist:[]},
+      lessonlist:[],
+      currentDate:{day: now.getDate(),month: now.getMonth()+1,year: now.getFullYear(),date: dateFormat(now,'yyyy-MM-dd'),week: now.getDay(),timestemp:now.getTime()}
     }
   },
   created() {
-    this.extraData = [
-      {date: '2021-01-18', dot: true},
-      {date: '2021-01-21', dot: true},
-      {date: '2021-01-22', dot: true},
-      {date: '2021-01-1', dot: true},
-      {date: '2021-01-6', dot: true},
-      {date: '2021-01-25', dot: true},
-      {date: '2021-01-9', dot: true},
-      {date: '2021-01-27', dot: true}
-    ];
+    
+  },
+  onLoad() {
+    this.getLessonData();
+    this.getAllData();
+    this.getClassList();
+  },
+  computed:{
+    list(){
+      var weekMap = [1,2,4,8,16,32,64]
+      const courseteachers = this.factory.courseteacher.filter(a=>a.day==weekMap[this.currentDate.week-1]);
+      const result = this.factory.schedulelist.filter(item=>{
+        var pass = courseteachers.some(c=>c.coursescheduleid == item.coursescheduleid);
+        var stime = new Date(item.begintime).getTime(),etime = new Date(item.endtime).getTime()
+        var timepass =  stime > etime || (stime < etime && etime>this.currentDate.timestamp)
+        return pass && timepass;
+      });
+      const lessionresult = this.lessonlist.filter(item=>item.dates==this.currentDate.date);
+      
+      return [...lessionresult,...result];
+    }
   },
   methods: {
     calendarTap(e) {
       console.log(e);
+      const now = new Date()
+      now.setYear(e.year);now.setMonth(e.month);now.setDate(e.day)
+      this.currentDate = {day: now.getDate(),month: now.getMonth()+1,year: now.getFullYear(),date: dateFormat(now,'yyyy-MM-dd'),week: now.getDay(),timestemp: now.getTime()}
+      // console.log('this.currentDate',this.currentDate,now)
     },
     monthTap(val) {
-      console.log(val);
       let {year, month} = val;
       this.month = {
         year: year,
         month: month,
       }
-      console.log(this.extraData);
+      // console.log(this.extraData);
       // 此处获取动态的数据，赋值给extraData
-      this.extraData = this.extraData;
+      // this.extraData = [];
+      this.getLessonData();
+      var startDate = new Date(year, month, 1);
+      var endDate = new Date(year, month+1, 0)
+      this.setDot(startDate,endDate);
     },
     showClassModal() {
       this.showModal = true;
@@ -199,7 +152,6 @@ export default {
         scanType: ['barCode', 'qrCode', 'datamatrix', 'pdf417'],
         success: res => {
           if (res.errMsg === 'scanCode:ok') {
-            console.log(res.result);
             wx.showToast({
               title: '扫码成功'
             })
@@ -223,15 +175,81 @@ export default {
     },
     goClassSchedule(e) {
       let {value} = e.detail;
+      var classItem = this.classArray.find(a=>a.id==value)
       wx.navigateTo({
-        url: `/pages/common/classSchedule/classSchedule?id=${value}`
+        url: `/pages/common/classSchedule/classSchedule?id=${value}&classname=${classItem.name}&date=${this.currentDate.date}`
       })
     },
-    goDetail(id) {
-      wx.navigateTo({
-        url: `/pages/common/namedPage/namedPage?id=${id}`
+    goDetail(coursescheduleid) {
+      var data = this.list.find(a=>a.coursescheduleid==coursescheduleid);
+      var lessonItem = this.lessonlist.find(a=>a.classid == data.classid);
+      uni.navigateTo({
+        url: `/pages/common/namedPage/namedPage?lessontaskid=${lessonItem&&lessonItem.lessontaskid||''}&coursescheduleid=${data.coursescheduleid}&date=${this.currentDate.date+' '+data.btime+':00'}`
+      })
+    },
+    //获取一周的时间
+    getWeekDate(){
+      var now1 = new Date(),year,month;
+      if(this.month){
+        year = this.month.year;
+        month = this.month.month
+      }else{
+        year = now1.getFullYear()
+        month = now1.getMonth()
+      }
+      var startDate = new Date(year,month , 1);
+      var endDate = new Date(year, month+1, 0)
+      var start = dateFormat(startDate,'yyyy-MM-dd');
+      var end = dateFormat(endDate,'yyyy-MM-dd');
+      return {start,end,startDate,endDate}
+    },
+    getAllData(){
+      var {start,end,startDate,endDate}=this.getWeekDate()
+      this.$api.lessontask.getlist().then(res1=>{
+        var data = res1.data.data;
+        data.schedulelist = data.schedulelist.filter(item=>{
+          var stime = new Date(item.begintime).getTime(),etime = new Date(item.endtime).getTime()
+          var timepass =  stime > etime || (stime < etime && etime>=new Date(end).getTime())
+          return timepass;
+        });
+        this.factory = data;
+        this.setDot(startDate,endDate)
+      })
+    },
+    getLessonData(){
+      var {start,end,startDate,endDate}=this.getWeekDate()
+      this.listQuery.btime = start;
+      this.listQuery.etime = end;
+      this.$api.lessontask.lessonlist(this.listQuery).then(res=>{
+        this.lessonlist = res.data.data;
+        this.extraData = this.extraData.concat(this.lessonlist.map(a=>( {date: a.dates, dot: true})));
+      })
+      
+    },
+    setDot(startDate,endDate){
+      /* 设置日历上的红点 */
+      var x = startDate.getDate(),y=endDate.getDate();
+      var weekMap = [1,2,4,8,16,32,64]
+      for(let i=x;i<=y;i++){
+        startDate.setDate(i);
+        var week = startDate.getDay();
+        var courseteachers = this.factory.courseteacher.filter(a=>a.day==weekMap[week-1])
+        const result = this.factory.schedulelist.filter(item=>{
+          var pass = courseteachers.some(c=>c.coursescheduleid == item.coursescheduleid);
+          return pass;
+        });
+        
+        if(result.length>0){
+          this.extraData.push({date: dateFormat(startDate,'yyyy-MM-dd'), dot: true})
+        }
+      }
+    },
+    getClassList(){
+      this.$api.class.classlist({status:0,paging: false}).then(res=>{
+        this.classArray = res.data.data
       })
     }
+    
   }
 }
 </script>

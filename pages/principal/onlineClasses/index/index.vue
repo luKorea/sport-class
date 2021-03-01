@@ -3,7 +3,7 @@
     <view class="cu-bar search bg-white">
       <view class="search-form">
         <text class="cuIcon-search"></text>
-        <input type="text" placeholder="请输入课程名称" v-model="searchInput"/>
+        <input type="text" placeholder="请输入课程名称" v-model="listQuery.keywords"/>
       </view>
       <view class="action" @click="searchValue">
         <button class="cu-btn shadow-blur text-white bg-red">搜索</button>
@@ -14,25 +14,26 @@
       <block v-if="list.length > 0">
         <view class="cu-item solid-bottom margin-bottom" v-for="item in list"
               :key="item.id" @click="goDetail(item)">
-          <view class="cu-avatar round lg"
-                :style="{backgroundImage: `url(${item.imgList})`}"
+          <view class="cu-avatar round lg" :data-url="$uploadUrl + item.cover"
+                :style="{backgroundImage: `url(${$uploadUrl + item.cover})`}"
                 style="border-radius: 50%"></view>
           <view class="content">
             <view>
-              <text class="margin-right">{{item.className}}</text>
-              <text class="text-red">{{item.price}}</text>
+              <text class="margin-right">{{item.title}}</text>
+              <text class="text-red">{{item.subtotalsum}}</text>
             </view>
             <view class="text-gray text-sm flex">
-              <text class="text-gray">截至时间：{{ item.time }}</text>
+              <text class="text-gray">截至时间：{{ item.endtime }}</text>
             </view>
           </view>
           <view class="action">
-            <view class="text-orange" v-if="item.type === 0">开启</view>
+            <view class="text-orange" v-if="item.enable">开启</view>
             <view class="text-red" v-else>关闭</view>
           </view>
         </view>
       </block>
     </view>
+    <uni-load-more :status="loadingType"></uni-load-more>
 
     <view class="fixed-right" @click="addOnlineClasses">
       <view class="cuIcon-edit"></view>
@@ -47,56 +48,72 @@ export default {
   name: "index",
   data() {
     return {
-      searchInput: '',
-      list: [
-        //  type: 0 开启 1 关闭
-        {
-          id: 1,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          className: '篮球',
-          price: '免费体验',
-          time: '2020-10-11',
-          type: 0,
-          state: 0
-        },
-        {
-          id: 2,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          className: '篮球',
-          price: '￥10-￥299',
-          time: '2020-10-11',
-          type: 0,
-          state: 0
-        },
-        {
-          id: 3,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          className: '篮球',
-          price: '￥10-￥299',
-          time: '2020-10-11',
-          type: 1,
-          state: 0
-        },
-        {
-          id: 4,
-          imgList: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-          className: '篮球',
-          price: '￥10-￥299',
-          time: '2020-10-11',
-          type: 0,
-          state: 1
-        },
-      ]
+      list:[],
+      listQuery:{
+        paging: true,
+        pi: 0,
+        ps: 20,
+        type: 1,
+        keywords:'',
+      },
+      loadingType: 'more'
     }
   },
+  onLoad() {
+    this.loadData();
+  },
+  //下拉刷新
+  onPullDownRefresh(){
+  	this.loadData('refresh');
+  },
+  //加载更多
+  onReachBottom(){
+  	this.loadData();
+  },
+  
   methods: {
+    loadData(type='add', loading) {
+      //没有更多直接返回
+      if(type === 'add'){
+        if(this.loadingType === 'nomore'){
+            return;
+        }
+        this.loadingType = 'loading';
+      }else{
+          this.loadingType = 'more'
+      }
+        if(type === 'refresh'){
+          this.listQuery.pi=1
+          this.list = [];
+          this.loadingType = 'loading';
+        }else{
+            this.listQuery.pi++;
+        }
+      //模拟api请求数据
+        this.$api.course.coursepacklist(this.listQuery).then((res)=>{
+            this.list = this.list.concat(res.data.data.list);
+            //判断是否还有下一页，有是more  没有是nomore(测试数据判断大于30就没有了)
+            this.loadingType  = this.list.length >= res.data.data.page.total ? 'nomore' : 'more';
+            
+        }).catch(()=>{
+            this.loadingType = 'nomore';
+        }).finally(()=>{
+            if(type === 'refresh'){
+              if(loading == 1){
+                  uni.hideLoading()
+              }else{
+                  uni.stopPullDownRefresh();
+              }
+            }
+        })
+      
+    },
     searchValue() {
-      console.log(this.searchInput);
+      this.loadData('refresh')
     },
     goDetail(item) {
-      let data = JSON.stringify(item);
       wx.navigateTo({
-        url: `../detail/detail?id=${data}`
+        url: `../detail/detail?id=${item.id}`
       })
     },
     addOnlineClasses() {
@@ -108,7 +125,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+page{
+  background-color: $uni-bg-color-grey;
+}
 .fixed-right {
   position: fixed;
   right: 30rpx;

@@ -18,10 +18,10 @@
     </view>
     <block v-if="list.length > 0">
       <view v-for="(item, index) in list" :key="index" class="cu-bar bg-white">
-        <view class="action" style="width: 124rpx">{{ item.gradeName }}</view>
-        <view class="action text-center">{{ item.number }}/{{ item.total }}
+        <view class="action" style="width: 124rpx">{{ item.title }}</view>
+        <view class="action text-center">{{ item.c2 }}/{{ item.c1 }}
         </view>
-        <view class="action text-center">{{ item.rate }}%</view>
+        <view class="action text-center">{{ (item.rate*100).toFixed(2)}}%</view>
       </view>
     </block>
     <block wx:else>
@@ -34,8 +34,14 @@
 </template>
 
 <script>
-import uCharts from '../../../../../components/u-charts/u-charts.js';
-
+import {
+		getrefundratebytype,
+		getrefundrate,
+	} from '../../../../../api/principal/attendanceRate.js'
+	import uCharts from '../../../../../components/u-charts/u-charts.js';
+	import {
+		chooseTime
+	} from '../../../../../utils/chooseTime.js';
 let _self;
 let canvaLineA = null;
 export default {
@@ -45,36 +51,7 @@ export default {
       cWidth: '',
       cHeight: '',
       pixelRatio: 1,
-      list: [
-        {
-          id: 1,
-          gradeName: '篮球',
-          total: 300,
-          number: 11,
-          rate: 11.19
-        },
-        {
-          id: 2,
-          gradeName: '足球',
-          total: 300,
-          number: 11,
-          rate: 11.19
-        },
-        {
-          id: 3,
-          gradeName: '测试测试',
-          total: 300,
-          number: 11,
-          rate: 11.19
-        },
-        {
-          id: 4,
-          gradeName: '武术',
-          total: 300,
-          number: 11,
-          rate: 11.19
-        }
-      ]
+      list: []
     }
   },
   created() {
@@ -85,20 +62,67 @@ export default {
     this.getServerData();
   },
   methods: {
+	  getMonths() {
+	  	var monthArr = [];
+	  	var data = new Date();
+	  	var year = data.getFullYear();
+	  	data.setMonth(data.getMonth() + 1, 1); //获取到当前月份,设置月份
+	  	for (var i = 0; i < 6; i++) {
+	  		data.setMonth(data.getMonth() - 1); //每次循环一次 月份值减1
+	  		var m = data.getMonth() + 1;
+	  		m = m < 10 ? "0" + m : m;
+	  		monthArr.push(`${m}月`);
+	  	}
+	  	return monthArr.reverse();
+	  },
     getServerData() {
-      let LineA = {categories: [], series: []};
-      let data = {
-        categories: ['8月','9月','10月','11月','12月','1月'],
-        series: [{
-          name: "退费率",
-          data: [0,0,0,0,0,0]
-        }]
-      }
-      // //这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
-      LineA.categories=data.categories;
-      LineA.series=data.series;
-      _self.textarea = JSON.stringify(data);
-      _self.showLineA("canvasLineA", LineA);
+		
+		// 判断时间
+		let obj = {
+			type: 1,
+		}
+		obj = chooseTime(obj, '4');
+		getrefundratebytype(obj).then((res) => {
+			if (res.data.code === 0) {
+				if (res.data.data.list.length > 0) {
+					let LineA = {
+						categories: [],
+						series: [{
+							name: "退费率",
+							data: []
+						}]
+					};
+		
+					res.data.data.list.map((item, index) => {
+						LineA.categories.push(`${item.date}`);
+						LineA.series[0].data.push(item.rate)
+					})
+		
+					// //这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
+					_self.showLineA("canvasLineA", LineA);
+				} else {
+					let LineA = {
+						categories: this.getMonths(),
+						series: [{
+							name: "退费率",
+							data: [0, 0, 0, 0, 0, 0]
+						}]
+					};
+		
+					// //这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
+					_self.showLineA("canvasLineA", LineA);
+				}
+		
+			}
+		
+		})
+      getrefundrate(obj).then((res) => {
+      	if (res.data.code === 0) {
+      		if (res.data.data.list.length > 0) {
+      			this.list = res.data.data.list
+      		}
+      	}
+      })
     },
     showLineA(canvasId, chartData) {
       canvaLineA = new uCharts({

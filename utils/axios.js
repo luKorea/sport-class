@@ -3,7 +3,15 @@
  * @method axios
  * @param params
  */
-const baseURL = "https://s1.huatisport.com/v1";
+// const baseURL = "https://s1.huatisport.com/v1";
+// const baseURL = "https://b.huatisport.com/v1";
+//#ifdef H5
+    const baseURL = '/v1';
+//#endif
+//#ifndef H5
+    const baseURL = "https://s1.huatisport.com/v1";
+//#endif
+
 // const baseURL = '';
 
 // 请求的计数器 -- 不加计数器的话会显示三次/隐藏三次 loading, 加了计数器之后,只当所有请求完成之后只需要隐藏一次loading

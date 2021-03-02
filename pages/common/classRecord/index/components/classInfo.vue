@@ -80,7 +80,7 @@
             点名 {{item.signupnum}}/{{item.stucount}}
           </view>
           <view class="action text-center text-orange">
-            约 {{item.reservenum}}/{{item.amount}}
+            约 {{item.signupnum}}/{{item.stucount}}
           </view>
         </view>
       </view>
@@ -254,9 +254,10 @@ export default {
       this.getData(this.params);
     },
     goCommentsPage(item) {
-	  let data = JSON.stringify(item);
+		var lesson = encodeURIComponent(JSON.stringify(item));
+	  // let data = JSON.stringify(item);
       wx.navigateTo({
-        url: `/pages/common/commentsPage/commentsPage?data=${data}`
+        url: `/pages/common/commentsPage/commentsPage?lesson=${lesson}`
       })
     }
   }

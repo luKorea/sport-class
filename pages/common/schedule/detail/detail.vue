@@ -80,11 +80,7 @@ export default {
       currentTab: 0,
       tab1: 'tabshow',
       tab2: 'tabhide',
-      result: {
-        ban: '2020通用课程',
-        ke: '篮球',
-        studentlist: [],
-      },
+      result: {},
       list:[],
       listQuery:{
         classid: '',

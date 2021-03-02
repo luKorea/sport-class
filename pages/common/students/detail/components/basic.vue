@@ -7,7 +7,7 @@
       <view class="action" style="width: 100rpx;height: 100rpx; margin: 30rpx 30rpx 10rpx 30rpx">
         <view class="grid col-1 grid-square flex-sub" style="flex-direction: row-reverse;">
           <view class="bg-img" v-if="form.avatar !== ''">
-            <image :src='form.avatar' mode='aspectFill'></image>
+            <image :src='imgUrl +  form.avatar' mode='aspectFill'></image>
             <view class="cu-tag bg-red" @click="DelImg">
               <text class="cuIcon-close"></text>
             </view>
@@ -31,33 +31,32 @@
         <button class="cu-btn sm bg-orange margin-left-sm" @click="sendPhone">拨打</button>
       </view>
     </view>
-
 <!--性别-->
     <view class="cu-form-group margin-top cu-bar bg-white">
       <view class="title">性别</view>
       <picker @change="bindSexChange($event, sexArray)" :value="sexIndex" :range="sexArray" range-key="label">
         <view class="picker">
-		<!-- {{sexArray[sexIndex].label}} -->
-		{{form.gender === 1 ? '男' : '女' }}
+			<!-- {{sexArray[sexIndex].label}} -->
+			{{form.gender === 1 ? '男' : '女'}}
 		</view>
       </picker>
     </view>
-<!--出生日期-->
+    <!--出生日期-->
     <view class="cu-form-group margin-top cu-bar bg-white">
       <view class="title">出生日期</view>
       <picker mode="date" @change="bindDateChange" :value="date" :start="startDate" :end="endDate">
         <view class="picker">
-		<!-- {{date}} -->
-		{{ form.birthday | FormatDate }}
+			<!-- {{date||'请选择'}} -->
+			{{form.birthday | FormatDate}}
 		</view>
       </picker>
     </view>
     <!--学生来源-->
     <view class="cu-form-group margin-top cu-bar bg-white">
       <view class="title">学生来源</view>
-      <picker @change="bindSourceChange($event, sourceArray)" 
-	  :value="sourceIndex" :range="sourceArray" range-key="name">
+      <picker @change="bindSourceChange($event, sourceArray)" :value="sourceIndex" :range="sourceArray" range-key="name">
         <view class="picker">
+			<!-- {{sourceArray[sourceIndex] &&sourceArray[sourceIndex].name}} -->
 			{{form.original}}
 		</view>
       </picker>
@@ -67,15 +66,15 @@
     <view class="cu-form-group margin-top cu-bar bg-white">
       <view class="title">学校</view>
       <view><input type="text" v-model="form.school" placeholder="请输入学校" /></view>
-      <picker @change="bindSchoolChange($event, sourceArray)" :value="schoolIndex" :range="schoolArray" range-key="label">
+      <picker @change="bindSchoolChange($event, schoolArray)" :value="schoolIndex" :range="schoolArray" range-key="name">
         <view class="picker">请选择</view>
       </picker>
     </view>
     <!--年级-->
     <view class="cu-form-group margin-top cu-bar bg-white">
       <view class="title">年级</view>
-      <view><input type="text" v-model="form.grade" placeholder="请输入年级" /></view>
-      <picker @change="bindGradeChange($event, sourceArray)" :value="gradeIndex" :range="gradeArray" range-key="label">
+      <view>{{form.grade}}</view>
+      <picker @change="bindGradeChange($event, gradeArray)" :value="gradeIndex" :range="gradeArray" range-key="label">
         <view class="picker">请选择</view>
       </picker>
     </view>
@@ -83,7 +82,7 @@
     <view class="cu-form-group margin-top cu-bar bg-white">
       <view class="title">班级</view>
       <view><input type="text" v-model="form.grade" placeholder="请输入班级" /></view>
-      <picker @change="bindClassChange($event, sourceArray)" :value="classIndex" :range="classArray" range-key="label">
+      <picker @change="bindClassChange($event, classArray)" :value="classIndex" :range="classArray">
         <view class="picker">请选择</view>
       </picker>
     </view>
@@ -105,7 +104,7 @@
     <view class="cu-bar bg-white margin-top">
       <view class="action">是否在读</view>
       <view class="action">
-        <switch @change="bindSwitch" />
+        <switch @change="bindSwitch"  :checked="form.state === 0" />
       </view>
     </view>
 
@@ -207,76 +206,44 @@ export default {
       format: true
     })
     return {
+	  imgUrl: this.$uploadUrl,	
       form: {},
-      // 性别
-      sexIndex: 0,
-      sexArray: [
-        {
-          label: '男',
-          value: 0
-        },
-        {
-          label: '女',
-          value: 1
-        }
-      ],
-      // 学生来源
-      sourceIndex: 0,
-      sourceArray: [
-		  {
-			  name: '请选择',
-			  id: null
-		  }
+	  // 性别
+	  sexIndex: 0,
+	  sexArray: [
+	    { label: '男', value: 1 },
+	    { label: '女', value: 2 }
 	  ],
-      // 学校
-      schoolIndex: 0,
-      schoolArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
-      // 年级
-      gradeIndex: 0,
-      gradeArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
-      // 班级
-      classIndex: 0,
-      classArray: [
-        {
-          label: '电话来访',
-          id: 111
-        },
-        {
-          label: '运动课',
-          id: 222
-        },
-        {
-          label: '门店到访',
-          id: 333
-        }
-      ],
-      date: currentDate
+	  // 学生来源
+	  sourceIndex: 0,
+	  sourceArray: [],
+	  // 学校
+	  schoolIndex: 0,
+	  schoolArray: [],
+	  // 年级
+	  gradeIndex: 0,
+	  gradeArray: [
+	    { label: '小班', id: 1, grade: '幼儿园' },
+	    { label: '中班', id: 2, grade: '幼儿园' },
+	    { label: '大班', id: 3, grade: '幼儿园' },
+	    { label: '一年级', id: 4, grade: '小学' },
+	    { label: '二年级', id: 5, grade: '小学' },
+	    { label: '三年级', id: 6, grade: '小学' },
+	    { label: '四年级', id: 7, grade: '小学' },
+	    { label: '五年级', id: 8, grade: '小学' },
+	    { label: '六年级', id: 9, grade: '小学' },
+	    { label: '初一', id: 10, grade: '初中' },
+	    { label: '初二', id: 11, grade: '初中' },
+	    { label: '初三', id: 12, grade: '初中' },
+	    { label: '高一', id: 13, grade: '高中' },
+	    { label: '高二', id: 14, grade: '高中' },
+	    { label: '高三', id: 15, grade: '高中' },
+	  ],
+	  // 班级
+	  classIndex: 0,
+	  classArray: [],
+	  date: '',
+	  currentSchool: null
     }
   },
   computed: {
@@ -289,8 +256,8 @@ export default {
   },
   mounted() {
 	this.getDetail(this.studentId);  
-	this.getSource();
-	this.getSchoolData();
+	this.getOriginList();
+	this.getSchoolList();
 	uni.$on('onShow', e => this.getDetail(this.studentId));
   },
   methods: {
@@ -345,40 +312,48 @@ export default {
     bindSexChange(e, data) {
       const {value} = e.detail;
       this.sexIndex = value;
-      this.form.sex = data[this.sexIndex].value;
+      this.form.gender = data[this.sexIndex].value;
     },
     // 选择学生来源
-	getSource(){
-		getStudentSource(1)
-		.then(res => {
-			this.sourceArray = res.data.data.list;
-		}).catch(err => console.log(err));
-	},
     bindSourceChange(e, data) {
       const {value} = e.detail;
       this.sourceIndex = value;
-      this.form.source = data[this.sourceIndex].id;
+      this.form.original =  data[this.sourceIndex].name;
     },
     // 选择学校
     bindSchoolChange(e, data) {
       const {value} = e.detail;
       this.schoolIndex = value;
-      this.form.schoolIndex = data[this.schoolIndex].id;
-      this.form.school = data[this.schoolIndex].label;
+      this.form.school = data[this.schoolIndex].name;
+      this.form.refer = data[this.schoolIndex].id
+      this.currentSchool = data[this.schoolIndex];
+      //更新班级
+      this.classArray = [];
+      const gradeItem = this.currentSchool.grade.find(a=>a.name==this.gradeArray[this.gradeIndex].grade);
+      if(gradeItem){
+        this.classArray = gradeItem.class
+      }
+      
     },
     // 选择年级
     bindGradeChange(e, data) {
       const {value} = e.detail;
       this.gradeIndex = value;
-      this.form.gradeIndex = data[this.gradeIndex].id;
       this.form.grade = data[this.gradeIndex].label;
+      //更新班级信息
+      this.classArray = [];
+      if(this.currentSchool){
+        const gradeItem = this.currentSchool.grade.find(a=>a.name==data[this.gradeIndex].grade);
+        if(gradeItem){
+          this.classArray = gradeItem.class
+        }
+      }
     },
     // 选择班级
     bindClassChange(e, data) {
       const {value} = e.detail;
       this.classIndex = value;
-      this.form.classIndex = data[this.classIndex].id;
-      this.form.myClass = data[this.classIndex].label;
+      this.form.myClass = data[this.classIndex];
     },
     // 选择出生日期
     bindDateChange(e) {
@@ -390,16 +365,45 @@ export default {
       const {value} = e.detail;
       value ? this.form.state = 0 : this.form.state = 1;
     },
+    getOriginList(){
+      this.$api.student.sourcelist({type:1}).then(res=>{
+        this.sourceArray = res.data.data.list;
+        this.sourceIndex = 0;
+        this.form.original = this.sourceArray[this.sourceIndex].name;
+      })
+    },
+    getSchoolList(){
+      this.$api.organize.get430configure().then(res=>{
+        if(res.data.data.data){
+          var data = JSON.parse(res.data.data.data);
+          this.schoolArray = data.school;
+        }
+      })
+    },
     // 保存数据
     sendData() {
-      if (this.form.school !== '') {
-        this.form.schoolIndex = undefined;
-      } if (this.form.grade !== '') {
-        this.form.gradeIndex = undefined;
-      } if (this.form.myClass !== '') {
-        this.form.classIndex = undefined;
+      if(!this.form.name){
+        return this.showToast({title:'请输入姓名',icon:'none'});
       }
-      console.log(this.form);
+      if(!this.form.contact){
+        return this.showToast({title:'请输入手机号',icon:'none'});
+      }
+      // return console.log('form',this.form);
+      this.form.grade += this.form.myClass;
+      
+      this.$api.student.operatorstudent(this.form).then(res=>{
+        if(res.data.data.errcode==200){
+          uni.showToast({ title:"添加成功" });
+          setTimeout(()=>{
+            uni.navigateBack();
+          },1000)
+        }else{
+          uni.showToast({
+            title: res.data.data.errmsg || "添加失败，请稍后重试",
+            icon: 'none'
+          })
+        }
+      })
     }
   },
 }

@@ -43,6 +43,54 @@ export const getOrganize = () => {
 }
 
 
+//  获取学员报读班级下报读的课程
+export const getReportList = params => {
+	return axios({
+		url: '/student/listbycourse',
+		method: post,
+		data: params
+	})
+}
+
+// 获取学员报读班级下 课程下的班级
+export const getReportClassList = ids => {
+	return axios({
+		url: '/student/classlist',
+		method: post,
+		data: {ids: ids}
+	})
+}
+
+//  学员选班操作
+export const getSelectClassList = params => {
+	return axios({
+		url: '/class/list',
+		method: post,
+		data: params
+	})
+}
+
+// 学员添加班级操作
+export const addStudentToClass = data => {
+	return axios({
+		url: '/class/addstudent',
+		method: post,
+		data: data
+	})
+}
+
+
+// 学员退班操作
+export const removeStudentClass = params => {
+	return axios({
+		url: '/class/deletemember',
+		method: post,
+		data: params
+	})
+}
+
+
+
 
 // 获取学员跟进记录
 export const getStudentFollow = studentid => {

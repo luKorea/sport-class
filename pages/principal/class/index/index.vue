@@ -73,7 +73,8 @@
       <!--列表-->
       <block v-if="list.length > 0">
         <view v-for="(item, index) in list" :key="index">
-          <view class="cu-bar bg-white solid-bottom margin-top" @click="goDetail(item.id, item.courseid)">
+          <view class="cu-bar bg-white solid-bottom margin-top"
+		   @click="goDetail(item.id, item.courseid, item.name)">
             <view class="action">
               <view class="flex flex-direction padding-top padding-bottom">
                 <view class="margin-bottom-sm">
@@ -272,9 +273,9 @@ export default {
         url: '../addClass/addClass'
       })
     },
-    goDetail(id, courseid) {
+    goDetail(id, courseid, className) {
       uni.navigateTo({
-        url: `../detail/detail?id=${id}&courseid=${courseid}`
+        url: `../detail/detail?id=${id}&courseid=${courseid}&className=${className}`
       });
     }
   }

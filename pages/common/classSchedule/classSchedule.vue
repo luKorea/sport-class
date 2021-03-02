@@ -142,7 +142,7 @@ export default {
     },
     chooseTeacherItem(e) {
       let {value} = e.detail;
-      this.info.name = value;
+      this.info.teacherName = value;
     },
     sendTeacher() {
       this.showModal = false;
@@ -151,7 +151,15 @@ export default {
       this.timeLimit = e;
     },
     nextOption() {
-      var temporary = {classid:this.classid,classname:this.info.className,teacher: this.selectedTeachers.map(a=>a.id+":"+a.name).join(';'),btime: this.startTime,etime: this.endTime,duration:this.timeLimit,date: this.date}
+      var temporary = {
+		  classid:this.classid,
+		  classname:this.info.className,
+		  teacher: this.selectedTeachers.map(a=>a.id+":"+a.name).join(';'),
+		  btime: this.startTime,
+		  etime: this.endTime,
+		  duration:this.timeLimit,
+		  date: this.date,
+		}
       wx.navigateTo({
         url: `/pages/common/namedPage/namedPage?temporary=${encodeURIComponent(JSON.stringify(temporary))}`
       })
@@ -160,7 +168,6 @@ export default {
       this.$api.teacher.teacherlist({classid: this.classid,paging: false,enable: 1}).then(res=>{
         this.selectedTeachers = res.data.data
         this.info.teacherName = this.selectedTeachers.map(a=>a.name).join(',')
-        
         this.getAllTeacherList();
       })
     },

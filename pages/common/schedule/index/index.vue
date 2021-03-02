@@ -7,7 +7,7 @@
               @monthTap="monthTap"></calendar>
 
     <block v-if="list.length > 0">
-      <view class="cu-bar bg-white margin-top" v-for="item in list" :key="item.id" @click="goDetail(item)">
+      <view class="cu-bar bg-white margin-top" v-for="(item, index) in list" :key="index" @click="goDetail(item)">
         <view class="action flex-common padding-top padding-bottom">
           <text class="margin-bottom-sm">{{item.classname}}</text>
           <text class="text-gray text-sm">{{item.teachername}}</text>

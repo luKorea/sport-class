@@ -5,29 +5,29 @@
     <view class="cu-bar search bg-white">
       <view class="search-form">
         <text class="cuIcon-search"></text>
-        <input type="text" placeholder="请输入班级名称" v-model="searchInput"/>
+        <input type="text" placeholder="请输入班级名称" v-model="params.keywords"/>
       </view>
-      <view class="action" @click="searchValue">
+      <view class="action" @click="getListData(params)">
         <button class="cu-btn shadow-blur text-white bg-red">搜索</button>
       </view>
     </view>
 <!--列表-->
     <block v-if="list.length > 0">
       <view v-for="(item, index) in list" :key="index">
-        <view class="cu-bar bg-white solid-bottom margin-top" @click="goDetail(item.id)">
+        <view class="cu-bar bg-white solid-bottom margin-top" @click="goDetail(item)">
           <view class="action">
             <view class="flex flex-direction padding-top padding-bottom">
               <view class="margin-bottom-sm">
                 <text class="ban-red">班</text>
-                <text>{{item.ban}}</text>
+                <text>{{item.name}}</text>
               </view>
               <view class="margin-bottom-sm">
                 <text class="ke-orange">课</text>
-                <text>{{item.ke}}</text>
+                <text>{{item.title}}</text>
               </view>
               <view>
                 <text class="ren-green">人</text>
-                <text>{{item.number}}</text>
+                <text>{{item.signnum}}</text>
               </view>
             </view>
           </view>
@@ -44,67 +44,39 @@
 </template>
 
 <script>
-// import {getMyClassList} from '../../../../api/teacher/myClass';
+import {getClassList} from "../../../../api/principal/class";
 export default {
   data() {
     return {
-      searchInput: '',
-      list: [
-        {
-          id: 1,
-          ban: '2020通用课程',
-          ke: '篮球',
-          number: 20
-        },
-        {
-          id: 2,
-          ban: '2020通用课程',
-          ke: '篮球',
-          number: 20
-        },
-        {
-          id: 3,
-          ban: '2020通用课程',
-          ke: '篮球',
-          number: 20
-        },
-        {
-          id: 4,
-          ban: '2020通用课程',
-          ke: '篮球',
-          number: 20
-        }
-      ],
-      params: {
-        pi : 1,
-        ps : 100,
-      },
+	  params: {
+	    pi: 1,
+	    ps: 100,
+	  		kind: 3,
+	    status: -1,
+	    keywords: ''
+	  },
+      list: [],
     }
   },
   onLoad() {
-    // this.getList();
+    this.getListData(this.params);
   },
   methods: {
-
-    getList() {
-      let user = wx.getStorageSync('userData'),
-      teacherid = user.venueid;
-      getMyClassList({
-        ...this.params
-      })
+    getListData(params){
+      getClassList(params)
       .then(res => {
-        let data = res.data.data;
-        console.log(data);
+        if (res.data.code === 0) {
+          this.list = res.data.data.list;
+          console.log(this.list);
+        }
       }).catch(err => console.log(err));
     },
-
-    searchValue() {
-      console.log(this.searchInput);
-    },
-    goDetail(id) {
+    
+    goDetail(data) {
+		console.log(data)
       uni.navigateTo({
-        url: `../detail/detail?id=${id}`
-      });
+        url: `../detail/detail?classid=${data.id}&coursename=${data.title}&classname=${data.name}`
+      })
     }
   }
 }

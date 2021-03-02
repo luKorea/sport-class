@@ -18,7 +18,7 @@
     </view>
     <!--上课情况-->
     <view id="tab3" class="margin-top-sm" :class="tab3">
-      <classes-component :classId="classId" :courseid="courseid" />
+      <classes-component :classId="classId" :courseid="courseid" :className="className" />
     </view>
     <!--班级排课-->
     <view id="tab4" class="margin-top-sm" :class="tab4">
@@ -45,6 +45,7 @@ export default {
   data() {
     return {
       classId: '',
+	  className: '',
       courseid: '',
       navTab: ['基础资料', '班级学生', '上课情况', '班级排课'],
       currentTab: 0,
@@ -55,8 +56,9 @@ export default {
     }
   },
   onLoad(options) {
-    let {id, courseid} = options;
+    let {id, courseid, className} = options;
     this.classId = String(id);
+	this.className = className;
     this.courseid = String(courseid);
   },
   methods: {

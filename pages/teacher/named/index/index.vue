@@ -91,7 +91,13 @@ export default {
       listQuery:{classstatus:0,paging:false,btime:'',etime:''},
       factory:{courseteacher:[],schedulelist:[],teacherlist:[]},
       lessonlist:[],
-      currentDate:{day: now.getDate(),month: now.getMonth()+1,year: now.getFullYear(),date: dateFormat(now,'yyyy-MM-dd'),week: now.getDay(),timestemp:now.getTime()}
+      currentDate:{
+		  day: now.getDate(),
+		  month: now.getMonth()+1,
+		  year: now.getFullYear(),
+		  date: dateFormat(now,'yyyy-MM-dd'),
+		  week: now.getDay(),
+		  timestemp:now.getTime()}
     }
   },
   created() {

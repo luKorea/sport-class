@@ -104,7 +104,7 @@
     <view class="cu-bar bg-white margin-top">
       <view class="action">是否在读</view>
       <view class="action">
-        <switch @change="bindSwitch"  :checked="form.state === 0" />
+        <switch @change="bindSwitch"  :checked="form.flags%3 === 0" />
       </view>
     </view>
 
@@ -159,7 +159,7 @@
 	    <input v-model="form.ext4" placeholder="请输入学员妈妈电话" />
 	  </view>
 	</view>
-    <view class="cu-bar bg-white margin-top">
+    <!-- <view class="cu-bar bg-white margin-top">
       <view class="action">体重</view>
       <view class="action text-right">
         <input v-model="form.back" placeholder="请输入学员体重" />
@@ -176,13 +176,7 @@
       <view class="action text-right">
         <input v-model="form.back" placeholder="请输入学员获奖经历" />
       </view>
-    </view>
-    <view class="cu-bar bg-white margin-top">
-      <view class="action">身份证</view>
-      <view class="action text-right">
-        <input v-model="form.back" placeholder="请输入学员身份证" type="idcard" />
-      </view>
-    </view>
+    </view> -->
 
     <view class="flex flex-direction margin-top" @click="sendData">
       <button class="cu-btn bg-my-red margin-tb-sm lg">保存</button>

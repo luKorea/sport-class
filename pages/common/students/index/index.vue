@@ -180,7 +180,8 @@
 				searchInput: '',
 				params: {
 					pi: 1,
-					ps: 20
+					ps: 20,
+					flags: 101
 				},
 				total: 0,
 				showUp: true,

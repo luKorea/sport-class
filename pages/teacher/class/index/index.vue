@@ -27,7 +27,7 @@
               </view>
               <view>
                 <text class="ren-green">人</text>
-                <text>{{item.signnum}}</text>
+                <text>{{item.signnum}}/{{item.capacity}}</text>
               </view>
             </view>
           </view>

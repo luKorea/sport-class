@@ -107,6 +107,9 @@ export default {
     this.venue = venulist.find(a=>a.id==userInfo.venueid);
     this.iconList[2].url+='?teacherid='+this.venue.teacherid
   },
+  onShow() {
+    wx.hideHomeButton();  
+  },
   methods: {
     goPage(url) {
       uni.navigateTo({
